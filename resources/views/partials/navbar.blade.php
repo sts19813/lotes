@@ -76,7 +76,7 @@
                                         class="d-flex text-gray-900 text-hover-primary align-items-center mb-5">
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
-                                            <img src="assets/media/avatars/300-2.jpg" alt="" />
+                                            <img src="/assets/media/avatars/300-2.jpg" alt="" />
                                         </div>
                                         <!--end::Symbol-->
                                         <!--begin::Title-->
@@ -1296,7 +1296,7 @@
                 <div class="cursor-pointer symbol symbol-circle symbol-30px symbol-lg-45px"
                     data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                     data-kt-menu-placement="bottom-end">
-                    <img src="assets/media/avatars/300-2.jpg" alt="user" />
+                    <img src="/assets/media/avatars/300-2.jpg" alt="user" />
                 </div>
                 <!--begin::User account menu-->
                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
@@ -1306,7 +1306,7 @@
                         <div class="menu-content d-flex align-items-center px-3">
                             <!--begin::Avatar-->
                             <div class="symbol symbol-50px me-5">
-                                <img alt="Logo" src="assets/media/avatars/300-2.jpg" />
+                                <img alt="Logo" src="/assets/media/avatars/300-2.jpg" />
                             </div>
                             <!--end::Avatar-->
                             <!--begin::Username-->

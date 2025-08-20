@@ -27,11 +27,11 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link active" href="index.html">
+                                <a class="menu-link active" href="/desarrollos">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>
-                                    <span class="menu-title">Default</span>
+                                    <span class="menu-title">Desarrollos</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -39,11 +39,11 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="dashboards/ecommerce.html">
+                                <a class="menu-link" href="/consulta">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>
-                                    <span class="menu-title">eCommerce</span>
+                                    <span class="menu-title">API</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
