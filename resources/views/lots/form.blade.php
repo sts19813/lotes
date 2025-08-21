@@ -10,27 +10,31 @@
         </div>
         <div class="card-body">
             {{-- Mensajes --}}
-            @if(session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
+            <div id="alert-container"></div>
 
             {{-- Formulario --}}
-            <form action="{{ route('lots.fetch') }}" method="POST" class="row g-3 mb-4">
+            <form id="filterForm" class="row g-3 mb-4">
                 @csrf
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Project ID</label>
-                    <input type="number" name="project_id" class="form-control form-control-solid"
-                           value="{{ old('project_id', $project_id ?? '') }}" required />
+                    <label class="form-label fw-bold">Proyecto</label>
+                    <select name="project_id" class="form-select form-select-solid" required>
+                        <option value="">Seleccione un proyecto...</option>
+                        @foreach($projects as $project)
+                        <option value="{{ $project['id'] }}">{{ $project['name'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Phase ID</label>
-                    <input type="number" name="phase_id" class="form-control form-control-solid"
-                           value="{{ old('phase_id', $phase_id ?? '') }}" required />
+                    <label class="form-label fw-bold">Fase</label>
+                    <select name="phase_id" id="phase_id" class="form-select form-select-solid" required>
+                        <option value="">Seleccione una fase...</option>
+                    </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label fw-bold">Stage ID</label>
-                    <input type="number" name="stage_id" class="form-control form-control-solid"
-                           value="{{ old('stage_id', $stage_id ?? '') }}" required />
+                    <label for="stage_id" class="form-label">Etapa (Stage)</label>
+                    <select id="stage_id" name="stage_id" class="form-select" required>
+                        <option value="">Seleccione una etapa...</option>
+                    </select>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">
@@ -42,7 +46,6 @@
     </div>
 
     {{-- Tabla de resultados --}}
-    @isset($lots)
     <div class="card">
         <div class="card-header border-0 pt-6">
             <div class="card-title">
@@ -63,53 +66,115 @@
                             <th>Imagen</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse($lots as $lot)
-                            <tr>
-                                <td>{{ $lot['id'] }}</td>
-                                <td>{{ $lot['name'] }}</td>
-                                <td>{{ $lot['area'] }}</td>
-                                <td>${{ number_format($lot['price_square_meter'], 2) }}</td>
-                                <td>${{ number_format($lot['total_price'], 2) }}</td>
-                                <td>
-                                    <span class="badge 
-                                        @if($lot['status'] === 'available') badge-light-success 
-                                        @elseif($lot['status'] === 'sold') badge-light-danger 
-                                        @else badge-light-warning @endif">
-                                        {{ ucfirst($lot['status']) }}
-                                    </span>
-                                </td>
-                                <td>
-                                    @if(isset($lot['chepina']))
-                                        <img src="{{ $lot['chepina'] }}" alt="Imagen Lote {{ $lot['name'] }}" class="img-thumbnail" style="width: 80px;">
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-gray-500">No se encontraron lotes</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
     </div>
-    @endisset
 </div>
 @endsection
 
-@section('scripts')
-    {{-- Metronic Datatables (DataTables o KTDatatable según tu versión) --}}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            $("#lots_table").DataTable({
-                responsive: true,
-                pageLength: 10,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json"
-                }
-            });
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inicializar DataTable
+        const table = $("#lots_table").DataTable({
+            responsive: true,
+            pageLength: 10,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json"
+            },
+            columns: [{}, {}, {}, {}, {}, {}, {}]
         });
-    </script>
-@endsection
+
+        const projectSelect = document.querySelector("select[name='project_id']");
+        const phaseSelect = document.getElementById("phase_id");
+        const stageSelect = document.getElementById("stage_id");
+
+        // Cargar fases según proyecto
+        projectSelect.addEventListener("change", function() {
+            const projectId = this.value;
+            phaseSelect.innerHTML = `<option value="">Cargando fases...</option>`;
+            stageSelect.innerHTML = `<option value="">Seleccione una fase primero</option>`;
+
+            if (!projectId) {
+                phaseSelect.innerHTML = `<option value="">Seleccione un proyecto primero</option>`;
+                return;
+            }
+
+            fetch(`/api/projects/${projectId}/phases`)
+                .then(res => res.json())
+                .then(data => {
+                    phaseSelect.innerHTML = `<option value="">Seleccione una fase...</option>`;
+                    data.forEach(phase => {
+                        const opt = document.createElement("option");
+                        opt.value = phase.id;
+                        opt.textContent = phase.name;
+                        phaseSelect.appendChild(opt);
+                    });
+                });
+        });
+
+        // Cargar etapas según fase
+        phaseSelect.addEventListener("change", function() {
+            const projectId = projectSelect.value;
+            const phaseId = this.value;
+            stageSelect.innerHTML = `<option value="">Cargando etapas...</option>`;
+
+            if (!projectId || !phaseId) {
+                stageSelect.innerHTML = `<option value="">Seleccione una fase primero</option>`;
+                return;
+            }
+
+            fetch(`/api/projects/${projectId}/phases/${phaseId}/stages`)
+                .then(res => res.json())
+                .then(data => {
+                    stageSelect.innerHTML = `<option value="">Seleccione una etapa...</option>`;
+                    data.forEach(stage => {
+                        const opt = document.createElement("option");
+                        opt.value = stage.id;
+                        opt.textContent = stage.name;
+                        stageSelect.appendChild(opt);
+                    });
+                });
+        });
+
+        // AJAX submit del formulario
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch("{{ route('lots.fetch') }}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    table.clear();
+
+                    data.forEach(lot => {
+                        table.row.add([
+                            lot.id,
+                            lot.name,
+                            lot.area,
+                            `$${Number(lot.price_square_meter).toFixed(2)}`,
+                            `$${Number(lot.total_price).toFixed(2)}`,
+                            `<span class="badge ${lot.status==='available'?'badge-light-success':lot.status==='sold'?'badge-light-danger':'badge-light-warning'}">${lot.status.charAt(0).toUpperCase()+lot.status.slice(1)}</span>`,
+                            lot.chepina ? `<img src="${lot.chepina}" style="width:80px;" class="img-thumbnail">` : ''
+                        ]);
+                    });
+
+                    table.draw();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Error al cargar los lotes.");
+                });
+        });
+    });
+</script>
+@endpush

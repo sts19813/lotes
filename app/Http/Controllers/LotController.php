@@ -10,7 +10,15 @@ class LotController extends Controller
 {
     public function form()
     {
-        return view('lots.form');
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])
+            ->withoutVerifying()
+            ->get(env('ADARA_API_URL') . "/projects");
+
+        $projects = $response->successful() ? $response->json() : [];
+        return view('lots.form', compact('projects'));
     }
 
     public function index()
@@ -32,22 +40,15 @@ class LotController extends Controller
             'accept' => 'application/json',
             'X-API-KEY' => env('ADARA_API_KEY'),
         ])
-            ->withoutVerifying() // <- omite la verificación SSL
+            ->withoutVerifying()
             ->get(
                 env('ADARA_API_URL')
-                . "/projects/{$request->project_id}/phases/{$request->phase_id}/stages/{$request->stage_id}/lots"
+                    . "/projects/{$request->project_id}/phases/{$request->phase_id}/stages/{$request->stage_id}/lots"
             );
-        if ($response->successful()) {
-            $lots = $response->json();
-            return view('lots.form', [
-                'lots' => $lots,
-                'project_id' => $request->project_id,
-                'phase_id' => $request->phase_id,
-                'stage_id' => $request->stage_id,
-            ]);
-        }
 
-        return back()->with('error', 'Error al consultar la API: ' . $response->status());
+        $lots = $response->successful() ? $response->json() : [];
+
+        return response()->json($lots);
     }
 
 
@@ -89,5 +90,75 @@ class LotController extends Controller
         Lot::create($data);
 
         return redirect()->route('desarrollos.index')->with('success', 'Lote creado correctamente.');
+    }
+
+
+    public function getPhases($id)
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])
+            ->withoutVerifying()
+            ->get(env('ADARA_API_URL') . "/projects/$id/phases");
+
+        return $response->json();
+    }
+
+    public function getStages($projectId, $phaseId)
+    {
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])
+            ->withoutVerifying()
+            ->get(env('ADARA_API_URL') . "/projects/$projectId/phases/$phaseId/stages");
+
+        return $response->json();
+    }
+
+
+    public function configurator($id)
+    {
+        $lot = Lot::findOrFail($id);
+
+        // Traer los proyectos desde la API
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])
+            ->withoutVerifying()
+            ->get(env('ADARA_API_URL') . "/projects");
+
+        $projects = $response->successful() ? $response->json() : [];
+
+        return view('lots.configurator', compact('lot', 'projects'));
+    }
+
+
+    public function savePolygonInfo(Request $request, $id)
+    {
+        $request->validate([
+            'polygonId' => 'required|string',
+            'projectId' => 'required|integer',
+            'phaseId' => 'required|integer',
+            'stageId' => 'required|integer',
+            'info' => 'nullable|string',
+        ]);
+
+        $lot = Lot::findOrFail($id);
+
+        $data = $lot->polygon_info ?? [];
+        $data[$request->polygonId] = [
+            'project_id' => $request->projectId,
+            'phase_id' => $request->phaseId,
+            'stage_id' => $request->stageId,
+            'info' => $request->info
+        ];
+
+        $lot->polygon_info = $data;
+        $lot->save();
+
+        return response()->json(['success' => true]);
     }
 }
