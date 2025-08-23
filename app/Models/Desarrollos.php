@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lot extends Model
+class Desarrollos extends Model
 {
     use HasFactory;
 
@@ -15,5 +15,8 @@ class Lot extends Model
         'total_lots',
         'svg_image',
         'png_image',
+        'project_id',
+        'phase_id',
+        'stage_id',
     ];
 }

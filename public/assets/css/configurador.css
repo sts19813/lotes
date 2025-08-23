@@ -1,0 +1,64 @@
+svg * {
+	fill: transparent !important;
+	stroke: #00aeef;
+	stroke-miterlimit: 10;
+	cursor: pointer;
+	transition: fill 0.3s ease;
+}
+
+svg * :hover {
+	fill: rgba(0, 200, 0, 0.6) !important;
+}
+
+.plan-box {
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	padding: 10px;
+	text-align: center;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+.plan-box:hover,
+.plan-box.active {
+	background: rgba(255, 255, 255, 0.25);
+}
+
+.switch-tabs {
+	width: 100%;
+	display: inline-flex;
+	border: 1px solid #d1d1d1;
+	border-radius: 50px;
+	overflow: hidden;
+	background-color: #f5f5f5;
+}
+
+.switch-tabs .btn {
+	border: none;
+	border-radius: 0;
+	padding: 0.375rem 1.25rem;
+	font-weight: 500;
+	color: #6c757d;
+	background-color: transparent;
+	transition: all 0.3s ease;
+}
+
+.switch-tabs .btn.active {
+	background-color: #fff;
+	color: #000;
+	box-shadow: 0 0 0 2px #d1d1d1 inset;
+}
+
+.switch-tabs .btn i {
+	margin-right: 0.5rem;
+}
+
+/* Contenido de tabs */
+.tab-content>div {
+	display: none;
+	margin-top: 1rem;
+}
+
+.tab-content>div.active {
+	display: block;
+}

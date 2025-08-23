@@ -11,13 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('lots', function (Blueprint $table) {
+       Schema::create('desarrollos', function (Blueprint $table) {
             $table->id();
+            
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('total_lots')->default(1);
             $table->string('svg_image')->nullable(); // ruta del SVG
             $table->string('png_image')->nullable(); // ruta del PNG
+
+
+             // 🔗 configuracion al api
+             $table->unsignedBigInteger('project_id')->nullable();
+             $table->unsignedBigInteger('phase_id')->nullable();
+             $table->unsignedBigInteger('stage_id')->nullable();
+
+
             $table->timestamps();
         });
     }
@@ -27,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lots');
+        Schema::dropIfExists('desarrollos');
     }
 };
