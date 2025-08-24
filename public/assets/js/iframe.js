@@ -100,22 +100,49 @@ document.addEventListener("DOMContentLoaded", function () {
     
         } else {
 
-            if(redireccion){
+            if (redireccion) {
                 window.dbLotes.forEach(dbLote => {
                     if (!dbLote.selectorSVG || !dbLote.redirect_url) return;
-        
+            
                     const svgElement = document.querySelector(`#${dbLote.selectorSVG}`);
                     if (!svgElement) return;
-        
-                    // Agregar cursor de link
+            
+                    // Helper para pintar el elemento y todos sus hijos
+                    const paintAll = (color) => {
+                        if (!color) return;
+                        svgElement.querySelectorAll('*').forEach(el => {
+                            el.style.setProperty('fill', color, 'important');
+                        });
+                        svgElement.style.setProperty('fill', color, 'important');
+                    };
+            
+                    // 1) Pintar color base si existe
+                    if (dbLote.color) paintAll(dbLote.color);
+            
+                    // Guardar colores en dataset
+                    svgElement.dataset.baseColor = dbLote.color || "";
+                    svgElement.dataset.activeColor = dbLote.color_active || "";
+            
+                    // 2) Hover IN -> aplicar color_active
+                    svgElement.addEventListener('mouseover', () => {
+                        if (svgElement.dataset.activeColor) {
+                            paintAll(svgElement.dataset.activeColor);
+                        }
+                    });
+            
+                    // 3) Hover OUT -> restaurar color base
+                    svgElement.addEventListener('mouseleave', () => {
+                        if (svgElement.dataset.baseColor) {
+                            paintAll(svgElement.dataset.baseColor);
+                        }
+                    });
+            
+                    // 4) Cursor y click (redirección)
                     svgElement.style.cursor = "pointer";
-        
-                    // Redirigir al hacer click
                     svgElement.addEventListener("click", () => {
                         window.location.href = dbLote.redirect_url;
                     });
                 });
-
             }
            
         }
