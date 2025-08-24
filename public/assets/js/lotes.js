@@ -1,5 +1,3 @@
-const tabs = document.querySelectorAll('.switch-tabs .btn');
-const contents = document.querySelectorAll('.tab-content > div');
 const redirectCheckbox = document.getElementById('redirect');
 const redirectUrlInput = document.getElementById('redirect_url');
 const polygonForm = document.getElementById('polygonForm');
@@ -10,22 +8,6 @@ redirectCheckbox.addEventListener('change', function() {
     if (!this.checked) redirectUrlInput.value = '';
 });
 
-
-
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        // Alternar botón activo
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        // Alternar contenido
-        const target = tab.getAttribute('data-tab');
-        contents.forEach(c => {
-            c.classList.remove('active');
-            if (c.id === target) c.classList.add('active');
-        });
-    });
-});
 
 document.addEventListener('DOMContentLoaded', function () {
     const projectSelect = document.getElementById("modal_project_id");
@@ -149,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     polygonForm.addEventListener('submit', function(e) {
         e.preventDefault();
-    debugger
+    
         const formData = new FormData(this);
     
         if(window.idDesarrollo) {
@@ -173,10 +155,12 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(data => {
             if(data.success) {
-                alert('Lote guardado correctamente');
                 polygonModal.hide();
                 polygonForm.reset();
                 lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
+
+                location.reload();
+
             } else {
                 alert('Error: ' + (data.message || 'No se pudo guardar'));
             }

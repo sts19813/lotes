@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DesarrollosController;
 use App\Http\Controllers\LoteController;
-
+use App\Http\Controllers\LeadController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -20,6 +20,11 @@ Route::post('/lots/fetch', [DesarrollosController::class, 'fetch'])->name('lots.
 
 Route::get('/lots/{lot}/configurator', [DesarrollosController::class, 'configurator'])->name('lots.configurator');
 Route::post('/lots/{lot}/save-polygon', [DesarrollosController::class, 'savePolygonInfo'])->name('lots.savePolygonInfo');
+
+
+
+Route::get('/iframe/{lot}/', [DesarrollosController::class, 'iframe'])->name('lots.iframe');
+Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
 
 Route::post('/lotes', [LoteController::class, 'store'])->name('lotes.store');

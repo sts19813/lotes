@@ -70,8 +70,14 @@
                     </td>
                     <td>{{ $lot->created_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        <a href="{{ route('lots.configurator', $lot->id) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ route('lots.configurator', $lot->id) }}" 
+                           class="btn btn-sm btn-primary">
                             Configurar
+                        </a>
+                    
+                        <a href="{{ url('iframe/' . $lot->id) }}" 
+                           class="btn btn-sm btn-secondary" target="_blank">
+                            Iframe
                         </a>
                     </td>
                 </tr>

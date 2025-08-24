@@ -176,4 +176,43 @@ class DesarrollosController extends Controller
 
         return view('lots.configurator', compact('lot', 'projects', 'lots', 'dbLotes'));
     }
+
+
+    public function iframe($id)
+    {
+        $lot = Desarrollos::findOrFail($id);
+    
+        // Traer todos los proyectos
+        $projectsResponse = Http::withHeaders([
+            'accept' => 'application/json',
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])->withoutVerifying()->get(env('ADARA_API_URL') . "/projects");
+    
+        $projects = $projectsResponse->successful() ? $projectsResponse->json() : [];
+    
+        // Inicializar array de lotes vacío
+        $lots = [];
+    
+        // Si el lote tiene proyecto, fase y etapa, traemos los lotes
+        if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
+            $lotsResponse = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-API-KEY' => env('ADARA_API_KEY'),
+            ])->withoutVerifying()
+                ->get(
+                    env('ADARA_API_URL') .
+                    "/projects/{$lot->project_id}/phases/{$lot->phase_id}/stages/{$lot->stage_id}/lots",
+                    [
+                        'per_page' => 9999
+                    ]
+                );
+    
+            $lots = $lotsResponse->successful() ? $lotsResponse->json() : [];
+        }
+    
+        $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
+
+
+        return view('lots.iframe', compact('lot', 'projects', 'lots', 'dbLotes'));
+    }
 }

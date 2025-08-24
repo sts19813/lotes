@@ -17,9 +17,9 @@
             </div>
             <!--end::Sidebar mobile toggle-->
             <!--begin::Logo-->
-            <a href="index.html" class="app-sidebar-logo">
-                <img alt="Logo" src="/assets/media/logos/demo39.svg" class="h-25px theme-light-show" />
-                <img alt="Logo" src="/assets/media/logos/demo39-dark.svg" class="h-25px theme-dark-show" />
+            <a href="/desarrollos" class="app-sidebar-logo">
+                <img alt="Logo" src="/assets/media/logos/demo39.svg" class="theme-light-show" style="width:180px"/>
+                <img alt="Logo" src="/assets/media/logos/demo39.svg" class="theme-dark-show"  style="width:180px" />
             </a>
             <!--end::Logo-->
         </div>
