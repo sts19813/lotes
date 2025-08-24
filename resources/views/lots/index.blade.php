@@ -79,6 +79,11 @@
                            class="btn btn-sm btn-secondary" target="_blank">
                             Iframe
                         </a>
+                    
+                        <a href="{{ route('desarrollos.edit', $lot->id) }}" 
+                           class="btn btn-sm btn-warning">
+                            Editar
+                        </a>
                     </td>
                 </tr>
                 @endforeach

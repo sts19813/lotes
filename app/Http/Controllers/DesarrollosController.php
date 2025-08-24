@@ -216,4 +216,86 @@ class DesarrollosController extends Controller
 
         return view('lots.iframe', compact('lot', 'projects', 'lots', 'dbLotes'));
     }
+
+
+    public function edit($id)
+    {
+        $lot = Desarrollos::findOrFail($id); // el registro a editar
+    
+        // Traer todos los proyectos
+        $projectsResponse = Http::withHeaders([
+            'accept' => 'application/json',
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])->withoutVerifying()->get(env('ADARA_API_URL') . "/projects");
+        $projects = $projectsResponse->successful() ? $projectsResponse->json() : [];
+    
+        // Traer fases del proyecto actual si existe
+        $phases = [];
+        if ($lot->project_id) {
+            $phasesResponse = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-API-KEY' => env('ADARA_API_KEY'),
+            ])->withoutVerifying()->get(env('ADARA_API_URL') . "/projects/{$lot->project_id}/phases");
+    
+            $phases = $phasesResponse->successful() ? $phasesResponse->json() : [];
+        }
+    
+        // Traer stages de la fase actual si existe
+        $stages = [];
+        if ($lot->phase_id) {
+            $stagesResponse = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-API-KEY' => env('ADARA_API_KEY'),
+            ])->withoutVerifying()->get(env('ADARA_API_URL') . "/projects/{$lot->project_id}/phases/{$lot->phase_id}/stages");
+    
+            $stages = $stagesResponse->successful() ? $stagesResponse->json() : [];
+        }
+    
+        return view('desarrollos.edit', compact('lot', 'projects', 'phases', 'stages'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $desarrollo = Desarrollos::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'project_id' => 'nullable',
+            'phase_id' => 'nullable',
+            'stage_id' => 'nullable',
+            'total_lots' => 'required|integer|min:1',
+
+        ]);
+
+        $data = $request->only([
+            'name', 'description', 'project_id', 'phase_id', 'stage_id', 'total_lots'
+        ]);
+
+        // Guardar SVG en public/lots si hay archivo
+        if ($request->hasFile('svg_image')) {
+            $svgFilename = time() . '_' . $request->file('svg_image')->getClientOriginalName();
+            $request->file('svg_image')->move(public_path('lots'), $svgFilename);
+            $data['svg_image'] = 'lots/' . $svgFilename;
+        }
+
+        // Guardar PNG en public/lots si hay archivo
+        if ($request->hasFile('png_image')) {
+            $pngFilename = time() . '_' . $request->file('png_image')->getClientOriginalName();
+            $request->file('png_image')->move(public_path('lots'), $pngFilename);
+            $data['png_image'] = 'lots/' . $pngFilename;
+        }
+
+        $desarrollo->update($data);
+
+        return redirect()->route('desarrollos.index')->with('success', 'Desarrollo actualizado correctamente.');
+    }
+
+    public function destroy($id)
+    {
+        $desarrollo = Desarrollos::findOrFail($id);
+        $desarrollo->delete();
+
+        return redirect()->route('desarrollos.index')->with('success', 'Desarrollo eliminado correctamente.');
+    }
 }

@@ -31,11 +31,21 @@ Route::post('/lotes', [LoteController::class, 'store'])->name('lotes.store');
 
 
 
+// Listar desarrollos
 Route::get('/desarrollos', [DesarrollosController::class, 'index'])->name('desarrollos.index');
 
+// Crear
 Route::get('/desarrollos/create', [DesarrollosController::class, 'create'])->name('desarrollos.create');
 Route::post('/desarrollos', [DesarrollosController::class, 'store'])->name('desarrollo.store');
 
+// Editar
+Route::get('/desarrollos/{desarrollo}/edit', [DesarrollosController::class, 'edit'])->name('desarrollos.edit');
+
+// Actualizar
+Route::put('/desarrollos/{desarrollo}', [DesarrollosController::class, 'update'])->name('desarrollos.update');
+
+// Eliminar
+Route::delete('/desarrollos/{desarrollo}', [DesarrollosController::class, 'destroy'])->name('desarrollos.destroy');
 
 
 Route::get('/api/projects/{id}/phases', [DesarrollosController::class, 'getPhases']);
