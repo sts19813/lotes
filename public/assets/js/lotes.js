@@ -1,166 +1,132 @@
-const redirectCheckbox = document.getElementById('redirect');
-const redirectUrlInput = document.getElementById('redirect_url');
-const polygonForm = document.getElementById('polygonForm');
-
-
-redirectCheckbox.addEventListener('change', function() {
-    redirectUrlInput.disabled = !this.checked;
-    if (!this.checked) redirectUrlInput.value = '';
-});
-
-
 document.addEventListener('DOMContentLoaded', function () {
-    const projectSelect = document.getElementById("modal_project_id");
-    const phaseSelect = document.getElementById("modal_phase_id");
-    const stageSelect = document.getElementById("modal_stage_id");
+    // Referencias a elementos
+    const redirectCheckbox = document.getElementById('redirect');
+    const redirectUrlInput = document.getElementById('redirect_url');
+    const polygonForm = document.getElementById('polygonForm');
     const lotSelect = document.getElementById('modal_lot_id');
+    const colorInput = document.getElementById('color');
+    const colorActiveInput = document.getElementById('color_active');
 
 
+    // Habilitar/deshabilitar inputs extra
+    redirectCheckbox.addEventListener('change', function() {
+        const enabled = this.checked;
+        redirectUrlInput.disabled = !enabled;
+        colorInput.disabled = !enabled;
+        colorActiveInput.disabled = !enabled;
+
+        if (!enabled) {
+            redirectUrlInput.value = '';
+            colorInput.value = '#34c759ff';
+            colorActiveInput.value = '#2c7be5ff';
+        }
+    });
+    // Instancia del modal
     const modalEl = document.getElementById('polygonModal');
-    polygonModal = new bootstrap.Modal(modalEl); // se crea una sola instancia
+    const polygonModal = new bootstrap.Modal(modalEl);
 
-    // 1️⃣ Detectar click sobre polygons/path con clase .cls-1
-    const svgElements = document.querySelectorAll(selector);
+    // Detectar click sobre cualquier elemento dentro de SVG
+    const svgElements = document.querySelectorAll("svg g *");
     svgElements.forEach(el => {
         el.addEventListener('click', function (e) {
             e.preventDefault();
 
-            // Priorizar el id del elemento actual
-            let elementId = (this.id && this.id.trim() !== "") ? this.id : null;
+            // Obtener ID del elemento clickeado o del <g> padre
+            let elementId = this.id?.trim() || this.closest('g')?.id?.trim() || null;
+            if (!elementId) return;
 
-            // Si no tiene id, buscar en el padre <g>
-            if (!elementId) {
-                const parentG = this.closest("g");
-                if (parentG && parentG.id && parentG.id.trim() !== "") {
-                    elementId = parentG.id;
-                }
-            }
+            document.getElementById('selectedElementId').innerText = elementId;
+            document.getElementById('polygonId').value = elementId;
 
-            // Mostrar solo si hay un id válido
-            if (elementId) {
-                document.getElementById('selectedElementId').innerText = elementId;
-                document.getElementById('polygonId').value = elementId;
-                polygonModal.show();
-            }
+            // Limpiar select
+            lotSelect.innerHTML = `<option value="">Cargando lotes...</option>`;
+
+            // Usar currentLot para enviar IDs al endpoint
+            const formData = new FormData();
+            formData.append('project_id', window.currentLot.project_id);
+            formData.append('phase_id', window.currentLot.phase_id);
+            formData.append('stage_id', window.currentLot.stage_id);
+
+            fetch(window.Laravel.routes.lotsFetch, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+            })
+            .then(res => res.json())
+            .then(data => {
+                lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
+                data.forEach(lot => {
+                    const opt = document.createElement('option');
+                    opt.value = lot.id;
+                    opt.textContent = lot.name;
+                    lotSelect.appendChild(opt);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                lotSelect.innerHTML = `<option value="">Error al cargar lotes</option>`;
+            });
+
+            polygonModal.show();
         });
     });
 
-    // 2️⃣ Cargar fases según proyecto
-    projectSelect.addEventListener("change", function () {
-        const projectId = this.value;
-        phaseSelect.innerHTML = `<option value="">Cargando fases...</option>`;
-        stageSelect.innerHTML = `<option value="">Seleccione una fase primero</option>`;
-        if (!projectId) return;
-
-        fetch(`/api/projects/${projectId}/phases`)
-            .then(res => res.json())
-            .then(data => {
-                phaseSelect.innerHTML = `<option value="">Seleccione una fase...</option>`;
-                data.forEach(phase => {
-                    const opt = document.createElement("option");
-                    opt.value = phase.id;
-                    opt.textContent = phase.name;
-                    phaseSelect.appendChild(opt);
-                });
-            });
-    });
-
-    // 3️⃣ Cargar stages según fase
-    phaseSelect.addEventListener("change", function () {
-        const projectId = projectSelect.value;
-        const phaseId = this.value;
-        stageSelect.innerHTML = `<option value="">Cargando etapas...</option>`;
-        if (!projectId || !phaseId) return;
-
-        fetch(`/api/projects/${projectId}/phases/${phaseId}/stages`)
-            .then(res => res.json())
-            .then(data => {
-                stageSelect.innerHTML = `<option value="">Seleccione una etapa...</option>`;
-                data.forEach(stage => {
-                    const opt = document.createElement("option");
-                    opt.value = stage.id;
-                    opt.textContent = stage.name;
-                    stageSelect.appendChild(opt);
-                });
-            });
-    });
-
-
-
-    stageSelect.addEventListener("change", function () {
-        const projectId = projectSelect.value;
-        const phaseId = phaseSelect.value;
-        const stageId = stageSelect.value;
-    
-        lotSelect.innerHTML = `<option value="">Cargando lotes...</option>`;
-    
-        if (!projectId || !phaseId || !stageId) {
-            lotSelect.innerHTML = `<option value="">Seleccione primero proyecto, fase y etapa</option>`;
-            return;
-        }
-    
-        // Llamada al endpoint que ya tienes
-        const formData = new FormData();
-        formData.append('project_id', projectId);
-        formData.append('phase_id', phaseId);
-        formData.append('stage_id', stageId);
-    
-        fetch(window.Laravel.routes.lotsFetch, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': window.Laravel.csrfToken
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
-            data.forEach(lot => {
-                const opt = document.createElement("option");
-                opt.value = lot.id; // o lot.lote_id si quieres
-                opt.textContent = lot.name; // o el campo que quieras mostrar
-                lotSelect.appendChild(opt);
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            lotSelect.innerHTML = `<option value="">Error al cargar lotes</option>`;
-        });
-    });
-
-
+    // Enviar formulario del modal
     polygonForm.addEventListener('submit', function(e) {
         e.preventDefault();
     
         const formData = new FormData(this);
     
-        if(window.idDesarrollo) {
-            formData.append('desarrollo_id', window.idDesarrollo);
-        }
+        // ⚡ Siempre enviamos el desarrollo actual
+        formData.set('desarrollo_id', window.idDesarrollo);
+    
+        // Agregar los demás IDs desde currentLot
+        formData.append('project_id', window.currentLot.project_id ?? '');
+        formData.append('phase_id', window.currentLot.phase_id ?? '');
+        formData.append('stage_id', window.currentLot.stage_id ?? '');
+        formData.append('lot_id', document.getElementById('modal_lot_id').value ?? '');
+    
+        // Enviar checkbox de redirección
+        const redirectCheckbox = document.getElementById('redirect');
+        formData.set('redirect', redirectCheckbox.checked ? 1 : 0);
+
         
+        // Redirección + colores
+        if (redirectCheckbox.checked) {
+            formData.set('redirect', 1);
+            formData.set('redirect_url', redirectUrlInput.value ?? '');
+            formData.set('color', colorInput.value);
+            formData.set('color_active', colorActiveInput.value);
+        } else {
+            formData.set('redirect', 0);
+            formData.set('redirect_url', '');
+            formData.set('color', '');
+            formData.set('color_active', '');
+        }
+    
+    
         fetch(window.Laravel.routes.lotesStore, {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-CSRF-TOKEN': window.Laravel.csrfToken
-            }
+            headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
         })
         .then(async res => {
-            const text = await res.text(); // primero leemos como texto
+            const text = await res.text();
             try {
-                return JSON.parse(text); // intentamos parsear JSON
+                return JSON.parse(text);
             } catch {
-                throw new Error('Respuesta no es JSON: ' + text); // lanzamos error si es HTML
+                throw new Error('Respuesta no es JSON: ' + text);
             }
         })
         .then(data => {
-            if(data.success) {
+            if (data.success) {
                 polygonModal.hide();
                 polygonForm.reset();
-                lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
-
+                document.getElementById('modal_lot_id').innerHTML = `<option value="">Seleccione un lote...</option>`;
+                const redirectSelect = document.getElementById('redirect_url');
+                redirectSelect.disabled = true;
+                redirectSelect.value = '';
                 location.reload();
-
             } else {
                 alert('Error: ' + (data.message || 'No se pudo guardar'));
             }

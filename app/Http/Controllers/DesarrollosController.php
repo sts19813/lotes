@@ -142,7 +142,8 @@ class DesarrollosController extends Controller
     public function configurator($id)
     {
         $lot = Desarrollos::findOrFail($id);
-    
+    // Traer todos los desarrollos para el select de redirección
+        $desarrollos = Desarrollos::all();
         // Traer todos los proyectos
         $projectsResponse = Http::withHeaders([
             'accept' => 'application/json',
@@ -174,7 +175,7 @@ class DesarrollosController extends Controller
         $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
 
 
-        return view('lots.configurator', compact('lot', 'projects', 'lots', 'dbLotes'));
+        return view('lots.configurator', compact('lot', 'projects', 'lots', 'dbLotes', 'desarrollos'));
     }
 
 

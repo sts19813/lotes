@@ -58,51 +58,68 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    if (!window.dbLotes || !window.preloadedLots) return;
+    if (window.dbLotes && Array.isArray(window.dbLotes)) {
+        if (window.preloadedLots && window.preloadedLots.length > 0) {
+            // Caso normal: hay lots precargados y dbLotes
+            window.dbLotes.forEach(dbLote => {
+                const matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id);
+                if (!matchedLot) return;
+    
+                const selector = dbLote.selectorSVG;
+                if (!selector) return;
+    
+                const svgElement = document.querySelector(`#${selector}`);
+                if (!svgElement) return;
+    
+                // === Color por status ===
+                let fillColor;
+                switch (matchedLot.status) {
+                    case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.7)'; break;
+                    case 'sold': fillColor = 'rgba(200, 0, 0, 0.6)'; break;
+                    case 'reserved': fillColor = 'rgba(255, 200, 0, 0.6)'; break;
+                    default: fillColor = 'rgba(100, 100, 100, .9)';
+                }
+    
+                svgElement.querySelectorAll('*').forEach(el => {
+                    el.style.setProperty('fill', fillColor, 'important');
+                });
+                svgElement.style.setProperty('fill', fillColor, 'important');
+    
+                // Guardar info en dataset
+                svgElement.dataset.loteInfo = JSON.stringify(matchedLot);
+    
+                if (matchedLot.status === "sold") {
+                    svgElement.setAttribute("data-bs-toggle", "tooltip");
+                    svgElement.setAttribute("data-bs-title", "Vendido");
+                    svgElement.style.cursor = "not-allowed";
+                    new bootstrap.Tooltip(svgElement);
+                    svgElement.onclick = (e) => e.preventDefault();
+                    return;
+                }
+            });
+    
+        } else {
 
-    window.dbLotes.forEach(dbLote => {
-        const matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id);
-        if (!matchedLot) return;
+            if(redireccion){
+                window.dbLotes.forEach(dbLote => {
+                    if (!dbLote.selectorSVG || !dbLote.redirect_url) return;
+        
+                    const svgElement = document.querySelector(`#${dbLote.selectorSVG}`);
+                    if (!svgElement) return;
+        
+                    // Agregar cursor de link
+                    svgElement.style.cursor = "pointer";
+        
+                    // Redirigir al hacer click
+                    svgElement.addEventListener("click", () => {
+                        window.location.href = dbLote.redirect_url;
+                    });
+                });
 
-        const selector = dbLote.selectorSVG;
-        if (!selector) return;
-
-        const svgElement = document.querySelector(`#${selector}`);
-        if (!svgElement) return;
-
-        // === Color por status ===
-        let fillColor;
-        switch (matchedLot.status) {
-            case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.7)'; break;
-            case 'sold': fillColor = 'rgba(200, 0, 0, 0.6)'; break;
-            case 'reserved': fillColor = 'rgba(255, 200, 0, 0.6)'; break;
-            default: fillColor = 'rgba(100, 100, 100, 0.4)';
+            }
+           
         }
-
-        svgElement.querySelectorAll('*').forEach(el => {
-            el.style.setProperty('fill', fillColor, 'important');
-        });
-        svgElement.style.setProperty('fill', fillColor, 'important');
-
-        // Guardar info en dataset
-        svgElement.dataset.loteInfo = JSON.stringify(matchedLot);
-
-        if (matchedLot.status === "sold") {
-            // Tooltip Bootstrap
-            svgElement.setAttribute("data-bs-toggle", "tooltip");
-            svgElement.setAttribute("data-bs-title", "Vendido");
-            svgElement.style.cursor = "not-allowed";
-
-            // Inicializar tooltip
-            new bootstrap.Tooltip(svgElement);
-
-            // Evitar click
-            svgElement.onclick = (e) => e.preventDefault();
-            return; // salir para no agregar el click handler
-        }
-
-
-    });
+    }
 
 
 
@@ -116,9 +133,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById('downloadForm');
     if (form) {
-        debugger
+        
         form.addEventListener('submit', function () {
-            debugger
+            
             document.getElementById('lotNumberHidden').value = info.id;
         });
     }

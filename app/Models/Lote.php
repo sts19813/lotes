@@ -21,12 +21,12 @@ class Lote extends Model
         'selectorSVG',
         'redirect',
         'redirect_url',
+        'color',
+        'color_active',
     ];
 
-    // Relación con Desarrollos
     public function desarrollo()
     {
         return $this->belongsTo(Desarrollos::class, 'desarrollo_id');
     }
-
 }

@@ -4,10 +4,8 @@
 
 @section('content')
 
-
-
-
 				<link rel="stylesheet" href="/assets/css/configurador.css">
+
 				<div class="card shadow-sm">
 								<div class="card-header">
 												<h3 class="card-title">Configurador: {{ $lot->name }}</h3>
@@ -30,7 +28,6 @@
 								</div>
 				</div>
 
-
 				<!-- Modal -->
 				<div class="modal fade" id="polygonModal" tabindex="-1" aria-labelledby="polygonModalLabel" aria-hidden="true">
 								<div class="modal-dialog modal-xl">
@@ -45,33 +42,11 @@
 																								@csrf
 																								<input type="hidden" id="polygonId" name="polygonId">
 
-																								{{-- Formulario dinámico --}}
+																								{{-- Solo select de lote --}}
 																								<div class="row g-3 mb-4">
-																												<div class="col-md-4">
-																																<label class="form-label fw-bold">Proyecto</label>
-																																<select name="project_id" id="modal_project_id" class="form-select form-select-solid"
-																																				required>
-																																				<option value="">Seleccione un proyecto...</option>
-																																				@foreach ($projects as $project)
-																																								<option value="{{ $project['id'] }}">{{ $project['name'] }}</option>
-																																				@endforeach
-																																</select>
-																												</div>
-																												<div class="col-md-4">
-																																<label class="form-label fw-bold">Fase</label>
-																																<select name="phase_id" id="modal_phase_id" class="form-select form-select-solid" required>
-																																				<option value="">Seleccione una fase...</option>
-																																</select>
-																												</div>
-																												<div class="col-md-4">
-																																<label for="stage_id" class="form-label">Etapa (Stage)</label>
-																																<select id="modal_stage_id" name="stage_id" class="form-select" required>
-																																				<option value="">Seleccione una etapa...</option>
-																																</select>
-																												</div>
 																												<div class="col-md-12 mb-3">
 																																<label for="lot_id" class="form-label fw-bold">Lote</label>
-																																<select id="modal_lot_id" name="lot_id" class="form-select form-select-solid" required>
+																																<select id="modal_lot_id" name="lot_id" class="form-select form-select-solid">
 																																				<option value="">Seleccione un lote...</option>
 																																</select>
 																												</div>
@@ -86,9 +61,26 @@
 																								</div>
 
 																								<div class="mb-3">
-																												<label for="redirect_url" class="form-label">URL de redirección:</label>
-																												<input type="url" class="form-control" id="redirect_url" name="redirect_url"
-																																placeholder="https://example.com" disabled>
+																												<label for="redirect_url" class="form-label">Redirigir a desarrollo:</label>
+																												<select id="redirect_url" name="redirect_url" class="form-select form-select-solid" disabled>
+																																<option value="">Seleccione un desarrollo...</option>
+																																@foreach ($desarrollos as $desarrollo)
+																																				<option value="{{ $desarrollo->id }}">{{ $desarrollo->name }}</option>
+																																@endforeach
+																												</select>
+																								</div>
+
+																								<div class="row mb-3">
+																												<div class="col-md-6">
+																																<label for="color" class="form-label">Color</label>
+																																<input type="color" id="color" name="color" class="form-control form-control-color"
+																																				value="#34c759ff" disabled>
+																												</div>
+																												<div class="col-md-6">
+																																<label for="color_active" class="form-label">Color Activo (hover)</label>
+																																<input type="color" id="color_active" name="color_active"
+																																				class="form-control form-control-color" value="#2c7be5ff" disabled>
+																												</div>
 																								</div>
 																								<div class="d-flex justify-content-end">
 																												<button type="submit" class="btn btn-primary">Guardar</button>
@@ -104,25 +96,22 @@
 @push('scripts')
 				<script>
 								let selector = "svg g *";
-				</script>
-
-				<script>
 								window.Laravel = {
 												csrfToken: "{{ csrf_token() }}",
 												routes: {
 																lotsFetch: "{{ route('lots.fetch') }}",
-                lotesStore: "{{ route('lotes.store') }}"
+																lotesStore: "{{ route('lotes.store') }}"
 												}
 								};
 
-     window.preloadedLots = @json($lots);
-     window.currentLot = @json($lot);
-     window.projects = @json($projects);
-     window.dbLotes = @json($dbLotes);
+								window.preloadedLots = @json($lots);
+								window.currentLot = @json($lot);
+								window.dbLotes = @json($dbLotes);
+								window.idDesarrollo = {{ $lot->id }};
 
-     window.idDesarrollo = {{ $lot->id }};
- </script>
-	<script src="/assets/js/lotes.js"></script>
- <script src="/assets/js/iframe.js"></script>
+								let redireccion = false;
+				</script>
 
+				<script src="/assets/js/lotes.js"></script>
+				<script src="/assets/js/iframe.js"></script>
 @endpush

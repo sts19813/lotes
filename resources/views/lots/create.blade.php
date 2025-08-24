@@ -35,7 +35,7 @@
             
                 <div class="mb-3">
                     <label class="form-label fw-bold">Proyecto</label>
-                    <select name="project_id" id="project_id" class="form-select form-select-solid" required>
+                    <select name="project_id" id="project_id" class="form-select form-select-solid">
                         <option value="">Seleccione un proyecto...</option>
                         @foreach ($projects as $project)
                             <option value="{{ $project['id'] }}">{{ $project['name'] }}</option>
@@ -45,14 +45,14 @@
             
                 <div class="mb-3">
                     <label class="form-label fw-bold">Fase</label>
-                    <select name="phase_id" id="phase_id" class="form-select form-select-solid" required disabled>
+                    <select name="phase_id" id="phase_id" class="form-select form-select-solid"  disabled>
                         <option value="">Seleccione una fase...</option>
                     </select>
                 </div>
             
                 <div class="mb-3">
                     <label class="form-label fw-bold">Etapa (Stage)</label>
-                    <select name="stage_id" id="stage_id" class="form-select form-select-solid" required disabled>
+                    <select name="stage_id" id="stage_id" class="form-select form-select-solid"  disabled>
                         <option value="">Seleccione una etapa...</option>
                     </select>
                 </div>

@@ -22,31 +22,58 @@ class LoteController  extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'project_id' => 'required|integer',
-            'phase_id' => 'required|integer',
-            'stage_id' => 'required|integer',
-            'lot_id' => 'required|integer',
-            'polygonId' => 'required|string',
-            'redirect' => 'nullable|boolean',
-            'redirect_url' => 'nullable|url',
-            'desarrollo_id' => 'required|integer', // <-- nuevo
-        ]);
+        try {
+            // Validación
+            $request->validate([
+                'project_id'   => 'nullable|integer',
+                'phase_id'     => 'nullable|integer',
+                'stage_id'     => 'nullable|integer',
+                'lot_id'       => 'nullable|string',
+                'polygonId'    => 'nullable|string',
+                'redirect'     => 'nullable|boolean',
+                'redirect_url' => 'nullable|string',
+                'desarrollo_id'=> 'required|integer',
+                'color'        => 'nullable|string|max:9',  // ejemplo: #34c759ff
+                'color_active' => 'nullable|string|max:9',
+            ]);
     
-        $lote = Lote::create([
-            'desarrollo_id' => $request->desarrollo_id, // <-- nuevo
-            'project_id' => $request->project_id,
-            'phase_id' => $request->phase_id,
-            'stage_id' => $request->stage_id,
-            'lote_id' => $request->lot_id,
-            'selectorSVG' => $request->polygonId,
-            'redirect' => $request->has('redirect') ? true : false,
-            'redirect_url' => $request->redirect_url,
-        ]);
-        return response()->json([
-            'success' => true,
-            'lote' => $lote
-        ]);
+            // Solo tomar redirect_url si está marcado
+            $redirectChecked = $request->has('redirect') && $request->redirect;
+            $redirectUrl = $redirectChecked ? $request->redirect_url : null;
+    
+            // Crear registro
+            $lote = Lote::create([
+                'desarrollo_id' => $request->desarrollo_id,
+                'project_id'    => $request->project_id ?: null,
+                'phase_id'      => $request->phase_id ?: null,
+                'stage_id'      => $request->stage_id ?: null,
+                'lote_id'       => $request->lot_id ?: null,
+                'selectorSVG'   => $request->polygonId,
+                'redirect'      => $redirectChecked,
+                'redirect_url'  => $redirectUrl,
+                'color'         => $redirectChecked ? $request->color : null,
+                'color_active'  => $redirectChecked ? $request->color_active : null,
+            ]);
+    
+            return response()->json([
+                'success' => true,
+                'lote' => $lote
+            ]);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Devolver errores de validación en JSON
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // Captura cualquier otro error
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(Request $request, Lote $lote)

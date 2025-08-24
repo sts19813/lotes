@@ -319,6 +319,9 @@
 								window.dbLotes = @json($dbLotes);
 
 								window.idDesarrollo = {{ $lot->id }};
+								let redireccion = true;
+
+
 				</script>
 				<script src="/assets/js/iframe.js"></script>
 @endpush

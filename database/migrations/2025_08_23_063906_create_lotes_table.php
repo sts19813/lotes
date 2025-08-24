@@ -14,18 +14,25 @@ return new class extends Migration
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('desarrollo_id'); 
-
-            $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('phase_id');
-            $table->unsignedBigInteger('stage_id');
-            $table->string('lote_id'); // ID del lote en el sistema (puede ser código interno)
-            $table->string('selectorSVG'); // ID del polígono en el SVG
-            $table->boolean('redirect')->default(false); // Nuevo campo booleano
-            $table->string('redirect_url')->nullable(); // Nuevo campo URL
-
+    
+            $table->unsignedBigInteger('project_id')->nullable();
+            $table->unsignedBigInteger('phase_id')->nullable();
+            $table->unsignedBigInteger('stage_id')->nullable();
+            $table->string('lote_id')->nullable();
+            $table->string('selectorSVG');
+            $table->boolean('redirect')->default(false);
+            $table->string('redirect_url')->nullable();
+    
+            // 🎨 Colores
+            $table->string('color', 9)->nullable(); 
+            $table->string('color_active', 9)->nullable(); 
+    
             $table->timestamps();
-            $table->foreign('desarrollo_id')->references('id')->on('desarrollos')->onDelete('cascade');
-
+    
+            $table->foreign('desarrollo_id')
+                  ->references('id')
+                  ->on('desarrollos')
+                  ->onDelete('cascade');
         });
     }
 
