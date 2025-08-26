@@ -27,7 +27,7 @@ Route::get('/iframe/{lot}/', [DesarrollosController::class, 'iframe'])->name('lo
 Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
 
-Route::post('/lotes', [LoteController::class, 'store'])->name('lotes.store');
+Route::post('/Savelotes', [LoteController::class, 'store'])->name('lotes.store');
 
 
 

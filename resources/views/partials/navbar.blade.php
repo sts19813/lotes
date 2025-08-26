@@ -60,7 +60,8 @@
                                         class="d-flex text-gray-900 text-hover-primary align-items-center mb-5">
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
-                                            <img src="assets/media/avatars/300-6.jpg" alt="" />
+                                            <img src="/assets/media/avatars/300-6.jpg" alt="" />
+
                                         </div>
                                         <!--end::Symbol-->
                                         <!--begin::Title-->
@@ -92,7 +93,8 @@
                                         class="d-flex text-gray-900 text-hover-primary align-items-center mb-5">
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
-                                            <img src="assets/media/avatars/300-9.jpg" alt="" />
+                                            <img src="/assets/media/avatars/300-9.jpg" alt="" />
+
                                         </div>
                                         <!--end::Symbol-->
                                         <!--begin::Title-->
@@ -108,7 +110,8 @@
                                         class="d-flex text-gray-900 text-hover-primary align-items-center mb-5">
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
-                                            <img src="assets/media/avatars/300-14.jpg" alt="" />
+                                            <img src="/assets/media/avatars/300-14.jpg" alt="" />
+
                                         </div>
                                         <!--end::Symbol-->
                                         <!--begin::Title-->
@@ -124,7 +127,8 @@
                                         class="d-flex text-gray-900 text-hover-primary align-items-center mb-5">
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
-                                            <img src="assets/media/avatars/300-11.jpg" alt="" />
+                                            <img src="/assets/media/avatars/300-11.jpg" alt="" />
+
                                         </div>
                                         <!--end::Symbol-->
                                         <!--begin::Title-->
@@ -146,8 +150,8 @@
                                         <div class="symbol symbol-40px me-4">
                                             <span class="symbol-label bg-light">
                                                 <img class="w-20px h-20px"
-                                                    src="assets/media/svg/brand-logos/volicity-9.svg"
-                                                    alt="" />
+                                                src="/assets/media/svg/brand-logos/volicity-9.svg"
+                                                alt="" />
                                             </span>
                                         </div>
                                         <!--end::Symbol-->
@@ -165,7 +169,7 @@
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
                                             <span class="symbol-label bg-light">
-                                                <img class="w-20px h-20px" src="assets/media/svg/brand-logos/tvit.svg"
+                                                <img class="w-20px h-20px" src="/assets/media/svg/brand-logos/tvit.svg"
                                                     alt="" />
                                             </span>
                                         </div>
@@ -184,7 +188,7 @@
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
                                             <span class="symbol-label bg-light">
-                                                <img class="w-20px h-20px" src="assets/media/svg/misc/infography.svg"
+                                                <img class="w-20px h-20px" src="/assets/media/svg/misc/infography.svg"
                                                     alt="" />
                                             </span>
                                         </div>
@@ -203,8 +207,8 @@
                                         <!--begin::Symbol-->
                                         <div class="symbol symbol-40px me-4">
                                             <span class="symbol-label bg-light">
-                                                <img class="w-20px h-20px" src="assets/media/svg/brand-logos/leaf.svg"
-                                                    alt="" />
+                                                <img class="w-20px h-20px" src="/assets/media/svg/brand-logos/leaf.svg"
+                                                alt="" />
                                             </span>
                                         </div>
                                         <!--end::Symbol-->
@@ -223,7 +227,7 @@
                                         <div class="symbol symbol-40px me-4">
                                             <span class="symbol-label bg-light">
                                                 <img class="w-20px h-20px"
-                                                    src="assets/media/svg/brand-logos/tower.svg" alt="" />
+                                                    src="/assets/media/svg/brand-logos/tower.svg" alt="" />
                                             </span>
                                         </div>
                                         <!--end::Symbol-->
@@ -956,7 +960,7 @@
                                 <!--begin::Illustration-->
                                 <div class="text-center px-4">
                                     <img class="mw-100 mh-200px" alt="image"
-                                        src="assets/media/illustrations/sketchy-1/1.png" />
+                                    src="/assets/media/illustrations/sketchy-1/1.png" />
                                 </div>
                                 <!--end::Illustration-->
                             </div>
@@ -1213,7 +1217,7 @@
                 <div class="menu menu-sub menu-sub-dropdown menu-column w-250px w-lg-325px" data-kt-menu="true">
                     <!--begin::Heading-->
                     <div class="d-flex flex-column flex-center bgi-no-repeat rounded-top px-9 py-10"
-                        style="background-image:url('assets/media/misc/menu-header-bg.jpg')">
+                        style="background-image:url('/assets/media/misc/menu-header-bg.jpg')">
                         <!--begin::Title-->
                         <h3 class="text-white fw-semibold mb-3">Quick Links</h3>
                         <!--end::Title-->
@@ -1455,7 +1459,7 @@
                                 <span
                                     class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">English
                                     <img class="w-15px h-15px rounded-1 ms-2"
-                                        src="assets/media/flags/united-states.svg" alt="" /></span></span>
+                                        src="/assets/media/flags/united-states.svg" alt="" /></span></span>
                         </a>
                         <!--begin::Menu sub-->
                         <div class="menu-sub menu-sub-dropdown w-175px py-4">
@@ -1463,7 +1467,7 @@
                             <div class="menu-item px-3">
                                 <a href="account/settings.html" class="menu-link d-flex px-5 active">
                                     <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="assets/media/flags/united-states.svg"
+                                        <img class="rounded-1" src="/assets/media/flags/united-states.svg"
                                             alt="" />
                                     </span>English</a>
                             </div>
@@ -1472,7 +1476,7 @@
                             <div class="menu-item px-3">
                                 <a href="account/settings.html" class="menu-link d-flex px-5">
                                     <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="assets/media/flags/spain.svg" alt="" />
+                                        <img class="rounded-1" src="/assets/media/flags/spain.svg" alt="" />
                                     </span>Spanish</a>
                             </div>
                             <!--end::Menu item-->
@@ -1480,7 +1484,7 @@
                             <div class="menu-item px-3">
                                 <a href="account/settings.html" class="menu-link d-flex px-5">
                                     <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="assets/media/flags/germany.svg" alt="" />
+                                        <img class="rounded-1" src="/assets/media/flags/germany.svg" alt="" />
                                     </span>German</a>
                             </div>
                             <!--end::Menu item-->
@@ -1488,7 +1492,7 @@
                             <div class="menu-item px-3">
                                 <a href="account/settings.html" class="menu-link d-flex px-5">
                                     <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="assets/media/flags/japan.svg" alt="" />
+                                        <img class="rounded-1" src="/assets/media/flags/japan.svg" alt="" />
                                     </span>Japanese</a>
                             </div>
                             <!--end::Menu item-->
@@ -1496,7 +1500,7 @@
                             <div class="menu-item px-3">
                                 <a href="account/settings.html" class="menu-link d-flex px-5">
                                     <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="assets/media/flags/france.svg" alt="" />
+                                        <img class="rounded-1" src="/assets/media/flags/france.svg" alt="" />
                                     </span>French</a>
                             </div>
                             <!--end::Menu item-->

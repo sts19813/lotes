@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const polygonModal = new bootstrap.Modal(modalEl);
 
     // Detectar click sobre cualquier elemento dentro de SVG
-    const svgElements = document.querySelectorAll("svg g *");
+    const svgElements = document.querySelectorAll("svg *");
     svgElements.forEach(el => {
         el.addEventListener('click', function (e) {
             e.preventDefault();
