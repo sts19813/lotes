@@ -6,6 +6,20 @@
 
 				<link rel="stylesheet" href="/assets/css/configurador.css">
 
+<style>
+    {{ $lot->modal_selector ?? 'svg g *' }} {
+        fill: transparent !important;
+        stroke: #00aeef;
+        stroke-miterlimit: 10;
+        cursor: pointer;
+        transition: fill 0.3s ease;
+    }
+
+    {{ $lot->modal_selector ?? 'svg g *' }}:hover {
+        fill: rgba(0, 200, 0, 0.6) !important;
+    }
+</style>
+
 				<div class="card shadow-sm">
 								<div class="card-header">
 												<h3 class="card-title">Configurador: {{ $lot->name }}</h3>
@@ -95,7 +109,7 @@
 
 @push('scripts')
 				<script>
-								let selector = "svg g *";
+								let selector = @json($lot->modal_selector ?? 'svg g *');
 								window.Laravel = {
 												csrfToken: "{{ csrf_token() }}",
 												routes: {

@@ -146,20 +146,20 @@
 																																				</div>
 																																				<div class="col-4">
 																																								<div class="label text-modal">Mensualidad</div>
-																																								<div class="value text-primary fw-bold">$8,295.00</div>
+																																								<div class="value text-primary fw-bold" id="loteMensualidad">$8,295.00</div>
 																																				</div>
 																																				<div class="col-4">
 																																								<div class="label text-modal">Monto Financiado</div>
-																																								<div class="value fw-bold">$497,700</div>
+																																								<div class="value fw-bold" id="loteMontoFinanciado">$497,700</div>
 																																				</div>
 
 																																				<div class="col-4">
 																																								<div class="label text-modal">Contra Entrega</div>
-																																								<div class="value text-primary fw-bold">$120,700</div>
+																																								<div class="value text-primary fw-bold" id="loteContraEntrega">$120,700</div>
 																																				</div>
 																																				<div class="col-4">
 																																								<div class="label text-modal">Costo total</div>
-																																								<div class="value text-primary fw-bold">$711,000.00</div>
+																																								<div class="value text-primary fw-bold" id="loteCostoTotal">$711,000.00</div>
 																																				</div>
 																																</div>
 

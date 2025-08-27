@@ -18,5 +18,7 @@ class Desarrollos extends Model
         'project_id',
         'phase_id',
         'stage_id',
+        'modal_color',    // nuevo campo
+        'modal_selector', // nuevo campo
     ];
 }
