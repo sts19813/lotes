@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DesarrollosController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\LeadController;
-
+use App\Http\Controllers\ReportController;
 Route::get('/', function () {
     return view('dashboard');
 });
@@ -52,3 +52,7 @@ Route::get('/api/projects/{id}/phases', [DesarrollosController::class, 'getPhase
 Route::get('/api/projects/{project}/phases/{phase}/stages', [DesarrollosController::class, 'getStages']);
 
 
+ Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
+
+    // GET directo para descargar desde Admin (botón descargar)
+    Route::get('/reports/{id}/download', [ReportController::class, 'download'])->name('reports.download');

@@ -1,11 +1,53 @@
 @extends('layouts.iframe')
 
 @section('title', 'Configurador de Lote')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('content')
 
 				<link rel="stylesheet" href="/assets/css/configurador.css">
 				<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+				<style>
+								.table {
+												font-family: 'Inter', sans-serif;
+												/* Fuente limpia como en la imagen */
+												font-size: 0.95rem;
+								}
+
+								.table th {
+												font-weight: 600;
+												color: #333;
+								}
+
+								.table td {
+												vertical-align: middle;
+								}
+
+								.table td,
+								.table th {
+												border: none !important;
+								}
+
+								.table-light {
+												font-weight: bold !important;
+												--bs-table-bg: #FFFFFF !important;
+								}
+
+								.text-success {
+												color: #1c9e4d !important;
+												/* Verde como el de la imagen */
+								}
+
+								.text-primary {
+												color: #1a73e8 !important;
+												/* Azul tipo Google */
+								}
+
+								.fw-semibold {
+												font-weight: 600;
+								}
+				</style>
 
 				<div class="card shadow-sm">
 								<div class="card-body text-center">
@@ -64,8 +106,7 @@
 																												<label class="label">Porcentaje de enganche</label>
 																												<select class="form-select form-select-sm">
 																																<option>30% de enganche</option>
-																																<option>40% de enganche</option>
-																																<option>50% de enganche</option>
+
 																												</select>
 																								</div>
 																								<p class="label"> Monto de Enganche: <strong>$213,300.00 MXN</strong></p>
@@ -74,32 +115,15 @@
 																								<div class="linea-discontinua "></div>
 																								<!-- Planes -->
 																								<div class="row row-cols-2 g-3 mt-3">
+
 																												<div class="col">
-																																<div class="plan-box">
-																																				<p class="mb-1 fw-bold">Contado</p>
-																																				<small>$680,000.00</small><br>
-																																				<small>10% descuento</small>
-																																</div>
-																												</div>
-																												<div class="col">
-																																<div class="plan-box">
-																																				<p class="mb-1 fw-bold">24 Meses</p>
-																																				<small>$16,925.00</small><br>
-																																				<small>Mensuales</small>
-																																</div>
-																												</div>
-																												<div class="col">
-																																<div class="plan-box">
-																																				<p class="mb-1 fw-bold">32 Meses</p>
-																																				<small>$13,925.00</small><br>
-																																				<small>Mensuales</small>
-																																</div>
-																												</div>
-																												<div class="col">
-																																<div class="plan-box active">
-																																				<p class="mb-1 fw-bold">60 Meses</p>
-																																				<small>$8,925.00</small><br>
-																																				<small>Mensuales</small>
+																																<div class="plan-box active" style="padding: 40px;">
+																																				<img src="/assets/img/Plan.svg" width="80">
+																																				<p class="mb-1 fw-bold"> <span style="font-size: 44px;">60</span> <br> <span
+																																												style="font-size: 12px;">Meses</span></p>
+																																				<small id="monthlyPayment"
+																																								style="font-size: 13px;font-family: 'Poppins';color: #F2F2F2 !important;">$0</small><br>
+																																				<small style="color: #D9D9D6; font-family: poppins; font-size: 13px;">Mensuales</small>
 																																</div>
 																												</div>
 																								</div>
@@ -129,7 +153,11 @@
 																																<div class="row g-3 mt-4">
 																																				<div class="col-6">
 																																								<div class="label text-modal">Enganche</div>
-																																								<div class="value text-primary fw-bold">30%</div>
+																																								<div class="d-flex gap-2">
+																																												<span class="value text-primary fw-bold" id="loteEnganchePorcentaje">30%</span>
+																																												<span class="value text-primary fw-bold">( <span
+																																																				id="loteContraEntrega">$0</span> )</span>
+																																								</div>
 																																				</div>
 																																				<div class="col-3">
 																																								<div class="label text-modal">Intereses</div>
@@ -152,15 +180,14 @@
 																																								<div class="label text-modal">Monto Financiado</div>
 																																								<div class="value fw-bold" id="loteMontoFinanciado">$497,700</div>
 																																				</div>
-
-																																				<div class="col-4">
-																																								<div class="label text-modal">Contra Entrega</div>
-																																								<div class="value text-primary fw-bold" id="loteContraEntrega">$120,700</div>
-																																				</div>
 																																				<div class="col-4">
 																																								<div class="label text-modal">Costo total</div>
 																																								<div class="value text-primary fw-bold" id="loteCostoTotal">$711,000.00</div>
 																																				</div>
+																																				<div class="col-4">
+
+																																				</div>
+
 																																</div>
 
 
@@ -176,21 +203,21 @@
 																																<!-- Tarjetas -->
 																																<div class="row g-3 mb-3">
 																																				<div class="col-6">
-																																								<div class="card p-3 shadow-sm text-center background-verde">
+																																								<div class="card p-3 text-center background-verde">
 																																												<img src="/assets/img/dinero.svg" alt="logo" class="mt-4 logos-modal">
 																																												<small class="text-modal-card">Plusvalía Total</small>
 																																												<h6 class="fw-bold text-success">$719,074.97</h6>
 																																								</div>
 																																				</div>
 																																				<div class="col-6">
-																																								<div class="card p-3 shadow-sm text-center background-azul">
+																																								<div class="card p-3 text-center background-azul">
 																																												<img src="/assets/img/mira.svg" alt="logo" class="mt-4 logos-modal">
 																																												<small class="text-modal-card">ROI Proyectado</small>
 																																												<h6 class="fw-bold text-primary">101.14%</h6>
 																																								</div>
 																																				</div>
 																																				<div class="col-6">
-																																								<div class="card p-3 shadow-sm text-center background-morado">
+																																								<div class="card p-3 text-center background-morado">
 																																												<img src="/assets/img/calendario.svg" alt="logo"
 																																																class="mt-4 logos-modal">
 																																												<small class="text-modal-card">Plusvalía Anual</small>
@@ -198,7 +225,7 @@
 																																								</div>
 																																				</div>
 																																				<div class="col-6">
-																																								<div class="card p-3 shadow-sm text-center background-amarillo">
+																																								<div class="card p-3 text-center background-amarillo">
 																																												<img src="/assets/img/arriba.svg" alt="logo" class="mt-4 logos-modal">
 																																												<small class="text-modal-card">Valor Final</small>
 																																												<h6 class="fw-bold text-danger">$1,430,074.97</h6>
@@ -208,7 +235,7 @@
 
 																																<!-- Tabla -->
 																																<div class="table-responsive small mb-3">
-																																				<table class="table table-sm table-bordered">
+																																				<table class="table table-sm table-borderless">
 																																								<thead class="table-light">
 																																												<tr>
 																																																<th>Año</th>
@@ -268,17 +295,21 @@
 																				<form id="downloadForm" action="{{ route('leads.store') }}" method="POST" class="mt-3">
 																								@csrf
 																								<div class="mb-3">
-																												<input type="text" class="form-control" name="name" placeholder="Nombre Completo"
-																																required>
+																												<input type="text" class="form-control" name="name" id="leadName"
+																																placeholder="Nombre Completo" required>
+
 																								</div>
 																								<div class="mb-3">
-																												<input type="text" class="form-control" name="phone" placeholder="Celular" required>
+																												<input type="text" class="form-control" name="phone" id="leadPhone"
+																																placeholder="Celular" required>
 																								</div>
 																								<div class="mb-3">
-																												<input type="email" class="form-control" name="email" placeholder="Correo" required>
+																												<input type="email" class="form-control" name="email" id="leadEmail"
+																																placeholder="Correo" required>
 																								</div>
 																								<div class="mb-3">
-																												<input type="text" class="form-control" name="city" placeholder="Ciudad" required>
+																												<input type="text" class="form-control" name="city" id="leadCity"
+																																placeholder="Ciudad" required>
 																								</div>
 
 																								<!-- HIDDEN FIELDS -->
@@ -300,8 +331,6 @@
 @endsection
 
 @push('scripts')
-			
-
 				<script>
 								let selector = @json($lot->modal_selector ?? 'svg g *');
 
@@ -320,8 +349,6 @@
 
 								window.idDesarrollo = {{ $lot->id }};
 								let redireccion = true;
-
-
 				</script>
 				<script src="/assets/js/iframe.js"></script>
 @endpush

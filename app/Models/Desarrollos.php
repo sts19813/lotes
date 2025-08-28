@@ -20,5 +20,8 @@ class Desarrollos extends Model
         'stage_id',
         'modal_color',    // nuevo campo
         'modal_selector', // nuevo campo
+        'color_primario',    // nuevo campo
+        'color_acento',      // nuevo campo
+        'financing_months', 
     ];
 }
