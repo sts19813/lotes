@@ -300,11 +300,11 @@
 @endsection
 
 @push('scripts')
-				<script>
-								let selector = "svg g *";
-				</script>
+			
 
 				<script>
+								let selector = @json($lot->modal_selector ?? 'svg g *');
+
 								window.Laravel = {
 												csrfToken: "{{ csrf_token() }}",
 												routes: {
