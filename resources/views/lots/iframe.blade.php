@@ -48,13 +48,12 @@
 												font-weight: 600;
 								}
 				</style>
-				<div class="card shadow-sm">
-								<div class="card-body text-center">
+								<div class="text-center">
 												<div style="position: relative; display: inline-block;">
 
 																{{-- Imagen base PNG --}}
 																@if ($lot->png_image)
-																				<img src="{{ asset('/' . $lot->png_image) }}" alt="PNG" style="width:900px; height:auto;">
+																				<img src="{{ asset('/' . $lot->png_image) }}" alt="PNG" style="width:100%; height:auto;">
 																@endif
 
 																{{-- SVG encima --}}
@@ -90,7 +89,7 @@
 																</div>
 
 												</div>
-								</div>
+							
 				</div>
 				<!-- Modal Cotizador -->
 				<div class="modal fade" id="polygonModal" tabindex="-1" aria-labelledby="polygonModalLabel" aria-hidden="true">

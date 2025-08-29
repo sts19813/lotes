@@ -121,13 +121,32 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (!svgElement) return;
 
                     // Helper para pintar el elemento y todos sus hijos
-                    const paintAll = (color) => {
-                        if (!color) return;
-                        svgElement.querySelectorAll('*').forEach(el => {
-                            el.style.setProperty('fill', color, 'important');
-                        });
-                        svgElement.style.setProperty('fill', color, 'important');
+                  const paintAll = (color) => {
+                    if (!color) return;
+
+                    // Función para convertir #RRGGBBAA a rgba()
+                    const hex8ToRgba = (hex8) => {
+                        hex8 = hex8.replace('#', '');
+                        if (hex8.length === 8) {
+                            const r = parseInt(hex8.substring(0, 2), 16);
+                            const g = parseInt(hex8.substring(2, 4), 16);
+                            const b = parseInt(hex8.substring(4, 6), 16);
+                            const a = parseInt(hex8.substring(6, 8), 16) / 255;
+                            return `rgba(${r},${g},${b},${a.toFixed(2)})`;
+                        }
+                        return hex8; // si no tiene alpha, devolver tal cual
                     };
+
+                    const finalColor = hex8ToRgba(color);
+
+                    svgElement.querySelectorAll('*').forEach(el => {
+                        el.removeAttribute('fill'); // elimina cualquier fill inline
+                        el.style.setProperty('fill', finalColor, 'important');
+                    });
+
+                    svgElement.removeAttribute('fill');
+                    svgElement.style.setProperty('fill', finalColor, 'important');
+                };
 
                     // 1) Pintar color base si existe
                     if (dbLote.color) paintAll(dbLote.color);
