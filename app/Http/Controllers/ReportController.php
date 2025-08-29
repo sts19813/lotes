@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Report;
+use App\Mail\CotizacionGenerada;
+use Illuminate\Support\Facades\Mail;
 
 class ReportController extends Controller
 {
+
+    public function index()
+    {
+        $reports = Report::latest()->paginate(10);
+
+        return view('reports.index', compact('reports'));
+    }
     public function generate(Request $request)
     {
         $data = $request->validate([
@@ -95,17 +104,53 @@ class ReportController extends Controller
             'chepinaUrl' => $chepinaUrl,
         ]);
 
-        // Generar PDF
-        $pdf = Pdf::loadView('reports.cotizacion', ['lot' => (object) $pdfData])
-            ->setPaper('a4', 'portrait')
-            ->getDomPDF()
-            ->set_option('isRemoteEnabled', true);
+    
 
-        return Pdf::loadView('reports.cotizacion', ['lot' => (object) $pdfData])
-                  ->setPaper('a4', 'portrait')
-                  ->download('cotizacion_'.$data['name'].'.pdf');
+        $pdf = Pdf::loadView('reports.cotizacion', ['lot' => (object) $pdfData])
+                ->setPaper('a4', 'portrait')
+                ->output(); // importante: usar ->output() para pasar a Mail
+
+        // Enviar al usuario
+        if (!empty($data['lead_email'])) {
+            Mail::to($data['lead_email'])->send(new CotizacionGenerada((object)$pdfData, $pdf));
+        }
+
+        // Enviar al admin
+        Mail::to('hi@davidsabido.com	')->send(new CotizacionGenerada((object)$pdfData, $pdf));
+
+        // Retornar descarga al navegador
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf;
+        }, 'cotizacion_'.$data['name'].'.pdf');
     }
 
-    // Descargar directamente por admin desde panel (GET)
+    public function download(Report $report)
+    {
+        // reconstruir arreglo con las mismas llaves que en generate()
+        $pdfData = [
+            'name' => $report->name,
+            'area' => $report->area,
+            'price_square_meter' => $report->price_square_meter,
+            'precioTotal' => $report->precio_total,
+            'enganchePorc' => $report->enganche_porcentaje,
+            'engancheMonto' => $report->enganche_monto,
+            'meses' => $report->financing_months,
+            'mensualidad' => $report->mensualidad,
+            'plusvaliaRate' => $report->annual_appreciation,
+            'plusvaliaTotal' => $report->plusvalia_total,
+            'roi' => $report->roi,
+            'chepinaUrl' => $report->chepina_url,
+            'lead_name' => $report->lead_name,
+            'lead_phone' => $report->lead_phone,
+            'lead_email' => $report->lead_email,
+            'city' => $report->city,
+            'years' => $report->years_data ?? [],
+        ];
+
+        $pdf = Pdf::loadView('reports.cotizacion', ['lot' => (object) $pdfData])
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('cotizacion_'.$report->name.'.pdf');
+    }
    
 }

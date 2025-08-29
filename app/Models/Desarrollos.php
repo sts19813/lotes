@@ -23,5 +23,8 @@ class Desarrollos extends Model
         'color_primario',    // nuevo campo
         'color_acento',      // nuevo campo
         'financing_months', 
+        'redirect_return',   // 🔗 nuevo campo
+        'redirect_next',     // 🔗 nuevo campo
+        'redirect_previous', // 🔗 nuevo campo
     ];
 }

@@ -24,6 +24,8 @@ Route::post('/lots/{lot}/save-polygon', [DesarrollosController::class, 'savePoly
 
 
 Route::get('/iframe/{lot}/', [DesarrollosController::class, 'iframe'])->name('lots.iframe');
+
+
 Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
 
@@ -55,4 +57,6 @@ Route::get('/api/projects/{project}/phases/{phase}/stages', [DesarrollosControll
  Route::post('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
 
     // GET directo para descargar desde Admin (botón descargar)
-    Route::get('/reports/{id}/download', [ReportController::class, 'download'])->name('reports.download');
+Route::get('/reports/{report}/download', [ReportController::class, 'download'])
+     ->name('reports.download');
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

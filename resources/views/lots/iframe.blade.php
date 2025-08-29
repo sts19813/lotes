@@ -48,24 +48,50 @@
 												font-weight: 600;
 								}
 				</style>
-
 				<div class="card shadow-sm">
 								<div class="card-body text-center">
 												<div style="position: relative; display: inline-block;">
+
+																{{-- Imagen base PNG --}}
 																@if ($lot->png_image)
 																				<img src="{{ asset('/' . $lot->png_image) }}" alt="PNG" style="width:900px; height:auto;">
 																@endif
 
+																{{-- SVG encima --}}
 																@if ($lot->svg_image)
 																				<div style="position: absolute; top:0; left:0; width:100%;">
 																								{!! file_get_contents(public_path($lot->svg_image)) !!}
 																				</div>
 																@endif
+
+																{{-- 🔗 Iconos flotantes --}}
+																<div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 8px;">
+																				@if ($lot->redirect_return)
+																								<a href="{{ route('lots.iframe', $lot->redirect_return) }}"
+																												class="" title="Regresar">
+																												<img src="{{ asset('assets/controes/Regresar.svg') }}" alt="Regresar"
+																																style="height:24px;">
+																								</a>
+																				@endif
+																				@if ($lot->redirect_previous)
+																								<a href="{{ route('lots.iframe', $lot->redirect_previous) }}"
+																												class="" title="Anterior">
+																												<img src="{{ asset('assets/controes/Anterior.svg') }}" alt="Anterior"
+																																style="height:24px;">
+																								</a>
+																				@endif
+																				@if ($lot->redirect_next)
+																								<a href="{{ route('lots.iframe', $lot->redirect_next) }}"
+																												class="" title="Siguiente">
+																												<img src="{{ asset('assets/controes/Siguiente.svg') }}" alt="Siguiente"
+																																style="height:24px;">
+																								</a>
+																				@endif
+																</div>
+
 												</div>
 								</div>
 				</div>
-
-
 				<!-- Modal Cotizador -->
 				<div class="modal fade" id="polygonModal" tabindex="-1" aria-labelledby="polygonModalLabel" aria-hidden="true">
 								<div class="modal-dialog modal-xl modal-dialog-centered">
@@ -154,7 +180,8 @@
 																																				<div class="col-6">
 																																								<div class="label text-modal">Enganche</div>
 																																								<div class="d-flex gap-2">
-																																												<span class="value text-primary fw-bold" id="loteEnganchePorcentaje">30%</span>
+																																												<span class="value text-primary fw-bold"
+																																																id="loteEnganchePorcentaje">30%</span>
 																																												<span class="value text-primary fw-bold">( <span
 																																																				id="loteContraEntrega">$0</span> )</span>
 																																								</div>

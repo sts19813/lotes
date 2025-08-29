@@ -37,11 +37,11 @@
 
                 <!--begin: iFrames -->
                 <div class="menu-item">
-                    <a class="menu-link" href="#">
+                    <a class="menu-link" href="/reports">
                         <span class="menu-icon">
                             <i class="ki-outline ki-element-7 fs-2"></i>
                         </span>
-                        <span class="menu-title">iFrames</span>
+                        <span class="menu-title">reportes</span>
                     </a>
                 </div>
                 <!--end: iFrames -->
