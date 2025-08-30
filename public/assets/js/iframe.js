@@ -121,32 +121,32 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (!svgElement) return;
 
                     // Helper para pintar el elemento y todos sus hijos
-                  const paintAll = (color) => {
-                    if (!color) return;
+                    const paintAll = (color) => {
+                        if (!color) return;
 
-                    // Función para convertir #RRGGBBAA a rgba()
-                    const hex8ToRgba = (hex8) => {
-                        hex8 = hex8.replace('#', '');
-                        if (hex8.length === 8) {
-                            const r = parseInt(hex8.substring(0, 2), 16);
-                            const g = parseInt(hex8.substring(2, 4), 16);
-                            const b = parseInt(hex8.substring(4, 6), 16);
-                            const a = parseInt(hex8.substring(6, 8), 16) / 255;
-                            return `rgba(${r},${g},${b},${a.toFixed(2)})`;
-                        }
-                        return hex8; // si no tiene alpha, devolver tal cual
+                        // Función para convertir #RRGGBBAA a rgba()
+                        const hex8ToRgba = (hex8) => {
+                            hex8 = hex8.replace('#', '');
+                            if (hex8.length === 8) {
+                                const r = parseInt(hex8.substring(0, 2), 16);
+                                const g = parseInt(hex8.substring(2, 4), 16);
+                                const b = parseInt(hex8.substring(4, 6), 16);
+                                const a = parseInt(hex8.substring(6, 8), 16) / 255;
+                                return `rgba(${r},${g},${b},${a.toFixed(2)})`;
+                            }
+                            return hex8; // si no tiene alpha, devolver tal cual
+                        };
+
+                        const finalColor = hex8ToRgba(color);
+
+                        svgElement.querySelectorAll('*').forEach(el => {
+                            el.removeAttribute('fill'); // elimina cualquier fill inline
+                            el.style.setProperty('fill', finalColor, 'important');
+                        });
+
+                        svgElement.removeAttribute('fill');
+                        svgElement.style.setProperty('fill', finalColor, 'important');
                     };
-
-                    const finalColor = hex8ToRgba(color);
-
-                    svgElement.querySelectorAll('*').forEach(el => {
-                        el.removeAttribute('fill'); // elimina cualquier fill inline
-                        el.style.setProperty('fill', finalColor, 'important');
-                    });
-
-                    svgElement.removeAttribute('fill');
-                    svgElement.style.setProperty('fill', finalColor, 'important');
-                };
 
                     // 1) Pintar color base si existe
                     if (dbLote.color) paintAll(dbLote.color);
@@ -201,6 +201,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const lote = window.currentLoteInfo;
             if (!lote) return alert("Error: no se seleccionó un lote");
 
+            const submitBtn = document.getElementById("submitBtn");
+            const btnText = submitBtn.querySelector(".btn-text");
+            const spinner = submitBtn.querySelector(".spinner-border");
+
+            // 🔄 Mostrar loader y deshabilitar botón
+            submitBtn.disabled = true;
+            spinner.classList.remove("d-none");
+            btnText.textContent = "Enviando...";
+
             const fd = new FormData();
             fd.append("_token", document.querySelector('meta[name="csrf-token"]').content);
             fd.append("name", lote.name);
@@ -215,17 +224,22 @@ document.addEventListener("DOMContentLoaded", function () {
             fd.append("lead_phone", document.querySelector("#leadPhone").value);
             fd.append("lead_email", document.querySelector("#leadEmail").value);
             fd.append("city", document.querySelector("#leadCity").value);
+            
+
+            fd.append("desarrollo_id", window.currentLot.desarrollo_id);
+            fd.append("desarrollo_name", window.currentLot.desarrollo_name);
+            fd.append("phase_id", window.currentLot.phase_id);
+            fd.append("stage_id", window.currentLot.stage_id);
 
             fetch("/reports/generate", { method: "POST", body: fd })
                 .then(async res => {
                     if (!res.ok) {
-                        // Si el backend devuelve un error HTTP, intenta leerlo como JSON
                         const errorText = await res.text();
                         console.error("Error del servidor:", errorText);
                         alert("Ocurrió un error. Revisa la consola.");
                         throw new Error(errorText);
                     }
-                    return res.blob(); // Si todo va bien, devuelve el PDF
+                    return res.blob();
                 })
                 .then(blob => {
                     const url = window.URL.createObjectURL(blob);
@@ -236,11 +250,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     a.click();
                     a.remove();
                     window.URL.revokeObjectURL(url);
+
+                    // ✅ Cerrar modal automáticamente
+                    const downloadFormModalEl = document.getElementById('downloadFormModal');
+                    const downloadFormModal = bootstrap.Modal.getInstance(downloadFormModalEl);
+                    if (downloadFormModal) downloadFormModal.hide();
+
+                    // Opcional: limpiar formulario
+                    form.reset();
                 })
                 .catch(err => {
                     console.error("Fetch fallo:", err);
+                    alert("Ocurrió un error al generar la cotización.");
+                })
+                .finally(() => {
+                    // 🔄 Restaurar botón
+                    submitBtn.disabled = false;
+                    spinner.classList.add("d-none");
+                    btnText.textContent = "ENVIAR Y DESCARGAR";
                 });
         });
+
     }
 });
 

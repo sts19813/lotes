@@ -31,6 +31,10 @@ class ReportController extends Controller
             'lead_phone' => 'nullable|string',
             'lead_email' => 'nullable|string',
             'city' => 'nullable|string',
+            'desarrollo_id' => 'nullable|integer',
+            'desarrollo_name' => 'nullable|string',
+            'phase_id' => 'nullable|integer',
+            'stage_id' => 'nullable|integer',
         ]);
 
         // Cálculos principales
@@ -87,6 +91,10 @@ class ReportController extends Controller
                 'roi' => round($roi, 2),
                 'years_data' => $years,
                 'chepina_url' => $chepinaUrl,
+                'desarrollo_id' => $data['desarrollo_id'] ?? null,
+                'desarrollo_name' => $data['desarrollo_name'] ?? null,
+                'phase_id' => $data['phase_id'] ?? null,
+                'stage_id' => $data['stage_id'] ?? null,
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -102,6 +110,11 @@ class ReportController extends Controller
             'roi' => $roi,
             'years' => $years,
             'chepinaUrl' => $chepinaUrl,
+               // ✅ NUEVOS CAMPOS para PDF
+            'desarrollo_id' => $data['desarrollo_id'] ?? null,
+            'desarrollo_name' => $data['desarrollo_name'] ?? null,
+            'phase_id' => $data['phase_id'] ?? null,
+            'stage_id' => $data['stage_id'] ?? null,
         ]);
 
     
@@ -145,6 +158,10 @@ class ReportController extends Controller
             'lead_email' => $report->lead_email,
             'city' => $report->city,
             'years' => $report->years_data ?? [],
+            'desarrollo_id' => $report->desarrollo_id,
+            'desarrollo_name' => $report->desarrollo_name,
+            'phase_id' => $report->phase_id,
+            'stage_id' => $report->stage_id,
         ];
 
         $pdf = Pdf::loadView('reports.cotizacion', ['lot' => (object) $pdfData])

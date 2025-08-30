@@ -29,6 +29,10 @@ class Report extends Model
         'roi',
         'years_data', // json de los años
         'chepina_url',
+        'desarrollo_id',
+        'desarrollo_name',
+        'phase_id',
+        'stage_id',
     ];
 
     protected $casts = [

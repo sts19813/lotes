@@ -97,7 +97,7 @@
 												<div class="modal-content" style="border-radius: 10px; overflow: hidden;">
 																<div class="row g-0">
 																				<!-- LADO IZQUIERDO -->
-																				<div class="col-md-6 p-4 text-white" style="background:#927A94;">
+																				<div class="col-md-6 p-4 text-white"  style="background: {{ $lot->modal_color ?? '#927A94' }};">
 
 																								<img src="/assets/img/title.svg" alt="logo">
 
@@ -344,8 +344,9 @@
 																								<input type="hidden" name="stage_id" value="{{ $lot->stage_id }}">
 																								<input type="hidden" name="lot_number" id="lotNumberHidden" value="">
 
-																								<button type="submit" class="btn btn-light w-100" style="border-radius: 25px; color:black;">
-																												ENVIAR Y DESCARGAR
+																								<button type="submit" id="submitBtn" class="btn btn-light w-100" style="border-radius: 25px; color:black;">
+																									<span class="btn-text">ENVIAR Y DESCARGAR</span>
+																									<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
 																								</button>
 																				</form>
 

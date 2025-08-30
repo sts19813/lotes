@@ -46,6 +46,19 @@
                     <tr><td>Área</td><td>{{ number_format($lot->area,2) }} m²</td></tr>
                     <tr><td>Precio m²</td><td>${{ number_format($lot->price_square_meter,2) }}</td></tr>
                     <tr><td>Precio Total</td><td>${{ number_format($lot->precioTotal,2) }}</td></tr>
+
+                    {{-- ✅ NUEVOS CAMPOS --}}
+                    @if(isset($lot->desarrollo_name))
+                    <tr><td>Desarrollo</td><td>{{ $lot->desarrollo_name }} (ID: {{ $lot->desarrollo_id ?? '-' }})</td></tr>
+                    @endif
+
+                    @if(isset($lot->phase_id))
+                    <tr><td>Phase ID</td><td>{{ $lot->phase_id }}</td></tr>
+                    @endif
+
+                    @if(isset($lot->stage_id))
+                    <tr><td>Stage ID</td><td>{{ $lot->stage_id }}</td></tr>
+                    @endif
                 </tbody>
             </table>
         </div>
