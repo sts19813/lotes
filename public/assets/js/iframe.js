@@ -216,7 +216,8 @@ document.addEventListener("DOMContentLoaded", function () {
             fd.append("area", lote.area);
             fd.append("price_square_meter", lote.price_square_meter);
             fd.append("down_payment_percent", lote.down_payment_percent || 30);
-            fd.append("financing_months", lote.financing_months || 60);
+            fd.append("financing_months", window.currentLot.financing_months || 60);
+            debugger
             fd.append("annual_appreciation", lote.annual_appreciation || 0.15);
             fd.append("chepina", lote.chepina);
 
@@ -224,10 +225,10 @@ document.addEventListener("DOMContentLoaded", function () {
             fd.append("lead_phone", document.querySelector("#leadPhone").value);
             fd.append("lead_email", document.querySelector("#leadEmail").value);
             fd.append("city", document.querySelector("#leadCity").value);
-            
 
-            fd.append("desarrollo_id", window.currentLot.desarrollo_id);
-            fd.append("desarrollo_name", window.currentLot.desarrollo_name);
+
+            fd.append("desarrollo_id", window.currentLot.id);
+            fd.append("desarrollo_name", window.currentLot.name);
             fd.append("phase_id", window.currentLot.phase_id);
             fd.append("stage_id", window.currentLot.stage_id);
 
@@ -304,11 +305,19 @@ function llenarModal(lote) {
     document.querySelector("#tab1 .col-3 .value.fw-bold").textContent = `${intereses}%`;
     document.querySelector("#tab1 .col-3:nth-child(3) .value.fw-bold").textContent = `${descuento}%`;
 
-    const meses = lote.financing_months || 60;
+    const meses = window.currentLot?.financing_months || lote.financing_months || 60;
+
+
+    // En la tarjeta del lado izquierdo (plan-box)
+    const planBox = document.querySelector(".plan-box p span");
+    if (planBox) {
+        planBox.textContent = meses;
+    }
     const mensualidad = (precioTotal - engancheMonto) / meses;
     document.querySelector("#tab1 .col-4 .value.fw-bold").textContent = `${meses} meses`;
     document.getElementById("loteMensualidad").textContent = `$${mensualidad.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
     document.getElementById("monthlyPayment").textContent = `$${mensualidad.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+
     document.getElementById("loteMontoFinanciado").textContent = `$${(precioTotal - engancheMonto).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
     document.getElementById("loteContraEntrega").textContent = `$${engancheMonto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
     document.getElementById("loteCostoTotal").textContent = `$${precioTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
@@ -329,9 +338,16 @@ function llenarModal(lote) {
     const tbody = document.querySelector(".table-responsive tbody");
     if (tbody) {
         tbody.innerHTML = "";
-        for (let year = 0; year <= 5; year++) {
+
+        const totalAnios = Math.ceil(meses / 12);
+
+        for (let year = 0; year <= totalAnios; year++) {
             const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
-            const montoPagado = (year >= 1) ? mensualidad * 12 * year + engancheMonto : engancheMonto;
+
+            // Lo pagado hasta ese año (enganche + mensualidades de ese año)
+            const mesesPagados = Math.min(meses, year * 12); // nunca más meses de los que tiene el plan
+            const montoPagado = engancheMonto + (mensualidad * mesesPagados);
+
             const plusvaliaAcum = valorProp - precioTotal;
             const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
             const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
@@ -339,12 +355,12 @@ function llenarModal(lote) {
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${year}</td>
-                <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                <td class="${plusColor}">+${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                <td class="${roiColor}">${roiAnual.toFixed(2)}%</td>
-            `;
+            <td>${year}</td>
+            <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            <td class="${plusColor}">+${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            <td class="${roiColor}">${roiAnual.toFixed(2)}%</td>
+        `;
             tbody.appendChild(tr);
         }
     }

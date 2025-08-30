@@ -83,7 +83,8 @@
         </tbody>
     </table>
 
-    <h3>Simulador de Plusvalía (5 años)</h3>
+    <h3>Simulador de Plusvalía ({{ ceil($lot->meses / 12) }} años)</h3>
+
     <div class="row">
         <div class="col summary-box">
             <div class="purple-header">Plusvalía Total</div>

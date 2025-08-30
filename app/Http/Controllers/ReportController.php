@@ -49,20 +49,26 @@ class ReportController extends Controller
 
         // Proyección anual
         $years = [];
-        for ($year = 0; $year <= 5; $year++) {
-            $valorProp = $precioTotal * pow(1 + $plusvaliaRate, $year);
-            $montoPagado = ($year >= 1) ? ($mensualidad * 12 * $year + $engancheMonto) : $engancheMonto;
-            $plusvaliaAcum = $valorProp - $precioTotal;
-            $roiAnual = ($valorProp - $precioTotal) / $precioTotal * 100;
+        $totalAnios = (int) ceil($meses / 12);
 
-            $years[] = [
-                'year' => $year,
-                'valorProp' => $valorProp,
-                'montoPagado' => $montoPagado,
-                'plusvaliaAcum' => $plusvaliaAcum,
-                'roiAnual' => $roiAnual,
-            ];
-        }
+        for ($year = 0; $year <= $totalAnios; $year++) {
+        $valorProp = $precioTotal * pow(1 + $plusvaliaRate, $year);
+
+        // Lo pagado hasta ese año (enganche + mensualidades de ese año)
+        $mesesPagados = min($meses, $year * 12);
+        $montoPagado = $engancheMonto + ($mensualidad * $mesesPagados);
+
+        $plusvaliaAcum = $valorProp - $precioTotal;
+        $roiAnual = ($valorProp - $precioTotal) / $precioTotal * 100;
+
+        $years[] = [
+            'year' => $year,
+            'valorProp' => $valorProp,
+            'montoPagado' => $montoPagado,
+            'plusvaliaAcum' => $plusvaliaAcum,
+            'roiAnual' => $roiAnual,
+        ];
+    }
 
         $chepinaUrl = $data['chepina'] ? url($data['chepina']) : url('/assets/img/CHEPINA.svg');
 
