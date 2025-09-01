@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <title>Cotización #{{ $lot->name }}</title>
     <style>
-        body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 12px; color:#222; margin: 25px; }
-        h1 { font-size: 24px; margin-bottom: 10px; }
+        body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 12px; color:#000; margin: 25px; background: #fff; }
+        h1 { font-size: 24px; margin-bottom: 10px; color:#000; }
         .row { display: flex; width: 100%; gap: 20px; margin-bottom: 12px; }
         .col { flex: 1; }
-        table { width:100%; border-collapse: collapse; margin-bottom: 10px; }
-        table th, table td { border: 1px solid #d0cfcf; padding: 8px; vertical-align: middle; }
-        .table-light th { background:#f8f8f8; font-weight:600; }
-        .purple-header { background:#9a7f91; color:#fff; font-weight:700; text-align:center; padding:10px; }
-        .summary-box { border:1px solid #d0cfcf; padding:8px; background:#faf7fb; }
+        table { width:100%; border-collapse: collapse; margin-bottom: 10px; color:#000; }
+        table th, table td { border: 1px solid #000; padding: 8px; vertical-align: middle; }
+        .table-light th { background:#eee; font-weight:600; color:#000; }
+        .purple-header { background:#000; color:#fff; font-weight:700; text-align:center; padding:10px; }
+        .summary-box { border:1px solid #000; padding:8px; background:#f9f9f9; color:#000; }
         .small { font-size: 11px; }
         .big-right { text-align:right; font-weight:700; }
-        .table-plusvalia th { background:#9a7f91; color:#fff; padding:10px; }
-        .text-success { color: #2a8f48; }
-        .text-primary { color:#3b6fb8; }
-        .footnotes { font-size:10px; margin-top:8px; color:#666; }
+        .table-plusvalia th { background:#000; color:#fff; padding:10px; }
+        .text-success { color: #000; font-weight:700; }
+        .text-primary { color:#000; font-weight:700; }
+        .footnotes { font-size:10px; margin-top:8px; color:#000; }
         .logo { width:140px; }
     </style>
 </head>
@@ -47,7 +47,7 @@
                     <tr><td>Precio m²</td><td>${{ number_format($lot->price_square_meter,2) }}</td></tr>
                     <tr><td>Precio Total</td><td>${{ number_format($lot->precioTotal,2) }}</td></tr>
 
-                    {{-- ✅ NUEVOS CAMPOS --}}
+                    {{-- Nuevos Campos --}}
                     @if(isset($lot->desarrollo_name))
                     <tr><td>Desarrollo</td><td>{{ $lot->desarrollo_name }} (ID: {{ $lot->desarrollo_id ?? '-' }})</td></tr>
                     @endif
