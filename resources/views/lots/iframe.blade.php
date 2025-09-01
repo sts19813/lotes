@@ -176,13 +176,14 @@
 
 																																<!-- Datos principales -->
 																																<div class="row g-3 mt-4">
-																																				<div class="col-12 col-md-6 col-lg-3">
+																																				<div class="col-12 col-md-6 col-lg-6">
 																																								<div class="label text-modal">Enganche</div>
 																																								<div class="d-flex gap-2">
 																																												<span class="value text-primary fw-bold"
 																																																id="loteEnganchePorcentaje">30%</span>
-																																												<span class="value text-primary fw-bold">( <span
-																																																				id="loteContraEntrega">$0</span> )</span>
+																																												<span class="value text-primary fw-bold" style="white-space: nowrap;">
+																																																( <span id="loteContraEntrega">$0</span> )
+																																												</span>
 																																								</div>
 																																				</div>
 																																				<div class="col-3">
