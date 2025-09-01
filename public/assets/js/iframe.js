@@ -323,7 +323,8 @@ function llenarModal(lote) {
     document.getElementById("loteCostoTotal").textContent = `$${precioTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
 
     // --- PROYECCIÓN PLUSVALÍA & ROI 5 AÑOS ---
-    const plusvaliaRate = lote.annual_appreciation || 0.15;
+    const plusvaliaRate = parseFloat(window.currentLot.plusvalia) || 0.15;
+    
     const valorFinal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
     const plusvaliaTotal = valorFinal - precioTotal; // 👈 Plusvalía acumulada
     const roi = ((valorFinal - precioTotal) / precioTotal) * 100;
@@ -341,31 +342,31 @@ function llenarModal(lote) {
 
     const tbody = document.querySelector(".table-responsive tbody");
     if (tbody) {
-        tbody.innerHTML = "";
+    tbody.innerHTML = "";
 
-        const totalAnios = 5; //Math.ceil(meses / 12);
+    const totalAnios = 5; //Math.ceil(meses / 12);
 
-        for (let year = 0; year <= totalAnios; year++) {
-            const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
+    for (let year = 0; year <= totalAnios; year++) {
+        const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
 
-            // Lo pagado hasta ese año (enganche + mensualidades de ese año)
-            const mesesPagados = Math.min(meses, year * 12); // nunca más meses de los que tiene el plan
-            const montoPagado = engancheMonto + (mensualidad * mesesPagados);
+        // Lo pagado hasta ese año (enganche + mensualidades de ese año)
+        const mesesPagados = Math.min(meses, year * 12); // nunca más meses de los que tiene el plan
+        const montoPagado = engancheMonto + (mensualidad * mesesPagados);
 
-            const plusvaliaAcum = valorProp - precioTotal;
-            const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
-            const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
-            const roiColor = roiAnual > 0 ? "text-primary fw-semibold" : "";
+        const plusvaliaAcum = valorProp - precioTotal;
+        const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
+        const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
+        const roiColor = roiAnual > 0 ? "text-primary fw-semibold" : "";
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
             <td>${year}</td>
-            <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            <td class="${plusColor}">+${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="${plusColor}">+$${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td class="${roiColor}">${roiAnual.toFixed(2)}%</td>
         `;
-            tbody.appendChild(tr);
-        }
+        tbody.appendChild(tr);
     }
+}
 }

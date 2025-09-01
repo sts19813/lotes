@@ -26,5 +26,7 @@ class Desarrollos extends Model
         'redirect_return',   // 🔗 nuevo campo
         'redirect_next',     // 🔗 nuevo campo
         'redirect_previous', // 🔗 nuevo campo
+        'plusvalia', // 👈 nuevo campo
+
     ];
 }
