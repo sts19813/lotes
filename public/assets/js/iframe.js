@@ -339,7 +339,7 @@ function llenarModal(lote) {
     if (tbody) {
         tbody.innerHTML = "";
 
-        const totalAnios = Math.ceil(meses / 12);
+        const totalAnios = 5; //Math.ceil(meses / 12);
 
         for (let year = 0; year <= totalAnios; year++) {
             const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
