@@ -302,8 +302,8 @@ function llenarModal(lote) {
     const intereses = lote.interest_rate || 0;
     const descuento = lote.discount_percent || 0;
     document.querySelector("#tab1 .value.text-primary.fw-bold").textContent = `${enganchePorc}%`;
-    document.querySelector("#tab1 .col-3 .value.fw-bold").textContent = `${intereses}%`;
-    document.querySelector("#tab1 .col-3:nth-child(3) .value.fw-bold").textContent = `${descuento}%`;
+    document.querySelector("#loteIntereses").textContent = `${intereses}%`;
+    document.querySelector("#loteDescuento").textContent = `${descuento}%`;
 
     const meses = window.currentLot?.financing_months || lote.financing_months || 60;
 
