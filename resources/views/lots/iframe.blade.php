@@ -47,6 +47,10 @@
 								.fw-semibold {
 												font-weight: 600;
 								}
+
+								#divloteDescuento, #divloteIntereses {
+												display: none
+								}
 				</style>
 				<div class="text-center">
 								<div style="position: relative; display: inline-block;">
@@ -186,11 +190,11 @@
 																																												</span>
 																																								</div>
 																																				</div>
-																																				<div class="col-3">
+																																				<div class="col-3" id="divloteIntereses">
 																																								<div class="label text-modal">Intereses</div>
 																																								<div class="value fw-bold" id="loteIntereses">8%</div>
 																																				</div>
-																																				<div class="col-3">
+																																				<div class="col-3" id="divloteDescuento">
 																																								<div class="label text-modal">Descuento</div>
 																																								<div class="value fw-bold" id="loteDescuento">8%</div>
 																																				</div>
