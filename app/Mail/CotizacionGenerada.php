@@ -40,9 +40,6 @@ class CotizacionGenerada extends Mailable
     public function build()
     {
         return $this->subject('Tu cotización - ' . $this->lot->name)
-                    ->markdown('emails.cotizacion')
-                    ->attachData($this->pdf, 'cotizacion_'.$this->lot->name.'.pdf', [
-                        'mime' => 'application/pdf',
-                    ]);
+                    ->markdown('emails.cotizacion');
     }
 }

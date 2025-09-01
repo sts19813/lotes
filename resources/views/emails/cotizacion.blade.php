@@ -11,7 +11,7 @@ Se ha generado tu cotización con los siguientes datos:
 
 {{-- ✅ NUEVOS CAMPOS --}}
 @if(isset($lot->desarrollo_name))
-- **Desarrollo:** {{ $lot->desarrollo_name }} (ID: {{ $lot->desarrollo_id ?? '-' }})
+- **Desarrollo:** {{ $lot->desarrollo_name }}
 @endif
 
 @if(isset($lot->phase_id))
