@@ -324,12 +324,16 @@ function llenarModal(lote) {
 
     // --- PROYECCIÓN PLUSVALÍA & ROI 5 AÑOS ---
     const plusvaliaRate = lote.annual_appreciation || 0.15;
-    const plusvaliaTotal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
-    const roi = ((plusvaliaTotal - precioTotal) / precioTotal) * 100;
-    document.querySelector(".background-verde h6").textContent = `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    const valorFinal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
+    const plusvaliaTotal = valorFinal - precioTotal; // 👈 Plusvalía acumulada
+    const roi = ((valorFinal - precioTotal) / precioTotal) * 100;
+
+    document.querySelector(".background-verde h6").textContent =
+    `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
     document.querySelector(".background-azul h6").textContent = `${roi.toFixed(2)}%`;
     document.querySelector(".background-morado h6").textContent = `${(plusvaliaRate * 100).toFixed(0)}%`;
-    document.querySelector(".background-amarillo h6").textContent = `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.querySelector(".background-amarillo h6").textContent =
+    `$${valorFinal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
 
     // --- TAB 2 CHEPINA ---
     const chepinaImg = document.getElementById("chepinaIMG");
