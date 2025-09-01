@@ -309,7 +309,7 @@
 				<div class="modal fade" id="downloadFormModal" tabindex="-1" aria-labelledby="downloadFormModalLabel"
 								aria-hidden="true">
 								<div class="modal-dialog modal-md modal-dialog-centered">
-												<div class="modal-content" style="border-radius: 15px; overflow: hidden; background:#927A94; color:white;">
+												<div class="modal-content" style="border-radius: 15px; overflow: hidden; color:white; background: {{ $lot->modal_color ?? '#927A94' }}; ">
 
 																<div class="p-4 text-center">
 																				<h5 class="fw-bold mt-4 mb-4">TUS DATOS</h5>
