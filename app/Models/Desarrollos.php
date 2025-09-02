@@ -15,6 +15,7 @@ class Desarrollos extends Model
         'total_lots',
         'svg_image',
         'png_image',
+        'path_logo',
         'project_id',
         'phase_id',
         'stage_id',
