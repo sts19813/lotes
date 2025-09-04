@@ -34,7 +34,8 @@ Route::post('/Savelotes', [LoteController::class, 'store'])->name('lotes.store')
 
 
 // Listar desarrollos
-Route::get('/desarrollos', [DesarrollosController::class, 'index'])->name('desarrollos.index');
+Route::get('/', [DesarrollosController::class, 'index'])->name('desarrollos.index');
+Route::get('/admin', [DesarrollosController::class, 'admin'])->name('admin.index');
 
 // Crear
 Route::get('/desarrollos/create', [DesarrollosController::class, 'create'])->name('desarrollos.create');

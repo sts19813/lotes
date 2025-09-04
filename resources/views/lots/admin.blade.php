@@ -26,7 +26,9 @@
 <div class="card card-flush shadow-sm">
     <div class="card-header ">
         <h3 class="card-title">Desarrollos</h3>
-       
+        <div class="card-toolbar">
+            <a href="{{ route('desarrollos.create') }}" class="btn btn-primary">Nuevo Desarrollo</a>
+        </div>
     </div>
 
     <div class="card-body">
@@ -68,14 +70,20 @@
                     </td>
                     <td>{{ $lot->created_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        
+                        <a href="{{ route('lots.configurator', $lot->id) }}" 
+                           class="btn btn-sm btn-primary">
+                            Configurar
+                        </a>
                     
                         <a href="{{ url('iframe/' . $lot->id) }}" 
                            class="btn btn-sm btn-secondary" target="_blank">
                             Iframe
                         </a>
                     
-                      
+                        <a href="{{ route('desarrollos.edit', $lot->id) }}" 
+                           class="btn btn-sm btn-warning">
+                            Editar
+                        </a>
                     </td>
                 </tr>
                 @endforeach

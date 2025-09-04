@@ -30,6 +30,13 @@ class DesarrollosController extends Controller
         return view('lots.index', compact('lots'));
     }
 
+    public function admin()
+    {
+        $lots = Desarrollos::orderBy('created_at', 'desc')->get();
+
+        return view('lots.admin', compact('lots'));
+    }
+
     //trae todos los resultados de los lotes
     public function fetch(Request $request)
     {
