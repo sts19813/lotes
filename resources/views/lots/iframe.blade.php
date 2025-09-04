@@ -47,49 +47,47 @@
 								.fw-semibold {
 												font-weight: 600;
 								}
+
+								#divloteDescuento, #divloteIntereses {
+												display: none
+								}
 				</style>
-								<div class="text-center">
-												<div style="position: relative; display: inline-block;">
+				<div class="text-center">
+								<div style="position: relative; display: inline-block;">
 
-																{{-- Imagen base PNG --}}
-																@if ($lot->png_image)
-																				<img src="{{ asset('/' . $lot->png_image) }}" alt="PNG" style="width:100%; height:auto;">
-																@endif
+												{{-- Imagen base PNG --}}
+												@if ($lot->png_image)
+																<img src="{{ asset('/' . $lot->png_image) }}" alt="PNG" style="width:100%; height:auto;">
+												@endif
 
-																{{-- SVG encima --}}
-																@if ($lot->svg_image)
-																				<div style="position: absolute; top:0; left:0; width:100%;">
-																								{!! file_get_contents(public_path($lot->svg_image)) !!}
-																				</div>
-																@endif
-
-																{{-- 🔗 Iconos flotantes --}}
-																<div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 8px;">
-																				@if ($lot->redirect_return)
-																								<a href="{{ route('lots.iframe', $lot->redirect_return) }}"
-																												class="" title="Regresar">
-																												<img src="{{ asset('assets/controes/Regresar.svg') }}" alt="Regresar"
-																																style="height:24px;">
-																								</a>
-																				@endif
-																				@if ($lot->redirect_previous)
-																								<a href="{{ route('lots.iframe', $lot->redirect_previous) }}"
-																												class="" title="Anterior">
-																												<img src="{{ asset('assets/controes/Anterior.svg') }}" alt="Anterior"
-																																style="height:24px;">
-																								</a>
-																				@endif
-																				@if ($lot->redirect_next)
-																								<a href="{{ route('lots.iframe', $lot->redirect_next) }}"
-																												class="" title="Siguiente">
-																												<img src="{{ asset('assets/controes/Siguiente.svg') }}" alt="Siguiente"
-																																style="height:24px;">
-																								</a>
-																				@endif
+												{{-- SVG encima --}}
+												@if ($lot->svg_image)
+																<div style="position: absolute; top:0; left:0; width:100%;">
+																				{!! file_get_contents(public_path($lot->svg_image)) !!}
 																</div>
+												@endif
 
+												{{-- 🔗 Iconos flotantes --}}
+												<div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 8px;">
+																@if ($lot->redirect_return)
+																				<a href="{{ route('lots.iframe', $lot->redirect_return) }}" class="" title="Regresar">
+																								<img src="{{ asset('assets/controes/Regresar.svg') }}" alt="Regresar" style="height:24px;">
+																				</a>
+																@endif
+																@if ($lot->redirect_previous)
+																				<a href="{{ route('lots.iframe', $lot->redirect_previous) }}" class="" title="Anterior">
+																								<img src="{{ asset('assets/controes/Anterior.svg') }}" alt="Anterior" style="height:24px;">
+																				</a>
+																@endif
+																@if ($lot->redirect_next)
+																				<a href="{{ route('lots.iframe', $lot->redirect_next) }}" class="" title="Siguiente">
+																								<img src="{{ asset('assets/controes/Siguiente.svg') }}" alt="Siguiente" style="height:24px;">
+																				</a>
+																@endif
 												</div>
-							
+
+								</div>
+
 				</div>
 				<!-- Modal Cotizador -->
 				<div class="modal fade" id="polygonModal" tabindex="-1" aria-labelledby="polygonModalLabel" aria-hidden="true">
@@ -97,27 +95,32 @@
 												<div class="modal-content" style="border-radius: 10px; overflow: hidden;">
 																<div class="row g-0">
 																				<!-- LADO IZQUIERDO -->
-																				<div class="col-md-6 p-4 text-white"  style="background: {{ $lot->modal_color ?? '#927A94' }};">
+																				<div class="col-md-6 p-4 text-white" style="background: {{ $lot->modal_color ?? '#927A94' }};">
 
-																								<img src="/assets/img/title.svg" alt="logo">
+																								<div class="d-flex justify-content-between align-items-start">
+																												<img src="/assets/img/title.svg" alt="logo">
 
-																								<div class="linea-discontinua "></div>
+																												<!-- Botón cerrar solo en tablets y celulares -->
+																												<button type="button" class="btn-close d-md-none" data-bs-dismiss="modal" aria-label="Cerrar"
+																																style="position: absolute; top: 15px; right: 15px; filter: invert(1);">
+																												</button>
+																								</div>
 
 
-																								<div class="info-container">
-																												<div class="info-item">
+																								<div class="info-container row g-3">
+																												<div class="info-item col-12 col-md-6 col-lg-3">
 																																<span class="label">Lote</span>
 																																<strong class="value" id="loteName">629</strong>
 																												</div>
-																												<div class="info-item">
+																												<div class="info-item col-12 col-md-6 col-lg-3">
 																																<span class="label">Área</span>
 																																<strong class="value" id="lotearea">200.0 m²</strong>
 																												</div>
-																												<div class="info-item">
+																												<div class="info-item col-12 col-md-6 col-lg-3">
 																																<span class="label">Precio m²</span>
 																																<strong class="value" id="lotePrecioMetro">$2,912.50</strong>
 																												</div>
-																												<div class="info-item">
+																												<div class="info-item col-12 col-md-6 col-lg-3">
 																																<span class="label">Precio</span>
 																																<strong class="value" id="lotePrecioTotal">$711,000.00</strong>
 																												</div>
@@ -173,86 +176,86 @@
 																								<div class="tab-content">
 																												<div id="tab1" class="active mt-4">
 
-																																<img src="/assets/img/resumen.svg" alt="logo" class="mt-4">
+																																<img src="/assets/img/resumen.svg" alt="logo" class="mt-4 img-fluid">
 
+																																<!-- Datos principales -->
 																																<div class="row g-3 mt-4">
-																																				<div class="col-6">
+																																				<div class="col-12 col-md-6 col-lg-6">
 																																								<div class="label text-modal">Enganche</div>
 																																								<div class="d-flex gap-2">
 																																												<span class="value text-primary fw-bold"
 																																																id="loteEnganchePorcentaje">30%</span>
-																																												<span class="value text-primary fw-bold">( <span
-																																																				id="loteContraEntrega">$0</span> )</span>
+																																												<span class="value text-primary fw-bold" style="white-space: nowrap;">
+																																																( <span id="loteContraEntrega">$0</span> )
+																																												</span>
 																																								</div>
 																																				</div>
-																																				<div class="col-3">
+																																				<div class="col-3" id="divloteIntereses">
 																																								<div class="label text-modal">Intereses</div>
-																																								<div class="value fw-bold">8%</div>
+																																								<div class="value fw-bold" id="loteIntereses">8%</div>
 																																				</div>
-																																				<div class="col-3">
+																																				<div class="col-3" id="divloteDescuento">
 																																								<div class="label text-modal">Descuento</div>
-																																								<div class="value fw-bold">8%</div>
+																																								<div class="value fw-bold" id="loteDescuento">8%</div>
 																																				</div>
 
 																																				<div class="col-4">
 																																								<div class="label text-modal">Financiamiento</div>
-																																								<div class="value fw-bold">60 meses</div>
+																																								<div class="value fw-bold" id="loteFinanciamiento">60 meses</div>
 																																				</div>
-																																				<div class="col-4">
+																																				<div class="col-12 col-md-6 col-lg-4">
 																																								<div class="label text-modal">Mensualidad</div>
 																																								<div class="value text-primary fw-bold" id="loteMensualidad">$8,295.00</div>
 																																				</div>
-																																				<div class="col-4">
+																																				<div class="col-12 col-md-6 col-lg-4">
 																																								<div class="label text-modal">Monto Financiado</div>
 																																								<div class="value fw-bold" id="loteMontoFinanciado">$497,700</div>
 																																				</div>
-																																				<div class="col-4">
+																																				<div class="col-12 col-md-6 col-lg-4">
 																																								<div class="label text-modal">Costo total</div>
 																																								<div class="value text-primary fw-bold" id="loteCostoTotal">$711,000.00</div>
 																																				</div>
-																																				<div class="col-4">
-
-																																				</div>
-
 																																</div>
 
+																																<div class="linea-discontinua-black mt-4"></div>
 
-																																<div class="linea-discontinua-black "></div>
+																																<img src="/assets/img/simulador de plusvalía.svg" alt="logo" class="mt-4 img-fluid">
 
-
-																																<img src="/assets/img/simulador de plusvalía.svg" alt="logo" class="mt-4">
-
-																																<p class="text-modal label mt-4">Proyección de plusvalía a <strong>5 años</strong> de
-																																				acuerdo al plan <br> de pagos
-																																				seleccionado</p>
+																																<p class="text-modal label mt-4">
+																																				Proyección de plusvalía a <strong>5 años</strong> de acuerdo al plan <br> de pagos
+																																				seleccionado
+																																</p>
 
 																																<!-- Tarjetas -->
 																																<div class="row g-3 mb-3">
-																																				<div class="col-6">
-																																								<div class="card p-3 text-center background-verde">
-																																												<img src="/assets/img/dinero.svg" alt="logo" class="mt-4 logos-modal">
+																																				<div class="col-12 col-md-6">
+																																								<div class="card p-3 text-center background-verde h-100">
+																																												<img src="/assets/img/dinero.svg" alt="logo"
+																																																class="mt-4 logos-modal img-fluid">
 																																												<small class="text-modal-card">Plusvalía Total</small>
 																																												<h6 class="fw-bold text-success">$719,074.97</h6>
 																																								</div>
 																																				</div>
-																																				<div class="col-6">
-																																								<div class="card p-3 text-center background-azul">
-																																												<img src="/assets/img/mira.svg" alt="logo" class="mt-4 logos-modal">
+																																				<div class="col-12 col-md-6">
+																																								<div class="card p-3 text-center background-azul h-100">
+																																												<img src="/assets/img/mira.svg" alt="logo"
+																																																class="mt-4 logos-modal img-fluid">
 																																												<small class="text-modal-card">ROI Proyectado</small>
 																																												<h6 class="fw-bold text-primary">101.14%</h6>
 																																								</div>
 																																				</div>
-																																				<div class="col-6">
-																																								<div class="card p-3 text-center background-morado">
+																																				<div class="col-12 col-md-6">
+																																								<div class="card p-3 text-center background-morado h-100">
 																																												<img src="/assets/img/calendario.svg" alt="logo"
-																																																class="mt-4 logos-modal">
+																																																class="mt-4 logos-modal img-fluid">
 																																												<small class="text-modal-card">Plusvalía Anual</small>
 																																												<h6 class="fw-bold">15%</h6>
 																																								</div>
 																																				</div>
-																																				<div class="col-6">
-																																								<div class="card p-3 text-center background-amarillo">
-																																												<img src="/assets/img/arriba.svg" alt="logo" class="mt-4 logos-modal">
+																																				<div class="col-12 col-md-6">
+																																								<div class="card p-3 text-center background-amarillo h-100">
+																																												<img src="/assets/img/arriba.svg" alt="logo"
+																																																class="mt-4 logos-modal img-fluid">
 																																												<small class="text-modal-card">Valor Final</small>
 																																												<h6 class="fw-bold text-danger">$1,430,074.97</h6>
 																																								</div>
@@ -287,13 +290,14 @@
 																																				Los cálculos consideran el plan de financiamiento y la ubicación <br>
 																																				Esta es una proyección basada en tendencias históricas del mercado
 																																</p>
-
 																												</div>
+
 																												<div id="tab2">
-																																<img src="/assets/img/CHEPINA.svg" alt="logo" class="mt-4">
-																																<img id="chepinaIMG" src="" alt="Lote" class="chepina">
+																																<img src="/assets/img/CHEPINA.svg" alt="logo" class="mt-4 img-fluid">
+																																<img id="chepinaIMG" src="" alt="Lote" class="chepina img-fluid">
 																												</div>
 																								</div>
+
 
 
 
@@ -309,7 +313,8 @@
 				<div class="modal fade" id="downloadFormModal" tabindex="-1" aria-labelledby="downloadFormModalLabel"
 								aria-hidden="true">
 								<div class="modal-dialog modal-md modal-dialog-centered">
-												<div class="modal-content" style="border-radius: 15px; overflow: hidden; background:#927A94; color:white;">
+												<div class="modal-content"
+																style="border-radius: 15px; overflow: hidden; color:white; background: {{ $lot->modal_color ?? '#927A94' }}; ">
 
 																<div class="p-4 text-center">
 																				<h5 class="fw-bold mt-4 mb-4">TUS DATOS</h5>
@@ -344,9 +349,11 @@
 																								<input type="hidden" name="stage_id" value="{{ $lot->stage_id }}">
 																								<input type="hidden" name="lot_number" id="lotNumberHidden" value="">
 
-																								<button type="submit" id="submitBtn" class="btn btn-light w-100" style="border-radius: 25px; color:black;">
-																									<span class="btn-text">ENVIAR Y DESCARGAR</span>
-																									<span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+																								<button type="submit" id="submitBtn" class="btn btn-light w-100"
+																												style="border-radius: 25px; color:black;">
+																												<span class="btn-text">ENVIAR Y DESCARGAR</span>
+																												<span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
+																																aria-hidden="true"></span>
 																								</button>
 																				</form>
 

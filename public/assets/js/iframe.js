@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
             fd.append("price_square_meter", lote.price_square_meter);
             fd.append("down_payment_percent", lote.down_payment_percent || 30);
             fd.append("financing_months", window.currentLot.financing_months || 60);
-            debugger
+            
             fd.append("annual_appreciation", lote.annual_appreciation || 0.15);
             fd.append("chepina", lote.chepina);
 
@@ -231,6 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
             fd.append("desarrollo_name", window.currentLot.name);
             fd.append("phase_id", window.currentLot.phase_id);
             fd.append("stage_id", window.currentLot.stage_id);
+            fd.append("project_id", window.currentLot.project_id);
 
             fetch("/reports/generate", { method: "POST", body: fd })
                 .then(async res => {
@@ -302,8 +303,8 @@ function llenarModal(lote) {
     const intereses = lote.interest_rate || 0;
     const descuento = lote.discount_percent || 0;
     document.querySelector("#tab1 .value.text-primary.fw-bold").textContent = `${enganchePorc}%`;
-    document.querySelector("#tab1 .col-3 .value.fw-bold").textContent = `${intereses}%`;
-    document.querySelector("#tab1 .col-3:nth-child(3) .value.fw-bold").textContent = `${descuento}%`;
+    document.querySelector("#loteIntereses").textContent = `${intereses}%`;
+    document.querySelector("#loteDescuento").textContent = `${descuento}%`;
 
     const meses = window.currentLot?.financing_months || lote.financing_months || 60;
 
@@ -323,13 +324,17 @@ function llenarModal(lote) {
     document.getElementById("loteCostoTotal").textContent = `$${precioTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
 
     // --- PROYECCIÓN PLUSVALÍA & ROI 5 AÑOS ---
-    const plusvaliaRate = lote.annual_appreciation || 0.15;
-    const plusvaliaTotal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
-    const roi = ((plusvaliaTotal - precioTotal) / precioTotal) * 100;
-    document.querySelector(".background-verde h6").textContent = `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    const plusvaliaRate = parseFloat(window.currentLot.plusvalia) || 0.15;
+    const valorFinal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
+    const plusvaliaTotal = valorFinal - precioTotal; // 👈 Plusvalía acumulada
+    const roi = ((valorFinal - precioTotal) / precioTotal) * 100;
+
+    document.querySelector(".background-verde h6").textContent =
+        `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
     document.querySelector(".background-azul h6").textContent = `${roi.toFixed(2)}%`;
     document.querySelector(".background-morado h6").textContent = `${(plusvaliaRate * 100).toFixed(0)}%`;
-    document.querySelector(".background-amarillo h6").textContent = `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.querySelector(".background-amarillo h6").textContent =
+        `$${valorFinal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
 
     // --- TAB 2 CHEPINA ---
     const chepinaImg = document.getElementById("chepinaIMG");
@@ -339,7 +344,7 @@ function llenarModal(lote) {
     if (tbody) {
         tbody.innerHTML = "";
 
-        const totalAnios = Math.ceil(meses / 12);
+        const totalAnios = 5; //Math.ceil(meses / 12);
 
         for (let year = 0; year <= totalAnios; year++) {
             const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
@@ -356,9 +361,9 @@ function llenarModal(lote) {
             const tr = document.createElement("tr");
             tr.innerHTML = `
             <td>${year}</td>
-            <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-            <td class="${plusColor}">+${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+            <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="${plusColor}">+$${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td class="${roiColor}">${roiAnual.toFixed(2)}%</td>
         `;
             tbody.appendChild(tr);

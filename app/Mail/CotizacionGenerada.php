@@ -15,10 +15,11 @@ class CotizacionGenerada extends Mailable
 
     public $lot;
     public $pdf;
+
     /**
      * Create a new message instance.
      */
-     public function __construct($lot, $pdf)
+    public function __construct($lot, $pdf)
     {
         $this->lot = $lot;
         $this->pdf = $pdf;
@@ -30,7 +31,7 @@ class CotizacionGenerada extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Cotizacion Generada',
+            subject: 'Tu cotización - ' . $this->lot->name,
         );
     }
 
@@ -39,10 +40,12 @@ class CotizacionGenerada extends Mailable
      */
     public function build()
     {
-        return $this->subject('Tu cotización - ' . $this->lot->name)
-                    ->markdown('emails.cotizacion')
-                    ->attachData($this->pdf, 'cotizacion_'.$this->lot->name.'.pdf', [
-                        'mime' => 'application/pdf',
-                    ]);
+        return $this->view('emails.cotizacion')
+                    ->with([
+
+                        'desarrollo_logo' => $this->lot->desarrollo_logo ?? null,
+                    ])
+                    ->subject('Tu cotización - ' . $this->lot->name)
+                    ->attachData($this->pdf, 'cotizacion.pdf', ['mime' => 'application/pdf']);
     }
 }

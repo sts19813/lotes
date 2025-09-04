@@ -171,12 +171,12 @@
 }
 
 #downloadFormModal .form-control::placeholder {
-	color: white !important;
+	color: rgb(148, 148, 148) !important;
 	opacity: 1;
 }
 
 #downloadFormModal .form-control {
-	background-color: #B8A4BA;
+	background-color: white;
     border: 0px;
     border-radius: 3px !important;
 }
