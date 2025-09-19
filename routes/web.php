@@ -104,8 +104,8 @@ Route::get('/api/projects/{project}/phases/{phase}/stages', [DesarrollosControll
 // =========================
 // Reports
 // =========================
-Route::post('/reports/generate', [ReportController::class, 'generate'])
-    ->name('reports.generate');
+Route::get('/reports/generate', [ReportController::class, 'generate'])
+     ->name('reports.generate');
 
 Route::get('/reports/{report}/download', [ReportController::class, 'download'])
     ->name('reports.download');

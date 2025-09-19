@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById('downloadForm');
     if (form) {
-        form.addEventListener('submit', function (e) {
+        form.addEventListener("submit", function (e) {
             e.preventDefault();
             const lote = window.currentLoteInfo;
             if (!lote) return alert("Error: no se seleccionó un lote");
@@ -205,68 +205,62 @@ document.addEventListener("DOMContentLoaded", function () {
             const btnText = submitBtn.querySelector(".btn-text");
             const spinner = submitBtn.querySelector(".spinner-border");
 
-            // 🔄 Mostrar loader y deshabilitar botón
+            // Mostrar loader y deshabilitar botón
             submitBtn.disabled = true;
             spinner.classList.remove("d-none");
             btnText.textContent = "Enviando...";
 
-            const fd = new FormData();
-            fd.append("_token", document.querySelector('meta[name="csrf-token"]').content);
-            fd.append("name", lote.name);
-            fd.append("area", lote.area);
-            fd.append("price_square_meter", lote.price_square_meter);
-            fd.append("down_payment_percent", lote.down_payment_percent || 30);
-            fd.append("financing_months", window.currentLot.financing_months || 60);
-            
-            fd.append("annual_appreciation", lote.annual_appreciation || 0.15);
-            fd.append("chepina", lote.chepina);
+            // Construir querystring con todos los datos
+            const params = new URLSearchParams({
+                name: lote.name,
+                area: lote.area,
+                price_square_meter: lote.price_square_meter,
+                down_payment_percent: lote.down_payment_percent || 30,
+                financing_months: window.currentLot.financing_months || 60,
+                annual_appreciation: lote.annual_appreciation || 0.15,
+                chepina: lote.chepina,
+                lead_name: document.querySelector("#leadName").value,
+                lead_phone: document.querySelector("#leadPhone").value,
+                lead_email: document.querySelector("#leadEmail").value,
+                city: document.querySelector("#leadCity").value,
+                desarrollo_id: window.currentLot.id,
+                desarrollo_name: window.currentLot.name,
+                phase_id: window.currentLot.phase_id,
+                stage_id: window.currentLot.stage_id,
+                project_id: window.currentLot.project_id
+            });
 
-            fd.append("lead_name", document.querySelector("#leadName").value);
-            fd.append("lead_phone", document.querySelector("#leadPhone").value);
-            fd.append("lead_email", document.querySelector("#leadEmail").value);
-            fd.append("city", document.querySelector("#leadCity").value);
+            const url = `/reports/generate?${params.toString()}`;
 
-
-            fd.append("desarrollo_id", window.currentLot.id);
-            fd.append("desarrollo_name", window.currentLot.name);
-            fd.append("phase_id", window.currentLot.phase_id);
-            fd.append("stage_id", window.currentLot.stage_id);
-            fd.append("project_id", window.currentLot.project_id);
-
-            fetch("/reports/generate", { method: "POST", body: fd })
-                .then(async res => {
-                    if (!res.ok) {
-                        const errorText = await res.text();
-                        console.error("Error del servidor:", errorText);
-                        alert("Ocurrió un error. Revisa la consola.");
-                        throw new Error(errorText);
-                    }
+            fetch(url)
+                .then(res => {
+                    if (!res.ok) throw new Error("Error al generar PDF");
                     return res.blob();
                 })
                 .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
+                    const blobUrl = URL.createObjectURL(blob);
                     const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "cotizacion.pdf";
+                    a.href = blobUrl;
+                    a.download = `cotizacion_${lote.name}.pdf`;
                     document.body.appendChild(a);
                     a.click();
                     a.remove();
-                    window.URL.revokeObjectURL(url);
+                    URL.revokeObjectURL(blobUrl);
 
-                    // ✅ Cerrar modal automáticamente
-                    const downloadFormModalEl = document.getElementById('downloadFormModal');
+                    // ✅ Cerrar modal solo después de iniciar descarga
+                    const downloadFormModalEl = document.getElementById("downloadFormModal");
                     const downloadFormModal = bootstrap.Modal.getInstance(downloadFormModalEl);
-                    if (downloadFormModal) downloadFormModal.hide();
+                    downloadFormModal?.hide();
 
-                    // Opcional: limpiar formulario
+                    // Limpiar formulario
                     form.reset();
                 })
                 .catch(err => {
-                    console.error("Fetch fallo:", err);
+                    console.error(err);
                     alert("Ocurrió un error al generar la cotización.");
                 })
                 .finally(() => {
-                    // 🔄 Restaurar botón
+                    // Restaurar botón
                     submitBtn.disabled = false;
                     spinner.classList.add("d-none");
                     btnText.textContent = "ENVIAR Y DESCARGAR";
