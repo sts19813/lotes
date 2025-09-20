@@ -277,90 +277,102 @@ function llenarModal(lote) {
     // Guardamos el lote globalmente para usarlo en el submit
     window.currentLoteInfo = lote;
 
-    // Cambiar imagen
-    document.querySelector("#chepinaIMG").src = lote.chepina;
+    // --- IMAGEN ---
+    const chepinaImg = document.getElementById("chepinaIMG");
+    if (chepinaImg) chepinaImg.src = lote.chepina || "/assets/img/CHEPINA.svg";
 
-    // Lote
+    // --- DATOS BASE DEL LOTE ---
     document.querySelector("#loteName").textContent = lote.name;
     document.querySelector("#lotearea").textContent = `${lote.area.toFixed(2)} m²`;
-    document.querySelector("#lotePrecioMetro").textContent = `$${lote.price_square_meter.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.querySelector("#lotePrecioMetro").textContent = formatMoney(lote.price_square_meter);
 
     const precioTotal = lote.area * lote.price_square_meter;
-    document.querySelector("#lotePrecioTotal").textContent = `$${precioTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.querySelector("#lotePrecioTotal").textContent = formatMoney(precioTotal);
 
     // --- FINANCIAMIENTO ---
     const enganchePorc = lote.down_payment_percent || 30;
     const engancheMonto = precioTotal * (enganchePorc / 100);
+
     document.querySelector(".form-select").value = `${enganchePorc}% de enganche`;
-    document.querySelector("p.label strong").textContent = `$${engancheMonto.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN`;
+    document.querySelector("p.label strong").textContent = `${formatMoney(engancheMonto)} MXN`;
 
     const intereses = lote.interest_rate || 0;
     const descuento = lote.discount_percent || 0;
+
     document.querySelector("#tab1 .value.text-primary.fw-bold").textContent = `${enganchePorc}%`;
-    document.querySelector("#loteIntereses").textContent = `${intereses}%`;
-    document.querySelector("#loteDescuento").textContent = `${descuento}%`;
+    document.querySelector("#loteIntereses").textContent = formatPercent(intereses);
+    document.querySelector("#loteDescuento").textContent = formatPercent(descuento);
 
     const meses = window.currentLot?.financing_months || lote.financing_months || 60;
 
-
-    // En la tarjeta del lado izquierdo (plan-box)
+    // Actualizar meses en UI
     const planBox = document.querySelector(".plan-box p span");
-    if (planBox) {
-        planBox.textContent = meses;
-    }
+    if (planBox) planBox.textContent = meses;
+
     const mensualidad = (precioTotal - engancheMonto) / meses;
     document.querySelector("#tab1 .col-4 .value.fw-bold").textContent = `${meses} meses`;
-    document.getElementById("loteMensualidad").textContent = `$${mensualidad.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
-    document.getElementById("monthlyPayment").textContent = `$${mensualidad.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.getElementById("loteMensualidad").textContent = formatMoney(mensualidad);
+    document.getElementById("monthlyPayment").textContent = formatMoney(mensualidad);
 
-    document.getElementById("loteMontoFinanciado").textContent = `$${(precioTotal - engancheMonto).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
-    document.getElementById("loteContraEntrega").textContent = `$${engancheMonto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
-    document.getElementById("loteCostoTotal").textContent = `$${precioTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.getElementById("loteMontoFinanciado").textContent = formatMoney(precioTotal - engancheMonto);
+    document.getElementById("loteContraEntrega").textContent = formatMoney(engancheMonto);
+    document.getElementById("loteCostoTotal").textContent = formatMoney(precioTotal);
 
     // --- PROYECCIÓN PLUSVALÍA & ROI 5 AÑOS ---
-    const plusvaliaRate = parseFloat(window.currentLot.plusvalia) || 0.15;
+    const plusvaliaRate = parseFloat(window.currentLot?.plusvalia) || 0.15;
     const valorFinal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
-    const plusvaliaTotal = valorFinal - precioTotal; // 👈 Plusvalía acumulada
+    const plusvaliaTotal = valorFinal - precioTotal;
     const roi = ((valorFinal - precioTotal) / precioTotal) * 100;
 
-    document.querySelector(".background-verde h6").textContent =
-        `$${plusvaliaTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
-    document.querySelector(".background-azul h6").textContent = `${roi.toFixed(2)}%`;
-    document.querySelector(".background-morado h6").textContent = `${(plusvaliaRate * 100).toFixed(0)}%`;
-    document.querySelector(".background-amarillo h6").textContent =
-        `$${valorFinal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.querySelector(".background-verde h6").textContent = formatMoney(plusvaliaTotal);
+    document.querySelector(".background-azul h6").textContent = formatPercent(roi);
+    document.querySelector(".background-morado h6").textContent = formatPercent(plusvaliaRate * 100);
+    document.querySelector(".background-amarillo h6").textContent = formatMoney(valorFinal);
 
-    // --- TAB 2 CHEPINA ---
-    const chepinaImg = document.getElementById("chepinaIMG");
-    if (chepinaImg) chepinaImg.src = lote.chepina || "/assets/img/CHEPINA.svg";
-
+    // --- TABLA DE PROYECCIÓN ---
     const tbody = document.querySelector(".table-responsive tbody");
     if (tbody) {
         tbody.innerHTML = "";
-
-        const totalAnios = 5; //Math.ceil(meses / 12);
+        const totalAnios = 5; // proyección a 5 años
 
         for (let year = 0; year <= totalAnios; year++) {
             const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
 
-            // Lo pagado hasta ese año (enganche + mensualidades de ese año)
-            const mesesPagados = Math.min(meses, year * 12); // nunca más meses de los que tiene el plan
-            const montoPagado = engancheMonto + (mensualidad * mesesPagados);
+            // Ajuste meses pagados según el año
+            let mesesPagados = 0;
+            if (year === 0) {
+                mesesPagados = 0; // solo enganche
+            } else if (year === 1) {
+                mesesPagados = Math.min(meses, 11);
+            } else {
+                mesesPagados = Math.min(meses, (year - 1) * 12 + 11);
+            }
 
+            const montoPagado = engancheMonto + (mensualidad * mesesPagados);
             const plusvaliaAcum = valorProp - precioTotal;
             const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
+
             const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
             const roiColor = roiAnual > 0 ? "text-primary fw-semibold" : "";
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-            <td>${year}</td>
-            <td>$${valorProp.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td>$${montoPagado.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="${plusColor}">+$${plusvaliaAcum.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="${roiColor}">${roiAnual.toFixed(2)}%</td>
-        `;
+                <td>${year}</td>
+                <td>${formatMoney(valorProp)}</td>
+                <td>${formatMoney(montoPagado)}</td>
+                <td class="${plusColor}">+${formatMoney(plusvaliaAcum)}</td>
+                <td class="${roiColor}">${formatPercent(roiAnual)}</td>
+            `;
             tbody.appendChild(tr);
         }
     }
+}
+
+
+function formatMoney(value) {
+    return `$${value.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function formatPercent(value) {
+    return `${value.toFixed(2)}%`;
 }
