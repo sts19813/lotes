@@ -60,8 +60,14 @@ class ReportController extends Controller
         for ($year = 0; $year <= $totalAnios; $year++) {
             $valorProp = $precioTotal * pow(1 + $plusvaliaRate, $year);
 
-            // Lo pagado hasta ese año (enganche + mensualidades de ese año)
-            $mesesPagados = min($meses, $year * 12);
+            if ($year === 0) {
+                $mesesPagados = 0;
+            } elseif ($year === 1) {
+                $mesesPagados = min($meses, 11);
+            } else {
+                $mesesPagados = min($meses, 11 + (($year - 1) * 12));
+            }
+
             $montoPagado = $engancheMonto + $mensualidad * $mesesPagados;
 
             $plusvaliaAcum = $valorProp - $precioTotal;

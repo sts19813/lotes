@@ -294,11 +294,11 @@
 																				<td>Enganche</td>
 																				<td>{{ $lot->enganchePorc }}% ${{ number_format($lot->engancheMonto, 2) }}</td>
 																</tr>
-																@for ($i = 1; $i <= min($lot->meses, 16); $i++)
-																				<tr>
-																								<td>Mes {{ $i }}</td>
-																								<td>${{ number_format($lot->mensualidad, 2) }}</td>
-																				</tr>
+																@for ($i = 1; $i <= $lot->meses; $i++)
+																	<tr>
+																		<td>Mes {{ $i }}</td>
+																		<td>${{ number_format($lot->mensualidad, 2) }}</td>
+																	</tr>
 																@endfor
 												</tbody>
 								</table>
