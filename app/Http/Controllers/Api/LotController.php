@@ -8,9 +8,26 @@ use App\Models\Lot;
 
 class LotController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        return Lot::with('customFields')->get();
+        $query = Lot::with(['stage.phase.project']);
+
+        if ($request->project_id) {
+            $query->whereHas('stage.phase.project', function($q) use ($request) {
+                $q->where('id', $request->project_id);
+            });
+        }
+        if ($request->phase_id) {
+            $query->whereHas('stage.phase', function($q) use ($request) {
+                $q->where('id', $request->phase_id);
+            });
+        }
+        if ($request->stage_id) {
+            $query->where('stage_id', $request->stage_id);
+        }
+
+        return $query->get();
     }
 
     public function store(Request $request)
@@ -24,39 +41,26 @@ class LotController extends Controller
             'price_square_meter' => 'nullable|numeric',
             'total_price' => 'nullable|numeric',
             'status' => 'nullable|string',
-            'chepina' => 'nullable|string',
+            'chepina' => 'nullable|string'
         ]);
 
         $lot = Lot::create($request->all());
 
-        if ($request->has('custom_fields')) {
-            foreach ($request->custom_fields as $cf) {
-                $lot->customFields()->create($cf);
-            }
-        }
-
-        return response()->json($lot->load('customFields'), 201);
+        return response()->json(
+            $lot->load(['stage.phase.project', 'customFields']),
+            201
+        );
     }
 
     public function show(Lot $lot)
     {
-        return $lot->load('customFields');
+        return $lot->load(['stage.phase.project', 'customFields']);
     }
 
     public function update(Request $request, Lot $lot)
     {
         $lot->update($request->all());
-
-        if ($request->has('custom_fields')) {
-            foreach ($request->custom_fields as $cf) {
-                $lot->customFields()->updateOrCreate(
-                    ['code' => $cf['code']],
-                    ['value' => $cf['value']]
-                );
-            }
-        }
-
-        return response()->json($lot->load('customFields'));
+        return response()->json($lot->load(['stage.phase.project', 'customFields']));
     }
 
     public function destroy(Lot $lot)

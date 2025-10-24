@@ -45,31 +45,49 @@
                 </div>
                 <!--end: iFrames -->
 
-                <div class="menu-item">
-                    <a class="menu-link" href="/projects">
-                        <span class="menu-icon"><i class="ki-outline ki-folder fs-2"></i></span>
-                        <span class="menu-title">Proyectos</span>
-                    </a>
-                </div>
-                <div class="menu-item">
-                    <a class="menu-link" href="/phases">
-                        <span class="menu-icon"><i class="ki-outline ki-timeline fs-2"></i></span>
-                        <span class="menu-title">Fases</span>
-                    </a>
-                </div>
-                <div class="menu-item">
-                    <a class="menu-link" href="/stages">
-                        <span class="menu-icon"><i class="ki-outline ki-layers fs-2"></i></span>
-                        <span class="menu-title">Etapas</span>
-                    </a>
-                </div>
-                <div class="menu-item">
-                    <a class="menu-link" href="/lots">
-                        <span class="menu-icon"><i class="ki-outline ki-grid fs-2"></i></span>
-                        <span class="menu-title">Lotes</span>
-                    </a>
-                </div>
+                <!--begin: CRM Naboo -->
+                <div class="menu-item menu-accordion {{ request()->is('projects*', 'phases*', 'stages*', 'lotsAdara*') ? 'show' : '' }}"
+                    data-kt-menu-trigger="click">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-briefcase fs-2"></i>
+                        </span>
+                        <span class="menu-title">Catálogo Naboo</span>
+                        <span class="menu-arrow"></span>
+                    </span>
 
+                    <div class="menu-sub menu-sub-accordion">
+                        <!-- Proyecto -->
+                        <div class="menu-item">
+                            <a class="menu-link" href="/projects">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Proyectos</span>
+                            </a>
+                        </div>
+                        <!-- Fases -->
+                        <div class="menu-item">
+                            <a class="menu-link" href="/phases">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Fases</span>
+                            </a>
+                        </div>
+                        <!-- Etapas -->
+                        <div class="menu-item">
+                            <a class="menu-link" href="/stages">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Etapas</span>
+                            </a>
+                        </div>
+                        <!-- Lotes -->
+                        <div class="menu-item">
+                            <a class="menu-link" href="/lotsAdara">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Lotes</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!--end: CRM Naboo -->
             </div>
             <!--end::Sidebar menu-->
         </div>

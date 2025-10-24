@@ -3,7 +3,6 @@
 @section('title', 'Consulta de Lotes')
 
 @section('content')
-<div class="app-container container-xxl">
     <div class="card mb-5">
         <div class="card-header">
             <h3 class="card-title">Consultar Lotes</h3>
@@ -20,7 +19,7 @@
                     <select name="project_id" class="form-select form-select-solid" required>
                         <option value="">Seleccione un proyecto...</option>
                         @foreach($projects as $project)
-                        <option value="{{ $project['id'] }}">{{ $project['name'] }}</option>
+                            <option value="{{ $project['id'] }}">{{ $project['name'] }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -71,18 +70,17 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')
-<script>
-    window.Laravel = {
-        csrfToken: "{{ csrf_token() }}",
-        routes: {
-            lotsFetch: "{{ route('lots.fetch') }}"
-        }
-    };
-</script>
+    <script>
+        window.Laravel = {
+            csrfToken: "{{ csrf_token() }}",
+            routes: {
+                lotsFetch: "{{ route('lots.fetch') }}"
+            }
+        };
+    </script>
 
-<script src="{{ asset('assets/js/ApiConsulta.js') }}"></script>
+    <script src="{{ asset('assets/js/ApiConsulta.js') }}"></script>
 @endpush

@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\View\PhaseViewController;
+use App\Http\Controllers\View\StageViewController;
+use App\Http\Controllers\View\LotViewController;
 
 use App\Http\Controllers\View\ProjectViewController;
 Route::view('/', 'login');
@@ -97,6 +100,11 @@ Route::middleware(['auth', AdminMiddleware::class])
 
         //Adara
         Route::get('/projects', [ProjectViewController::class, 'index'])->name('projects.index');
+        Route::get('/phases', [PhaseViewController::class, 'index'])->name('phases.index');
+        Route::get('/stages', [StageViewController::class, 'index'])->name('stages.index');
+        Route::get('/lotsAdara', [LotViewController::class, 'index'])->name('lots.index');
+
+
     
 });
 

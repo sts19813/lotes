@@ -8,9 +8,15 @@ use App\Models\Stage;
 
 class StageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Stage::with('lots', 'customFields')->get();
+        $query = Stage::with(['phase', 'phase.project', 'enterprise', 'lots', 'customFields']);
+
+        if ($request->has('phase_id') && $request->phase_id) {
+            $query->where('phase_id', $request->phase_id);
+        }
+
+        return $query->get();
     }
 
     public function store(Request $request)
@@ -24,19 +30,30 @@ class StageController extends Controller
 
         $stage = Stage::create($request->all());
 
-        // Guardar campos personalizados si vienen
         if ($request->has('custom_fields')) {
             foreach ($request->custom_fields as $cf) {
                 $stage->customFields()->create($cf);
             }
         }
 
-        return response()->json($stage->load('customFields'), 201);
+        return response()->json(
+            $stage->load([
+                'phase.project', 
+                'enterprise',     // 🔹 Agregado
+                'customFields'
+            ]),
+            201
+        );
     }
 
     public function show(Stage $stage)
     {
-        return $stage->load('lots', 'customFields');
+        return $stage->load([
+            'phase.project', 
+            'enterprise',       // 🔹 Agregado
+            'lots', 
+            'customFields'
+        ]);
     }
 
     public function update(Request $request, Stage $stage)
@@ -52,7 +69,13 @@ class StageController extends Controller
             }
         }
 
-        return response()->json($stage->load('customFields'));
+        return response()->json(
+            $stage->load([
+                'phase.project', 
+                'enterprise',       // 🔹 Agregado
+                'customFields'
+            ])
+        );
     }
 
     public function destroy(Stage $stage)

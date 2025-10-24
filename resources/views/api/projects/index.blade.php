@@ -1,36 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-10">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <h1 class="fw-bold text-gray-800">Proyectos</h1>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProject">
-            <i class="ki-duotone ki-plus fs-2"></i> Nuevo Proyecto
-        </button>
-    </div>
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 class="fw-bold text-gray-800">Proyectos</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProject">
+        <i class="ki-duotone ki-plus fs-2"></i> Nuevo Proyecto
+    </button>
+</div>
 
-    <!-- Tabla -->
-    <div class="card">
-        <div class="card-body">
-            <table id="projectsTable" class="table align-middle table-row-dashed fs-6 gy-5">
-                <thead>
-                    <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Usuario</th>
-                        <th>Creado</th>
-                        <th class="text-end">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+<!-- Tabla -->
+<div class="card">
+    <div class="card-body">
+        <table id="projectsTable" class="table align-middle table-row-dashed fs-6 gy-5">
+            <thead>
+                <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Usuario</th>
+                    <th>Creado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
+
 
 <!-- Modal Crear Proyecto -->
 <div class="modal fade" id="modalProject" tabindex="-1" aria-hidden="true">

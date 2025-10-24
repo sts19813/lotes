@@ -8,11 +8,17 @@ use App\Models\Phase;
 
 class PhaseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Phase::with('stages.lots')->get();
-    }
+        $query = Phase::with('project', 'stages.lots');
 
+        if ($request->has('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        return $query->get();
+    }
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -23,18 +29,26 @@ class PhaseController extends Controller
 
         $phase = Phase::create($request->all());
 
-        return response()->json($phase, 201);
+        // ✅ Devolverlo con la relación cargada
+        return response()->json(
+            $phase->load('project'),
+            201
+        );
     }
 
     public function show(Phase $phase)
     {
-        return $phase->load('stages.lots');
+        // ✅ También aquí debe incluir project
+        return $phase->load('project', 'stages.lots');
     }
 
     public function update(Request $request, Phase $phase)
     {
         $phase->update($request->all());
-        return response()->json($phase);
+
+        return response()->json(
+            $phase->load('project')
+        );
     }
 
     public function destroy(Phase $phase)
