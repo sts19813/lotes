@@ -10,6 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Http\Middleware\AdminMiddleware;
 
+use App\Http\Controllers\View\ProjectViewController;
 Route::view('/', 'login');
 
 // =========================
@@ -93,6 +94,10 @@ Route::middleware(['auth', AdminMiddleware::class])
 
         Route::delete('/desarrollos/{desarrollo}', [DesarrollosController::class, 'destroy'])
             ->name('desarrollos.destroy');
+
+        //Adara
+        Route::get('/projects', [ProjectViewController::class, 'index'])->name('projects.index');
+    
 });
 
 // =========================
@@ -112,8 +117,6 @@ Route::get('/reports/{report}/download', [ReportController::class, 'download'])
 
 Route::get('/reports', [ReportController::class, 'index'])
     ->name('reports.index');
-
-
     
 Route::get('/iframe/{lot}/', [DesarrollosController::class, 'iframe'])
     ->name('lots.iframe');
