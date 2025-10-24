@@ -19,15 +19,14 @@ class Desarrollos extends Model
         'project_id',
         'phase_id',
         'stage_id',
-        'modal_color',    // nuevo campo
-        'modal_selector', // nuevo campo
-        'color_primario',    // nuevo campo
-        'color_acento',      // nuevo campo
-        'financing_months', 
-        'redirect_return',   // 🔗 nuevo campo
-        'redirect_next',     // 🔗 nuevo campo
-        'redirect_previous', // 🔗 nuevo campo
-        'plusvalia', // 👈 nuevo campo
-
+        'modal_color',
+        'modal_selector',
+        'color_primario',
+        'color_acento',
+        'financing_months',
+        'redirect_return',
+        'redirect_next',
+        'redirect_previous',
+        'plusvalia'
     ];
 }

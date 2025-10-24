@@ -14,7 +14,7 @@
 
                 <!--begin: Desarrollos -->
                 <div class="menu-item">
-                    <a class="menu-link active" href="/desarrollos">
+                    <a class="menu-link {{ request()->is('desarrollos*') ? 'active' : '' }}" href="/desarrollos">
                         <span class="menu-icon">
                             <i class="ki-outline ki-home-2 fs-2"></i>
                         </span>
@@ -25,7 +25,7 @@
 
                 <!--begin: Consulta Adara -->
                 <div class="menu-item">
-                    <a class="menu-link" href="/consulta">
+                    <a class="menu-link {{ request()->is('consulta*') ? 'active' : '' }}" href="/consulta">
                         <span class="menu-icon">
                             <i class="ki-outline ki-search-list fs-2"></i>
                         </span>
@@ -34,13 +34,13 @@
                 </div>
                 <!--end: Consulta Adara -->
 
-                <!--begin: iFrames -->
+                <!--begin: iFrames / Reportes -->
                 <div class="menu-item">
-                    <a class="menu-link" href="/reports">
+                    <a class="menu-link {{ request()->is('reports*') ? 'active' : '' }}" href="/reports">
                         <span class="menu-icon">
                             <i class="ki-outline ki-element-7 fs-2"></i>
                         </span>
-                        <span class="menu-title">reportes</span>
+                        <span class="menu-title">Reportes</span>
                     </a>
                 </div>
                 <!--end: iFrames -->
@@ -59,28 +59,28 @@
                     <div class="menu-sub menu-sub-accordion">
                         <!-- Proyecto -->
                         <div class="menu-item">
-                            <a class="menu-link" href="/projects">
+                            <a class="menu-link {{ request()->is('projects*') ? 'active' : '' }}" href="/projects">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="menu-title">Proyectos</span>
                             </a>
                         </div>
                         <!-- Fases -->
                         <div class="menu-item">
-                            <a class="menu-link" href="/phases">
+                            <a class="menu-link {{ request()->is('phases*') ? 'active' : '' }}" href="/phases">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="menu-title">Fases</span>
                             </a>
                         </div>
                         <!-- Etapas -->
                         <div class="menu-item">
-                            <a class="menu-link" href="/stages">
+                            <a class="menu-link {{ request()->is('stages*') ? 'active' : '' }}" href="/stages">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="menu-title">Etapas</span>
                             </a>
                         </div>
                         <!-- Lotes -->
                         <div class="menu-item">
-                            <a class="menu-link" href="/lotsAdara">
+                            <a class="menu-link {{ request()->is('lotsAdara*') ? 'active' : '' }}" href="/lotsAdara">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="menu-title">Lotes</span>
                             </a>

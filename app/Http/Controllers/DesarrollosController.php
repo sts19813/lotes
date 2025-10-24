@@ -85,11 +85,20 @@ class DesarrollosController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'total_lots' => 'required|integer|min:1',
-            'svg_image' => 'required|mimes:svg,xml',
-            'png_image' => 'required|image|mimes:png,jpg,jpeg',
-            'project_id' => 'nullable',
-            'phase_id' => 'nullable',
-            'stage_id' => 'nullable',
+            'svg_image' => 'nullable|mimes:svg,xml',
+            'png_image' => 'nullable|image|mimes:png,jpg,jpeg',
+            'project_id' => 'nullable|integer',
+            'phase_id' => 'nullable|integer',
+            'stage_id' => 'nullable|integer',
+            'modal_color' => 'nullable|string|max:10',
+            'modal_selector' => 'nullable|string|max:255',
+            'color_primario' => 'nullable|string|max:50',
+            'color_acento' => 'nullable|string|max:50',
+            'financing_months' => 'nullable|integer|min:0',
+            'redirect_return' => 'nullable|string|max:255',
+            'redirect_next' => 'nullable|string|max:255',
+            'redirect_previous' => 'nullable|string|max:255',
+            'plusvalia' => 'nullable|numeric|min:0|max:100'
         ]);
     
         $data = [
@@ -268,15 +277,27 @@ class DesarrollosController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'project_id' => 'nullable',
-            'phase_id' => 'nullable',
-            'stage_id' => 'nullable',
             'total_lots' => 'required|integer|min:1',
-
+            'svg_image' => 'nullable|mimes:svg,xml',
+            'png_image' => 'nullable|image|mimes:png,jpg,jpeg',
+            'project_id' => 'nullable|integer',
+            'phase_id' => 'nullable|integer',
+            'stage_id' => 'nullable|integer',
+            'modal_color' => 'nullable|string|max:10',
+            'modal_selector' => 'nullable|string|max:255',
+            'color_primario' => 'nullable|string|max:50',
+            'color_acento' => 'nullable|string|max:50',
+            'financing_months' => 'nullable|integer|min:0',
+            'redirect_return' => 'nullable|string|max:255',
+            'redirect_next' => 'nullable|string|max:255',
+            'redirect_previous' => 'nullable|string|max:255',
+            'plusvalia' => 'nullable|numeric|min:0|max:100'
         ]);
 
         $data = $request->only([
-            'name', 'description', 'project_id', 'phase_id', 'stage_id', 'total_lots'
+            'name', 'description', 'total_lots', 'project_id', 'phase_id', 'stage_id',
+            'modal_color', 'modal_selector', 'color_primario', 'color_acento',
+            'financing_months', 'redirect_return', 'redirect_next', 'redirect_previous', 'plusvalia'
         ]);
 
         // Guardar SVG en public/lots si hay archivo
