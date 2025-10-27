@@ -171,6 +171,36 @@ $(document).ready(function () {
         });
     });
 
+    $('#formStage').submit(function(e){
+    e.preventDefault(); // evita que el form haga submit normal
+
+    // Habilitar el select por si estaba disabled
+    $('#phaseSelect').prop('disabled', false);
+
+    const data = {
+        phase_id: $('#phaseSelect').val(),
+        name: $(this).find('input[name="name"]').val(),
+        enterprise_id: $(this).find('select[name="enterprise_id"]').val()
+    };
+
+    $.ajax({
+        url: '/api/stages', // endpoint de tu API
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': $('input[name="_token"]').val() },
+        data: data,
+        success: function(res){
+            $('#modalStage').modal('hide');       // cerrar modal
+            $('#stagesTable').DataTable().ajax.reload(); // recargar tabla
+            $('#formStage')[0].reset();           // limpiar formulario
+            $('#phaseSelect').prop('disabled', true).html('<option>Selecciona primero un Proyecto...</option>');
+        },
+        error: function(err){
+            console.log(err.responseJSON);
+            alert('Ocurrió un error al guardar la etapa.');
+        }
+    });
+});
+
 });
 
 </script>

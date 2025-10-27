@@ -79,16 +79,17 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        $("#lots_table").DataTable({
-            responsive: true,
-            pageLength: 5,
-            language: {
-                url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json"
-            }
-        });
+$(document).ready(function() {
+    $("#lots_table").DataTable({
+        responsive: true,
+        pageLength: 5,
+        lengthMenu: [5, 10, 25, 50],
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json"
+        }
     });
+});
 </script>
-@endsection
+@endpush
