@@ -7,6 +7,15 @@
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLot">
         <i class="ki-duotone ki-plus fs-2"></i> Nuevo Lote
     </button>
+
+    <button id="btnDownloadTemplate" class="btn btn-success">
+        <i class="ki-duotone ki-download fs-2"></i> Descargar Plantilla
+    </button>
+
+    <input type="file" id="inputImport" accept=".xlsx" hidden>
+    <button id="btnImport" class="btn btn-info">
+        <i class="ki-duotone ki-upload fs-2"></i> Importar Lotes
+    </button>
 </div>
 
 <!-- 🔹 Filtros arriba -->
@@ -139,6 +148,8 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <script>
 $(document).ready(function () {
     // 🔹 Inicializar DataTable
@@ -279,6 +290,103 @@ $(document).ready(function () {
                     text: xhr.responseJSON.message
                 });
             });
+    });
+
+    
+    // ✅ Descargar plantilla de lotes en Excel
+    $('#btnDownloadTemplate').on('click', function () {
+        const projectId = $('#filterProject').val();
+        const phaseId = $('#filterPhase').val();
+        const stageId = $('#filterStage').val();
+
+        if (!projectId || !phaseId || !stageId) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Selecciona Proyecto, Fase y Etapa',
+                text: 'Debes usar los filtros para que la plantilla tenga los IDs correctos.'
+            });
+        }
+
+        const instructions = [
+            "⚠️ IMPORTANTE: Los IDs de Proyecto, Fase y Etapa ya están asignados y " +
+            "NO deben modificarse. Capture solo los datos de los campos vacíos."
+        ];
+
+        const header = [
+            "project_id",
+            "phase_id",
+            "stage_id",
+            "name",
+            "depth",
+            "front",
+            "area",
+            "price_square_meter",
+            "total_price",
+            "status",
+            "chepina"
+        ];
+
+        const dataRows = Array.from({ length: 50 }, () => [
+            projectId,
+            phaseId,
+            stageId,
+            "", "", "", "", "", "",
+            "Disponible",
+            ""
+        ]);
+
+        const worksheet = XLSX.utils.aoa_to_sheet([
+            instructions,
+            header,
+            ...dataRows
+        ]);
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Lotes");
+
+        XLSX.writeFile(workbook, "plantilla_lotes.xlsx");
+    });
+
+    $('#btnImport').on('click', () => $('#inputImport').click());
+
+    $('#inputImport').on('change', function() {
+        let file = this.files[0];
+        if (!file) return;
+
+        let formData = new FormData();
+        formData.append('file', file);
+
+        $.ajax({
+            url: '/api/lots/import',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+
+                let message = `✅ Lotes importados: ${response.success}\n\n`;
+
+                if (response.errors.length > 0) {
+                    message += `⚠️ Errores encontrados:\n\n`;
+                    response.errors.forEach(err => {
+                        message += `• ${err}\n`;
+                    });
+                }
+
+                Swal.fire({
+                    icon: response.errors.length > 0 ? 'warning' : 'success',
+                    title: 'Resultado de importación',
+                    html: `<pre style="text-align:left;white-space:pre-wrap">${message}</pre>`,
+                    width: '800px'
+                });
+
+                $('#modalImport').modal('hide');
+                $('#lotsTable').DataTable().ajax.reload();
+            },
+            error: function() {
+                Swal.fire('Error', 'No se pudo procesar el archivo', 'error');
+            }
+        });
     });
 });
 </script>

@@ -16,3 +16,6 @@ Route::apiResource('stages', StageController::class);
 
 // Lotes
 Route::apiResource('lots', LotController::class);
+
+
+Route::post('/lots/import', [LotController::class, 'import']);

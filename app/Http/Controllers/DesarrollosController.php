@@ -76,7 +76,6 @@ class DesarrollosController extends Controller
 
         $projects = $response->successful() ? $response->json() : [];
         return view('lots.create', compact('projects'));
-
     }
 
     public function store(Request $request)
@@ -100,7 +99,7 @@ class DesarrollosController extends Controller
             'redirect_previous' => 'nullable|string|max:255',
             'plusvalia' => 'nullable|numeric|min:0|max:100'
         ]);
-    
+
         $data = [
             'name' => $request->name,
             'description' => $request->description,
@@ -108,20 +107,29 @@ class DesarrollosController extends Controller
             'project_id' => $request->project_id,
             'phase_id' => $request->phase_id,
             'stage_id' => $request->stage_id,
+            'modal_color' => $request->modal_color,
+            'modal_selector' => $request->modal_selector,
+            'color_primario' => $request->color_primario,
+            'color_acento' => $request->color_acento,
+            'financing_months' => $request->financing_months,
+            'redirect_return' => $request->redirect_return,
+            'redirect_next' => $request->redirect_next,
+            'redirect_previous' => $request->redirect_previous,
+            'plusvalia' => $request->plusvalia
         ];
 
         // Guardar SVG en public/lots
         if ($request->hasFile('svg_image')) {
             $svgFilename = time() . '_' . $request->file('svg_image')->getClientOriginalName();
             $request->file('svg_image')->move(public_path('lots'), $svgFilename);
-            $data['svg_image'] = 'lots/' . $svgFilename; // ruta relativa desde public
+            $data['svg_image'] = 'lots/' . $svgFilename;
         }
 
         // Guardar PNG en public/lots
         if ($request->hasFile('png_image')) {
             $pngFilename = time() . '_' . $request->file('png_image')->getClientOriginalName();
             $request->file('png_image')->move(public_path('lots'), $pngFilename);
-            $data['png_image'] = 'lots/' . $pngFilename; // ruta relativa desde public
+            $data['png_image'] = 'lots/' . $pngFilename;
         }
 
         Desarrollos::create($data);
