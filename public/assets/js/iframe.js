@@ -283,7 +283,7 @@ function llenarModal(lote) {
 
     // --- DATOS BASE DEL LOTE ---
     document.querySelector("#loteName").textContent = lote.name;
-    document.querySelector("#lotearea").textContent = `${lote.area.toFixed(2)} m²`;
+    document.querySelector("#lotearea").textContent =`${parseFloat(lote.area).toFixed(2)} m²`;
     document.querySelector("#lotePrecioMetro").textContent = formatMoney(lote.price_square_meter);
 
     const precioTotal = lote.area * lote.price_square_meter;

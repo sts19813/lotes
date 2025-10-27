@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const colorInput = document.getElementById('color');
     const colorActiveInput = document.getElementById('color_active');
 
-
     // Habilitar/deshabilitar inputs extra
     redirectCheckbox.addEventListener('change', function() {
         const enabled = this.checked;
@@ -41,56 +40,64 @@ document.addEventListener('DOMContentLoaded', function () {
             // Limpiar select
             lotSelect.innerHTML = `<option value="">Cargando lotes...</option>`;
 
-            // Usar currentLot para enviar IDs al endpoint
-            const formData = new FormData();
-            formData.append('project_id', window.currentLot.project_id);
-            formData.append('phase_id', window.currentLot.phase_id);
-            formData.append('stage_id', window.currentLot.stage_id);
+            if (window.currentLot.source_type === 'adara') {
+                
+                const formData = new FormData();
+                formData.append('project_id', window.currentLot.project_id);
+                formData.append('phase_id', window.currentLot.phase_id);
+                formData.append('stage_id', window.currentLot.stage_id);
 
-            fetch(window.Laravel.routes.lotsFetch, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
-            })
-            .then(res => res.json())
-            .then(data => {
-                lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
-                data.forEach(lot => {
-                    const opt = document.createElement('option');
-                    opt.value = lot.id;
-                    opt.textContent = lot.name;
-                    lotSelect.appendChild(opt);
+                fetch(window.Laravel.routes.lotsFetch, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
+                    data.forEach(lot => {
+                        const opt = document.createElement('option');
+                        opt.value = lot.id;
+                        opt.textContent = lot.name;
+                        lotSelect.appendChild(opt);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    lotSelect.innerHTML = `<option value="">Error al cargar lotes</option>`;
                 });
-            })
-            .catch(err => {
-                console.error(err);
-                lotSelect.innerHTML = `<option value="">Error al cargar lotes</option>`;
-            });
+            } else if (window.currentLot.source_type === 'naboo') {
+                lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
+                window.dbLotes.forEach(lot => {
+                    
+                        const opt = document.createElement('option');
+                        opt.value = lot.id;
+                        opt.textContent = lot.name;
+                        lotSelect.appendChild(opt);
+                });
+            }
 
             polygonModal.show();
         });
     });
 
-    // Enviar formulario del modal
+    // Form submit sigue igual
     polygonForm.addEventListener('submit', function(e) {
         e.preventDefault();
-    
         const formData = new FormData(this);
-    
-        // ⚡ Siempre enviamos el desarrollo actual
+        // Siempre enviamos el desarrollo actual
         formData.set('desarrollo_id', window.idDesarrollo);
-    
+
         // Agregar los demás IDs desde currentLot
         formData.append('project_id', window.currentLot.project_id ?? '');
         formData.append('phase_id', window.currentLot.phase_id ?? '');
         formData.append('stage_id', window.currentLot.stage_id ?? '');
         formData.append('lot_id', document.getElementById('modal_lot_id').value ?? '');
-    
+
         // Enviar checkbox de redirección
         const redirectCheckbox = document.getElementById('redirect');
         formData.set('redirect', redirectCheckbox.checked ? 1 : 0);
 
-        
         // Redirección + colores
         if (redirectCheckbox.checked) {
             formData.set('redirect', 1);
@@ -103,8 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.set('color', '');
             formData.set('color_active', '');
         }
-    
-    
         fetch(window.Laravel.routes.lotesStore, {
             method: 'POST',
             body: formData,
@@ -112,11 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(async res => {
             const text = await res.text();
-            try {
-                return JSON.parse(text);
-            } catch {
-                throw new Error('Respuesta no es JSON: ' + text);
-            }
+            try { return JSON.parse(text); } 
+            catch { throw new Error('Respuesta no es JSON: ' + text); }
         })
         .then(data => {
             if (data.success) {

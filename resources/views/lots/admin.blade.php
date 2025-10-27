@@ -54,7 +54,7 @@
                 </td>
                 <td>{{ $lot->created_at->format('d/m/Y H:i') }}</td>
                 <td>
-                    <a href="{{ route('lots.configurator', $lot->id) }}" 
+                    <a href="{{ route('desarrollos.configurator', $lot->id) }}" 
                         class="btn btn-sm btn-primary">
                         Configurar
                     </a>

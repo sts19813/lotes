@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Desarrollos;
-use App\Models\Lote;
+use App\Models\Lote;//donde guarda la configuracion del svg
+use App\Models\Lot;//informacion del lote, m2 precio 
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -75,7 +76,7 @@ class DesarrollosController extends Controller
             ->get(env('ADARA_API_URL') . "/projects");
 
         $projects = $response->successful() ? $response->json() : [];
-        return view('lots.create', compact('projects'));
+        return view('desarrollos.create', compact('projects'));
     }
 
     public function store(Request $request)
@@ -115,7 +116,8 @@ class DesarrollosController extends Controller
             'redirect_return' => $request->redirect_return,
             'redirect_next' => $request->redirect_next,
             'redirect_previous' => $request->redirect_previous,
-            'plusvalia' => $request->plusvalia
+            'plusvalia' => $request->plusvalia,
+            'source_type' => $request->source_type
         ];
 
         // Guardar SVG en public/lots
@@ -166,47 +168,66 @@ class DesarrollosController extends Controller
     public function configurator($id)
     {
         $lot = Desarrollos::findOrFail($id);
-    // Traer todos los desarrollos para el select de redirección
+
+        // Traer todos los desarrollos para el select de redirección
         $desarrollos = Desarrollos::all();
-        // Traer todos los proyectos
-        $projectsResponse = Http::withHeaders([
-            'accept' => 'application/json',
-            'X-API-KEY' => env('ADARA_API_KEY'),
-        ])->withoutVerifying()->get(env('ADARA_API_URL') . "/projects");
-    
-        $projects = $projectsResponse->successful() ? $projectsResponse->json() : [];
-    
-        // Inicializar array de lotes vacío
+
+        $sourceType = $lot->source_type ?? 'adara';
+
+        // Inicializar variables
+        $projects = [];
         $lots = [];
-    
-        // Si el lote tiene proyecto, fase y etapa, traemos los lotes
-        if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
-            $lotsResponse = Http::withHeaders([
+        $dbLotes = [];
+
+        if ($sourceType === 'adara') {
+            // Traer proyectos de Adara
+            $projectsResponse = Http::withHeaders([
                 'accept' => 'application/json',
                 'X-API-KEY' => env('ADARA_API_KEY'),
-            ])->withoutVerifying()
-                ->get(
-                    env('ADARA_API_URL') .
-                    "/projects/{$lot->project_id}/phases/{$lot->phase_id}/stages/{$lot->stage_id}/lots",
-                    [
-                        'per_page' => 9999
-                    ]
-                );
-    
-            $lots = $lotsResponse->successful() ? $lotsResponse->json() : [];
+            ])->withoutVerifying()->get(env('ADARA_API_URL') . "/projects");
+
+            $projects = $projectsResponse->successful() ? $projectsResponse->json() : [];
+
+            // Traer lotes de la API si se tienen project_id, phase_id y stage_id
+            if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
+                $lotsResponse = Http::withHeaders([
+                    'accept' => 'application/json',
+                    'X-API-KEY' => env('ADARA_API_KEY'),
+                ])->withoutVerifying()
+                    ->get(
+                        env('ADARA_API_URL') .
+                        "/projects/{$lot->project_id}/phases/{$lot->phase_id}/stages/{$lot->stage_id}/lots",
+                        [
+                            'per_page' => 9999
+                        ]
+                    );
+
+                $lots = $lotsResponse->successful() ? $lotsResponse->json() : [];
+            }
+        } elseif ($sourceType === 'naboo') {
+            // Proyectos locales (si los necesitas en un select)
+            $projects = Desarrollos::all();
+
+            $lots = Lote::where('desarrollo_id', $lot->id)
+                ->where('project_id', $lot->project_id)
+                ->where('phase_id', $lot->phase_id)
+                ->where('stage_id', $lot->stage_id)
+                ->get(); 
+            // Lotes locales filtrados por proyecto/fase/etapa
+            $dbLotes = Lot::where('stage_id', $lot->stage_id)->get();  
         }
-    
-        $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
 
-
-        return view('lots.configurator', compact('lot', 'projects', 'lots', 'dbLotes', 'desarrollos'));
+        return view('desarrollos.configurator', compact('lot', 'projects', 'lots', 'dbLotes', 'desarrollos'))
+            ->with('sourceType', $sourceType);
     }
+
 
 
     public function iframe($id)
     {
         $lot = Desarrollos::findOrFail($id);
-    
+        $sourceType = $lot->source_type ?? 'adara';
+
         // Traer todos los proyectos
         $projectsResponse = Http::withHeaders([
             'accept' => 'application/json',
@@ -218,26 +239,36 @@ class DesarrollosController extends Controller
         // Inicializar array de lotes vacío
         $lots = [];
     
-        // Si el lote tiene proyecto, fase y etapa, traemos los lotes
-        if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
-            $lotsResponse = Http::withHeaders([
-                'accept' => 'application/json',
-                'X-API-KEY' => env('ADARA_API_KEY'),
-            ])->withoutVerifying()
-                ->get(
-                    env('ADARA_API_URL') .
-                    "/projects/{$lot->project_id}/phases/{$lot->phase_id}/stages/{$lot->stage_id}/lots",
-                    [
-                        'per_page' => 9999
-                    ]
-                );
-    
-            $lots = $lotsResponse->successful() ? $lotsResponse->json() : [];
+        if ($sourceType === 'adara') {
+            // Si el lote tiene proyecto, fase y etapa, traemos los lotes
+            if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
+                $lotsResponse = Http::withHeaders([
+                    'accept' => 'application/json',
+                    'X-API-KEY' => env('ADARA_API_KEY'),
+                ])->withoutVerifying()
+                    ->get(
+                        env('ADARA_API_URL') .
+                        "/projects/{$lot->project_id}/phases/{$lot->phase_id}/stages/{$lot->stage_id}/lots",
+                        [
+                            'per_page' => 9999
+                        ]
+                    );
+        
+                $lots = $lotsResponse->successful() ? $lotsResponse->json() : [];
+            }
+            $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
+        }elseif ($sourceType === 'naboo') {
+            // Proyectos locales (si los necesitas en un select)
+            $projects = Desarrollos::all();
+
+            // Lotes locales filtrados por proyecto/fase/etapa
+            $dbLotes = Lote::where('desarrollo_id', $lot->id)
+            ->where('project_id', $lot->project_id)
+            ->where('phase_id', $lot->phase_id)
+            ->where('stage_id', $lot->stage_id)
+            ->get(); 
+            $lots =  Lot::where('stage_id', $lot->stage_id)->get();
         }
-    
-        $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
-
-
         return view('lots.iframe', compact('lot', 'projects', 'lots', 'dbLotes'));
     }
 
@@ -305,7 +336,7 @@ class DesarrollosController extends Controller
         $data = $request->only([
             'name', 'description', 'total_lots', 'project_id', 'phase_id', 'stage_id',
             'modal_color', 'modal_selector', 'color_primario', 'color_acento',
-            'financing_months', 'redirect_return', 'redirect_next', 'redirect_previous', 'plusvalia'
+            'financing_months', 'redirect_return', 'redirect_next', 'redirect_previous', 'plusvalia', 'source_type'
         ]);
 
         // Guardar SVG en public/lots si hay archivo

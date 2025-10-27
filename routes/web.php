@@ -64,7 +64,7 @@ Route::middleware(['auth', AdminMiddleware::class])
             ->name('lots.fetch');
 
         Route::get('/lots/{lot}/configurator', [DesarrollosController::class, 'configurator'])
-            ->name('lots.configurator');
+            ->name('desarrollos.configurator');
 
         Route::post('/lots/{lot}/save-polygon', [DesarrollosController::class, 'savePolygonInfo'])
             ->name('lots.savePolygonInfo');

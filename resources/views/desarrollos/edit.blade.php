@@ -39,10 +39,21 @@
                     rows="2">{{ old('description', $lot->description) }}</textarea>
             </div>
 
+            <!-- Fuente -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Fuente</label>
+                <select name="source_type" id="source_type" class="form-select form-select-solid" required>
+                    <option value="">Seleccione una fuente...</option>
+                    <option value="adara" {{ $lot->source_type === 'adara' ? 'selected' : '' }}>Adara</option>
+                    <option value="naboo" {{ $lot->source_type === 'naboo' ? 'selected' : '' }}>Naboo</option>
+                </select>
+            </div>
+
             <!-- Proyecto -->
             <div class="mb-4">
                 <label class="form-label fw-bold">Proyecto</label>
-                <select name="project_id" id="project_id" class="form-select form-select-solid">
+                <select name="project_id" id="project_id" class="form-select form-select-solid"
+                    data-adara-projects='@json($projects)'>
                     <option value="">Seleccione un proyecto...</option>
                     @foreach ($projects as $project)
                         <option value="{{ $project['id'] }}" {{ $lot->project_id == $project['id'] ? 'selected' : '' }}>
@@ -157,6 +168,8 @@
     <script>
         window.selectedPhase = "{{ $lot->phase_id }}";
         window.selectedStage = "{{ $lot->stage_id }}";
+        window.selectedSource = "{{ $lot->source_type }}";
+        window.selectedProject = "{{ $lot->project_id }}";
     </script>
     <script src="/assets/js/desarrollo.js"></script>
 @endpush

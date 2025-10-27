@@ -36,14 +36,21 @@
             <textarea name="description" class="form-control" rows="2"></textarea>
         </div>
 
+        <div class="mb-4">
+            <label class="form-label fw-bold">Fuente de datos</label>
+            <select name="source_type" id="source_type" class="form-select form-select-solid" required>
+                <option value="adara" selected>API Adara</option>
+                <option value="naboo">Catálogo Naboo</option>
+            </select>
+        </div>
+
+
         <!-- Proyecto -->
         <div class="mb-4">
             <label class="form-label fw-bold">Proyecto</label>
-            <select name="project_id" id="project_id" class="form-select form-select-solid">
+            <select name="project_id" id="project_id" data-adara-projects='@json($projects)' class="form-select form-select-solid">
                 <option value="">Seleccione un proyecto...</option>
-                @foreach ($projects as $project)
-                    <option value="{{ $project['id'] }}">{{ $project['name'] }}</option>
-                @endforeach
+                
             </select>
         </div>
 
@@ -147,5 +154,5 @@
 @endsection
 
 @push('scripts')
-    <script src="/assets/js/desarrollo.js"></script>
+     <script src="/assets/js/desarrollo.js"></script>
 @endpush

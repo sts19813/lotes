@@ -13,9 +13,7 @@ class Desarrollos extends Model
         'name',
         'description',
         'total_lots',
-        'svg_image',
-        'png_image',
-        'path_logo',
+        'source_type',
         'project_id',
         'phase_id',
         'stage_id',
@@ -27,6 +25,8 @@ class Desarrollos extends Model
         'redirect_return',
         'redirect_next',
         'redirect_previous',
-        'plusvalia'
+        'plusvalia',
+        'svg_image',
+        'png_image'
     ];
 }
