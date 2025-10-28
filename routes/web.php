@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DesarrollosController;
+use App\Http\Controllers\API\AdaraController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ReportController;
@@ -98,21 +99,22 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::delete('/desarrollos/{desarrollo}', [DesarrollosController::class, 'destroy'])
             ->name('desarrollos.destroy');
 
-        //Adara
+        //Adara Catálogo
         Route::get('/projects', [ProjectViewController::class, 'index'])->name('projects.index');
         Route::get('/phases', [PhaseViewController::class, 'index'])->name('phases.index');
         Route::get('/stages', [StageViewController::class, 'index'])->name('stages.index');
         Route::get('/lotsAdara', [LotViewController::class, 'index'])->name('lots.index');
-
-
-    
 });
 
 // =========================
-// API Endpoints
+// API Endpoints Adara
 // =========================
-Route::get('/api/projects/{id}/phases', [DesarrollosController::class, 'getPhases']);
-Route::get('/api/projects/{project}/phases/{phase}/stages', [DesarrollosController::class, 'getStages']);
+Route::prefix('api')->group(function () {
+    Route::get('/projects/{id}/phases', [AdaraController::class, 'phases']);
+    Route::get('/projects/{project}/phases/{phase}/stages', [AdaraController::class, 'stages']);
+    Route::get('/projects/{project}/phases/{phase}/stages/{stage}/lots', [AdaraController::class, 'lots']);
+});
+
 
 // =========================
 // Reports

@@ -8,10 +8,17 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
-<div class="card-header ">
-    <h3 class="card-title">Desarrollos</h3>
+<div class="card-header d-flex flex-wrap justify-content-between align-items-center py-5">
+    <div class="card-title mb-0">
+        <h3 class="fw-bold text-gray-800 mb-1">Desarrollos</h3>
+        <span class="text-muted fs-7">Gestiona la configuración de todos tus desarrollos inmobiliarios</span>
+    </div>
+
     <div class="card-toolbar">
-        <a href="{{ route('desarrollos.create') }}" class="btn btn-primary">Nuevo Desarrollo</a>
+        <a href="{{ route('desarrollos.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+            <i class="ki-duotone ki-plus fs-2"></i>
+            <span>Nuevo Desarrollo</span>
+        </a>
     </div>
 </div>
 
@@ -39,19 +46,24 @@
                     @if ($lot->png_image || $lot->svg_image)
                     <div class="image-container" style="position: relative; width: 200px;">
                         @if ($lot->png_image)
-                        <img src="{{ asset('/' . $lot->png_image) }}" alt="PNG"
-                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <img data-src="{{ asset('/' . $lot->png_image) }}"
+                            alt="PNG"
+                            class="img-thumbnail lazy-img"
+                            style="width:100%; height:100%; object-fit:cover;"
+                            loading="lazy">
                         @endif
 
                         @if ($lot->svg_image)
-                        <div class="svg-wrapper"
-                            style="position: absolute; top: 0; left: 0; width: 100%; ">
-                            {!! file_get_contents(public_path($lot->svg_image)) !!}
-                        </div>
+                        <img data-src="{{ asset('/' . $lot->svg_image) }}"
+                            alt="SVG"
+                            class="svg-lazy lazy-img"
+                            style="position:absolute; top:0; left:0; width:100%; height:100%;"
+                            loading="lazy">
                         @endif
                     </div>
                     @endif
                 </td>
+
                 <td>{{ $lot->created_at->format('d/m/Y H:i') }}</td>
                 <td>
                     <a href="{{ route('desarrollos.configurator', $lot->id) }}" 
@@ -82,12 +94,31 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    $("#lots_table").DataTable({
+
+    let observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                observer.unobserve(img);
+            }
+        });
+    }, { root: null, threshold: 0.1 });
+
+    const table = $("#lots_table").DataTable({
         responsive: true,
         pageLength: 5,
         lengthMenu: [5, 10, 25, 50],
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json"
+        language: { url: '//cdn.datatables.net/plug-ins/2.3.2/i18n/es-MX.json' },
+        dom: "<'row mb-3'<'col-12 d-flex justify-content-end'f>>" +
+            "<'row'<'col-12'tr>>" +
+            "<'row mt-3'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'p>>",
+        drawCallback: function () {
+            document.querySelectorAll("img.lazy-img:not([data-observed])")
+                .forEach(img => {
+                    img.dataset.observed = "true";
+                    observer.observe(img);
+                });
         }
     });
 });

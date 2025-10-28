@@ -91,27 +91,27 @@
 
         <!-- Colores del modal -->
         <div class="row mb-4">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <label class="form-label">Color Modal</label>
-                <input type="text" name="modal_color" class="form-control" placeholder="#000000">
+                <input type="text" name="modal_color" id="modal_color" class="form-control form-control-solid color-picker" placeholder="rgba(0,0,0,0.5)">
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-2">
+                <label class="form-label">Color Primario</label>
+                <input type="text" name="color_primario" id="color_primario" class="form-control form-control-solid color-picker" placeholder="#0044CC">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Color Acento</label>
+                <input type="text" name="color_acento" id="color_acento" class="form-control form-control-solid color-picker" placeholder="#FFAA00">
+            </div>
+
+            <div class="col-md-6">
                 <label class="form-label">Selector Modal</label>
                 <input type="text" name="modal_selector" class="form-control" placeholder=".modal-class">
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col">
-                <label class="form-label">Color Primario</label>
-                <input type="text" name="color_primario" class="form-control" placeholder="#0044CC">
-            </div>
-            <div class="col">
-                <label class="form-label">Color Acento</label>
-                <input type="text" name="color_acento" class="form-control" placeholder="#FFAA00">
-            </div>
-        </div>
 
         <!-- Plusvalia -->
         <div class="mb-4">
@@ -155,4 +155,32 @@
 
 @push('scripts')
      <script src="/assets/js/desarrollo.js"></script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const pickers = document.querySelectorAll('.color-picker');
+
+            pickers.forEach(input => {
+                const pickr = Pickr.create({
+                    el: input,
+                    theme: 'classic',
+                    default: input.value || null,
+                    components: {
+                        preview: true,
+                        opacity: true, // Soporta transparencia ✅
+                        hue: true,
+                        interaction: {
+                            input: true,
+                            save: true,
+                            clear: true
+                        }
+                    }
+                });
+
+                pickr.on('save', (color) => {
+                    input.value = color.toRGBA().toString();
+                    pickr.hide();
+                });
+            });
+        });
+        </script>
 @endpush

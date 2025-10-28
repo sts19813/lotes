@@ -1,12 +1,31 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Inicializar DataTable
+    let observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                observer.unobserve(img);
+            }
+        });
+    }, { root: null, threshold: 0.1 });
+
     const table = $("#lots_table").DataTable({
         responsive: true,
         pageLength: 10,
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/es_es.json"
-        },
-        columns: [{}, {}, {}, {}, {}, {}, {}]
+        language: { url: '//cdn.datatables.net/plug-ins/2.3.2/i18n/es-MX.json' },
+        dom: "<'row mb-3'<'col-12 d-flex justify-content-end'f>>" +
+            "<'row'<'col-12'tr>>" +
+            "<'row mt-3'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'p>>",
+        columns: [{}, {}, {}, {}, {}, {}, {}],
+
+        drawCallback: function () {
+            document.querySelectorAll("img.lazy-img:not([data-observed])")
+                .forEach(img => {
+                    img.dataset.observed = "true";
+                    observer.observe(img);
+                });
+        }
     });
 
     const projectSelect = document.querySelector("select[name='project_id']");
@@ -82,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         `$${Number(lot.price_square_meter).toFixed(2)}`,
                         `$${Number(lot.total_price).toFixed(2)}`,
                         `<span class="badge ${lot.status==='available'?'badge-light-success':lot.status==='sold'?'badge-light-danger':'badge-light-warning'}">${lot.status.charAt(0).toUpperCase()+lot.status.slice(1)}</span>`,
-                        lot.chepina ? `<img src="${lot.chepina}" style="width:80px;" class="img-thumbnail">` : ''
+                        lot.chepina ? `<img data-src="${lot.chepina}" loading="lazy" class="img-thumbnail lazy-img" style="width:80px;">`: ''
                     ]);
                 });
                 table.draw();

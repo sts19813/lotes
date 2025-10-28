@@ -149,6 +149,11 @@
 	<script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>
 	<!--end::Custom Javascript-->
 
+
+	<!-- Load Pickr -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr"></script>
+
 	<!-- Para cargar scripts adicionales desde otras vistas -->
 	@stack('scripts')
 	<!--end::Javascript-->

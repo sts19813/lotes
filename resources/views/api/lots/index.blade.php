@@ -4,20 +4,22 @@
 
 <div class="d-flex justify-content-between align-items-center mb-5">
     <h1 class="fw-bold text-gray-800">Lotes</h1>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLot">
-        <i class="ki-duotone ki-plus fs-2"></i> Nuevo Lote
-    </button>
 
-    <button id="btnDownloadTemplate" class="btn btn-success">
-        <i class="ki-duotone ki-download fs-2"></i> Descargar Plantilla
-    </button>
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLot">
+            <i class="ki-duotone ki-plus fs-2"></i> Nuevo Lote
+        </button>
 
-    <input type="file" id="inputImport" accept=".xlsx" hidden>
-    <button id="btnImport" class="btn btn-info">
-        <i class="ki-duotone ki-upload fs-2"></i> Importar Lotes
-    </button>
+        <button id="btnDownloadTemplate" class="btn btn-success">
+            <i class="ki-duotone ki-download fs-2"></i> Descargar Plantilla
+        </button>
+
+        <input type="file" id="inputImport" accept=".xlsx" hidden>
+        <button id="btnImport" class="btn btn-info">
+            <i class="ki-duotone ki-upload fs-2"></i> Importar Lotes
+        </button>
+    </div>
 </div>
-
 <!-- 🔹 Filtros arriba -->
 <div class="row mb-5">
     <div class="col-md-4">
@@ -174,7 +176,12 @@ $(document).ready(function () {
             { data: 'created_at', render: d => new Date(d).toLocaleDateString() }
         ],
         autoWidth: false,
-        responsive: true
+        language: { url: '//cdn.datatables.net/plug-ins/2.3.2/i18n/es-MX.json' },
+        responsive: true,
+        dom:
+            "<'row mb-3'<'col-12 d-flex justify-content-end'f>>" + // buscador arriba derecha
+            "<'row'<'col-12'tr>>" +                               // tabla
+            "<'row mt-3'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'p>>" // select y paginación abajo
     });
 
     // 🔹 Filtros dependientes arriba

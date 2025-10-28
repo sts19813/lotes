@@ -9,9 +9,17 @@ use App\Mail\CotizacionGenerada;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use App\Models\Desarrollos;
+use App\Services\AdaraService;
 
 class ReportController extends Controller
 {
+    protected AdaraService $adara;
+
+    public function __construct(AdaraService $adara)
+    {
+        $this->adara = $adara;
+    }
+
     public function index()
     {
         $reports = Report::latest()->get();
@@ -51,8 +59,6 @@ class ReportController extends Controller
         $plusvaliaTotal = $precioTotal * pow(1 + $plusvaliaRate, 5);
         $roi = (($plusvaliaTotal - $precioTotal) / $precioTotal) * 100;
 
-
-        
         // Proyección anual
         $years = [];
         $totalAnios = (int) ceil($meses / 12);
@@ -69,7 +75,6 @@ class ReportController extends Controller
             }
 
             $montoPagado = $engancheMonto + $mensualidad * $mesesPagados;
-
             $plusvaliaAcum = $valorProp - $precioTotal;
             $roiAnual = (($valorProp - $precioTotal) / $precioTotal) * 100;
 
@@ -82,63 +87,19 @@ class ReportController extends Controller
             ];
         }
 
-        $chepinaUrl = $data["chepina"]
-            ? url($data["chepina"])
-            : url("/assets/img/CHEPINA.svg");
+        $chepinaBase64 = $this->getChepinaBase64($data['chepina'] ?? null);
+        $chepinaUrl = $data["chepina"] ? url($data["chepina"]) : url("/assets/img/CHEPINA.svg");
 
-
-        $chepinaBase64 = null;
-
-       if (!empty($data['chepina'])) {
-            try {
-                // Si la URL requiere HTTPS sin verificar, usa withoutVerifying()
-                $response = Http::withoutVerifying()->get($data['chepina']);
-                
-                if ($response->successful()) {
-                    $mimeType = $response->header('Content-Type') ?? 'image/jpeg';
-                    $chepinaBase64 = 'data:' . $mimeType . ';base64,' . base64_encode($response->body());
-                } else {
-                    throw new \Exception('Respuesta no exitosa: ' . $response->status());
-                }
-
-            } catch (\Exception $e) {
-               
-
-                // fallback a imagen local
-                $chepinaPath = public_path("assets/img/CHEPINA.svg");
-                if (file_exists($chepinaPath)) {
-                    $chepinaBase64 = 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($chepinaPath));
-                }
-            }
-        } else {
-            // fallback a imagen local
-            $chepinaPath = public_path("assets/img/CHEPINA.svg");
-            if (file_exists($chepinaPath)) {
-                $chepinaBase64 = 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($chepinaPath));
-            }
-        }
+        $desarrolloName = $phaseName = $stageName = null;
 
         if (!empty($data["project_id"])) {
-            $desarrolloName = $this->getProjectName($data["project_id"]);
+            $desarrolloName = $this->adara->getProjectName($data["project_id"]);
         }
-
         if (!empty($data["project_id"]) && !empty($data["phase_id"])) {
-            $phaseName = $this->getPhaseName(
-                $data["project_id"],
-                $data["phase_id"]
-            ); // string, no array
+            $phaseName = $this->adara->getPhaseName($data["project_id"], $data["phase_id"]);
         }
-
-        if (
-            !empty($data["project_id"]) &&
-            !empty($data["phase_id"]) &&
-            !empty($data["stage_id"])
-        ) {
-            $stageName = $this->getStageName(
-                $data["project_id"],
-                $data["phase_id"],
-                $data["stage_id"]
-            );
+        if (!empty($data["project_id"]) && !empty($data["phase_id"]) && !empty($data["stage_id"])) {
+            $stageName = $this->adara->getStageName($data["project_id"], $data["phase_id"], $data["stage_id"]);
         }
 
         // Guardar en BD
@@ -170,7 +131,12 @@ class ReportController extends Controller
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
-        } // Preparar datos para PDF
+        }
+
+        $desarrollo = $data['desarrollo_id'] ? Desarrollos::find($data['desarrollo_id']) : null;
+        $desarrolloLogo = $desarrollo?->path_logo ?? null;
+        $desarrolloNombre = $desarrollo?->name ?? null;
+
         $pdfData = array_merge($data, [
             "precioTotal" => $precioTotal,
             "enganchePorc" => $enganchePorc,
@@ -188,20 +154,8 @@ class ReportController extends Controller
             "stage_id" => $data["stage_id"] ?? null,
             "phase_name" => $phaseName,
             "stage_name" => $stageName,
-        ]);
-
-        $desarrollo = null;
-        if (!empty($data['desarrollo_id'])) {
-            $desarrollo = Desarrollos::find($data['desarrollo_id']);
-        }
-        $desarrolloLogo = $desarrollo?->path_logo ?? null;
-        $desarrolloNombre = $desarrollo?->name ?? null;
-
-        // Agregar al arreglo de datos para el PDF
-        $pdfData = array_merge($pdfData, [
             "desarrollo_logo" => $desarrolloLogo,
-            "desarrollo_name" => $desarrolloNombre ?? $pdfData['desarrollo_name'] ?? null,
-            "chepina_base64" => $chepinaBase64 ?? url("/assets/img/CHEPINA.svg"),
+            "chepina_base64" => $chepinaBase64,
         ]);
 
         // Generar PDF
@@ -215,71 +169,30 @@ class ReportController extends Controller
 
         // Enviar al usuario
         if (!empty($data["lead_email"])) {
-            Mail::to($data["lead_email"])->send(
-                new CotizacionGenerada((object) $pdfData, $pdf)
-            );
-        }
-
+            Mail::to($data["lead_email"])->send(new CotizacionGenerada((object) $pdfData, $pdf));
+        } 
         // Enviar al admin
-        Mail::to("hi@davidsabido.com	")->send(
-            new CotizacionGenerada((object) $pdfData, $pdf)
-        );
+        Mail::to("hi@davidsabido.com")->send(new CotizacionGenerada((object) $pdfData, $pdf));
 
-        // Retornar descarga al navegador
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf;
-        }, "cotizacion_" . $data["name"] . ".pdf");
+        // Retornar descarga
+        return response()->streamDownload(fn() => print($pdf), "cotizacion_" . $data["name"] . ".pdf");
     }
 
-  
     public function download(Report $report)
     {
-        $phaseName = null;
-        $stageName = null;
-        $desarrolloName = null;
+        $desarrolloName = $phaseName = $stageName = null;
 
         if (!empty($report->desarrollo_id)) {
-            $desarrolloName = $this->getProjectName($report->desarrollo_id);
+            $desarrolloName = $this->adara->getProjectName($report->desarrollo_id);
         }
-
         if (!empty($report->desarrollo_id) && !empty($report->phase_id)) {
-            $phaseName = $this->getPhaseName(
-                $report->desarrollo_id,
-                $report->phase_id
-            );
+            $phaseName = $this->adara->getPhaseName($report->desarrollo_id, $report->phase_id);
         }
-
         if (!empty($report->desarrollo_id) && !empty($report->phase_id) && !empty($report->stage_id)) {
-            $stageName = $this->getStageName(
-                $report->desarrollo_id,
-                $report->phase_id,
-                $report->stage_id
-            );
+            $stageName = $this->adara->getStageName($report->desarrollo_id, $report->phase_id, $report->stage_id);
         }
 
-        // Obtener chepina_base64
-        $chepinaBase64 = null;
-        if (!empty($report->chepina)) {
-            try {
-                $response = Http::withoutVerifying()->get($report->chepina);
-                if ($response->successful()) {
-                    $mimeType = $response->header('Content-Type') ?? 'image/jpeg';
-                    $chepinaBase64 = 'data:' . $mimeType . ';base64,' . base64_encode($response->body());
-                } else {
-                    throw new \Exception('Respuesta no exitosa: ' . $response->status());
-                }
-            } catch (\Exception $e) {
-                $chepinaPath = public_path("assets/img/CHEPINA.svg");
-                if (file_exists($chepinaPath)) {
-                    $chepinaBase64 = 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($chepinaPath));
-                }
-            }
-        } else {
-            $chepinaPath = public_path("assets/img/CHEPINA.svg");
-            if (file_exists($chepinaPath)) {
-                $chepinaBase64 = 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($chepinaPath));
-            }
-        }
+        $chepinaBase64 = $this->getChepinaBase64($report->chepina ?? null);
 
         $pdfData = [
             "name" => $report->name,
@@ -294,7 +207,7 @@ class ReportController extends Controller
             "plusvaliaTotal" => $report->plusvalia_total,
             "roi" => $report->roi,
             "chepinaUrl" => $report->chepina_url,
-            "chepina_base64" => $chepinaBase64 ?? url("/assets/img/CHEPINA.svg"),
+            "chepina_base64" => $chepinaBase64,
             "lead_name" => $report->lead_name,
             "lead_phone" => $report->lead_phone,
             "lead_email" => $report->lead_email,
@@ -316,82 +229,27 @@ class ReportController extends Controller
             ->setOption('margin-left', 0)
             ->setOption('margin-right', 0);
 
-            return $pdf->download("cotizacion_" . $report->name . ".pdf");
+        return $pdf->download("cotizacion_" . $report->name . ".pdf");
     }
 
-    public function getProjectName(int $projectId): ?string
+    /**
+     * Obtiene la imagen CHEPINA en Base64, con fallback a local
+     */
+    private function getChepinaBase64(?string $url): string
     {
-        try {
-            $response = Http::withHeaders([
-                "accept" => "application/json",
-                "X-API-KEY" => env("ADARA_API_KEY"),
-            ])
-                ->withoutVerifying()
-                ->get(env("ADARA_API_URL") . "/projects");
-
-            if ($response->successful()) {
-                $projects = $response->json();
-
-                foreach ($projects as $project) {
-                    if ((int) $project["id"] === $projectId) {
-                        return $project["name"] ?? null;
-                    }
+        if ($url) {
+            try {
+                $response = Http::withoutVerifying()->get($url);
+                if ($response->successful()) {
+                    $mimeType = $response->header('Content-Type') ?? 'image/jpeg';
+                    return 'data:' . $mimeType . ';base64,' . base64_encode($response->body());
                 }
+            } catch (\Exception $e) {
+                // fallback
             }
-        } catch (\Exception $e) {
-            // opcional: log del error
         }
 
-        return null;
-    }
-
-    public function getPhaseName(int $projectId, int $phaseId): ?string
-    {
-        try {
-            $response = Http::withHeaders([
-                "accept" => "application/json",
-                "X-API-KEY" => env("ADARA_API_KEY"),
-            ])
-                ->withoutVerifying()
-                ->get(env("ADARA_API_URL") . "/projects/{$projectId}/phases");
-
-            if ($response->successful()) {
-                $phases = $response->json();
-
-                // Buscar la fase por ID
-                foreach ($phases as $phase) {
-                    if ((int) $phase["id"] === $phaseId) {
-                        return $phase["name"] ?? null;
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            // Aquí puedes loguear el error si quieres
-        }
-
-        return null;
-    }
-
-    private function getStageName(int $projectId, int $phaseId, int $stageId): ?string {
-        try {
-            $response = Http::withHeaders([
-                "accept" => "application/json",
-                "X-API-KEY" => env("ADARA_API_KEY"),
-            ])
-                ->withoutVerifying()
-                ->get(
-                    env("ADARA_API_URL") .
-                        "/projects/{$projectId}/phases/{$phaseId}/stages/{$stageId}"
-                );
-
-            if ($response->successful()) {
-                $data = $response->json();
-
-                return $data["stage"]["name"] ?? null;
-            }
-        } catch (\Exception $e) {
-        }
-
-        return null;
+        $chepinaPath = public_path("assets/img/CHEPINA.svg");
+        return 'data:image/svg+xml;base64,' . base64_encode(file_get_contents($chepinaPath));
     }
 }
