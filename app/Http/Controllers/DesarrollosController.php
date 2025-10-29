@@ -128,6 +128,27 @@ class DesarrollosController extends Controller
         return redirect()->route('desarrollos.index')->with('success', 'Lote creado correctamente.');
     }
 
+
+    public function guardarAsientos(Request $request)
+    {
+        $lotIds = $request->input('lots', []);
+        $newStatus = $request->input('status', 'sold'); // por defecto 'sold'
+
+        if (empty($lotIds)) {
+            return response()->json(['success' => false, 'message' => 'No se enviaron lotes']);
+        }
+
+        $updated = Lot::whereIn('id', $lotIds)->update(['status' => $newStatus]);
+
+        if ($updated) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'No se pudieron actualizar los lotes']);
+    }
+
+
+
     /**
      * Obtener fases de un proyecto
      */

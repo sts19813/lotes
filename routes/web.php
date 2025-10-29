@@ -110,6 +110,7 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::get('/dashboards', [DashboardController::class, 'index'])->name('dashboards.index');
         Route::post('/dashboards/data', [DashboardController::class, 'getData'])->name('dashboards.data');
 
+        Route::post('/lotes/guardar-asientos', [DesarrollosController::class, 'guardarAsientos']);
 
 });
 
