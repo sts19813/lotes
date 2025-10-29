@@ -88,9 +88,71 @@
                     </div>
                 </div>
                 <!--end: CRM Naboo -->
+
+                <!-- Dashboard -->
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->is('dashboards*') ? 'active' : '' }}" href="/dashboards">
+                        <span class="menu-icon"><i class="ki-outline ki-chart-line fs-2"></i></span>
+                        <span class="menu-title">Dashboards</span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->is('search*') ? 'active' : '' }}" href="/search">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-magnifier fs-2"></i>
+                        </span>
+                        <span class="menu-title">Búsqueda masiva</span>
+                    </a>
+                </div>
+
+                <!--begin: Financiamiento -->
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->is('financing*') ? 'active' : '' }}" href="/financing">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-calculator fs-2"></i>
+                        </span>
+                        <span class="menu-title">Financiamiento</span>
+                    </a>
+                </div>
+                <!--end: Financiamiento -->
+
+                <!--begin: Configuraciones -->
+                <div class="menu-item menu-accordion {{ request()->is('users*', 'connections*', 'access*') ? 'show' : '' }}"
+                    data-kt-menu-trigger="click">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-setting-3 fs-2"></i>
+                        </span>
+                        <span class="menu-title">Configuraciones</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <!-- Usuarios -->
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->is('users*') ? 'active' : '' }}" href="/users">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Usuarios</span>
+                            </a>
+                        </div>
+
+                        <!-- Conexiones -->
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->is('connections*') ? 'active' : '' }}"
+                                href="/connections">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Conexiones APIs</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Configuraciones -->
+
             </div>
             <!--end::Sidebar menu-->
         </div>
     </div>
     <!--end::Wrapper-->
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">

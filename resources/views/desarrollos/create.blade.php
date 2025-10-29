@@ -125,21 +125,37 @@
             <input type="number" name="financing_months" class="form-control" placeholder="Ej. 36">
         </div>
 
-        <!-- Redirect -->
+       <!-- Redirect -->
         <div class="row mb-4">
             <div class="col">
                 <label class="form-label">URL Regresar</label>
-                <input type="text" name="redirect_return" class="form-control">
+                <select name="redirect_return" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($desarrollos as $desarrollo)
+                        <option value="{{ $desarrollo['id'] }}">{{ $desarrollo['name'] }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col">
                 <label class="form-label">URL Siguiente</label>
-                <input type="text" name="redirect_next" class="form-control">
+                <select name="redirect_next" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($desarrollos as $desarrollo)
+                        <option value="{{ $desarrollo['id'] }}">{{ $desarrollo['name'] }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col">
                 <label class="form-label">URL Anterior</label>
-                <input type="text" name="redirect_previous" class="form-control">
+                <select name="redirect_previous" class="form-select">
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($desarrollos as $desarrollo)
+                        <option value="{{ $desarrollo['id'] }}">{{ $desarrollo['name'] }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
+
 
         <div class="text-end">
             <button type="submit" class="btn btn-primary">
@@ -155,32 +171,54 @@
 
 @push('scripts')
      <script src="/assets/js/desarrollo.js"></script>
-     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const pickers = document.querySelectorAll('.color-picker');
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const pickers = document.querySelectorAll('.color-picker');
 
-            pickers.forEach(input => {
-                const pickr = Pickr.create({
-                    el: input,
-                    theme: 'classic',
-                    default: input.value || null,
-                    components: {
-                        preview: true,
-                        opacity: true, // Soporta transparencia ✅
-                        hue: true,
-                        interaction: {
-                            input: true,
-                            save: true,
-                            clear: true
-                        }
+        pickers.forEach(input => {
+            // Crear un contenedor para Pickr
+            const pickrContainer = document.createElement('div');
+            input.parentNode.insertBefore(pickrContainer, input.nextSibling);
+
+            const pickr = Pickr.create({
+                el: pickrContainer,
+                theme: 'classic',
+                default: input.value || '#30362D',
+                components: {
+                    preview: true,
+                    opacity: false, // solo HEX
+                    hue: true,
+                    interaction: {
+                        hex: true,
+                        input: true,
+                        save: true
                     }
-                });
-
-                pickr.on('save', (color) => {
-                    input.value = color.toRGBA().toString();
-                    pickr.hide();
-                });
+                }
             });
+
+            // Al cambiar el color
+            pickr.on('change', (color) => {
+                const hex = color.toHEXA().slice(0,3).map(c => c.toString(16).padStart(2,'0')).join('');
+                input.value = `#${hex}`;
+                // Cambiar fondo del input para previsualización
+                input.style.backgroundColor = input.value;
+            });
+
+            // Al cerrar el picker, asegurar que el input tenga el valor
+            pickr.on('save', (color) => {
+                if (!color) return;
+                const hex = color.toHEXA().slice(0,3).map(c => c.toString(16).padStart(2,'0')).join('');
+                input.value = `#${hex}`;
+                input.style.backgroundColor = input.value;
+                pickr.hide(); // ocultar picker
+            });
+
+            // Inicializar fondo si ya hay valor
+            if(input.value) {
+                input.style.backgroundColor = input.value;
+            }
         });
-        </script>
+    });
+
+    </script>
 @endpush

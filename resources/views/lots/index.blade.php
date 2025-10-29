@@ -48,10 +48,13 @@
                     @endif
                 </td>
                 <td>{{ $lot->created_at->format('d/m/Y H:i') }}</td>
-                <td>
-                    <a href="{{ url('iframe/' . $lot->id) }}" 
-                       class="btn btn-sm btn-primary" target="_blank">
-                        <i class="fas fa-external-link-alt"></i> Ver iframe
+              <td class="text-end">
+                    <a href="{{ url('iframe/' . $lot->id) }}"
+                    class="btn btn-sm btn-light btn-active-light-primary"
+                    data-bs-toggle="tooltip"
+                    title="Ver iframe"
+                    target="_blank">
+                        <i class="ki-outline ki-arrow-up-right fs-2"></i>
                     </a>
                 </td>
             </tr>

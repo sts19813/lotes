@@ -12,8 +12,6 @@ use App\Services\FileUploadService;
 
 class DesarrollosController extends Controller
 {
-
-
     protected AdaraService $adaraService;
     protected FileUploadService $fileUploadService;
 
@@ -80,7 +78,8 @@ class DesarrollosController extends Controller
     public function create()
     {
         $projects = $this->adaraService->getProjects();
-        return view('desarrollos.create', compact('projects'));
+        $desarrollos = Desarrollos::select('id', 'name')->get();
+        return view('desarrollos.create', compact('projects', 'desarrollos'));
     }
 
     /**
