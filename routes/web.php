@@ -13,6 +13,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\View\PhaseViewController;
 use App\Http\Controllers\View\StageViewController;
 use App\Http\Controllers\View\LotViewController;
+use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\View\ProjectViewController;
 Route::view('/', 'login');
@@ -104,6 +105,12 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::get('/phases', [PhaseViewController::class, 'index'])->name('phases.index');
         Route::get('/stages', [StageViewController::class, 'index'])->name('stages.index');
         Route::get('/lotsAdara', [LotViewController::class, 'index'])->name('lots.index');
+
+        //dashboard
+        Route::get('/dashboards', [DashboardController::class, 'index'])->name('dashboards.index');
+        Route::post('/dashboards/data', [DashboardController::class, 'getData'])->name('dashboards.data');
+
+
 });
 
 // =========================
