@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } else if (window.currentLot.source_type === 'naboo') {
                 lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
-                window.dbLotes.forEach(lot => {
+                window.preloadedLots.forEach(lot => {
                     
                         const opt = document.createElement('option');
                         opt.value = lot.id;

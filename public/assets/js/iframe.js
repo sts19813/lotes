@@ -67,7 +67,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (window.preloadedLots && window.preloadedLots.length > 0) {
             // Caso normal: hay lots precargados y dbLotes
             window.dbLotes.forEach(dbLote => {
-                const matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id);
+                let matchedLot;
+
+                if(window.currentLot.source_type === 'adara') {
+                    matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id);
+                } else if(window.currentLot.source_type === 'naboo') {
+                    matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id); // usar id directamente
+                }
                 if (!matchedLot) return;
 
                 const selector = dbLote.selectorSVG;

@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function index()
     {
         $projects = $this->adara->getProjects();
-        return view('dashboard.index', compact('projects'));
+        return view('dashboards.index', compact('projects'));
     }
 
     public function getData(Request $request)
@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $projectId = $request->project_id;
         $phaseId   = $request->phase_id;
         $stageId   = $request->stage_id;
-        $status    = $request->status;
+        $filterStatus = $request->status;
 
         $stats = [
             'total'        => 0,
@@ -36,56 +36,66 @@ class DashboardController extends Controller
             'resume'       => []
         ];
 
-        // Si no hay proyecto → obtener todos
-        $projects = $projectId
-            ? collect($this->adara->getProjects())->where('id', $projectId)
-            : collect($this->adara->getProjects());
+        // 🔥 Mapeo real API → Dashboard
+        $statusMap = [
+            'for_sale'    => 'available',
+            'sold'        => 'sold',
+            'reserved'    => 'reserved',
+            'locked_sale' => 'blocked'
+        ];
+
+        // 👉 Cargar lotes SOLO UNA VEZ por Stage ✅
+        $projects = collect($this->adara->getProjects());
+
+        if ($projectId) {
+            $projects = $projects->where('id', intval($projectId));
+        }
 
         foreach ($projects as $project) {
+            $phases = collect($this->adara->getPhases($project['id']));
 
-            $phases = $phaseId
-                ? collect($this->adara->getPhases($project['id']))->where('id', $phaseId)
-                : collect($this->adara->getPhases($project['id']));
+            if ($phaseId) {
+                $phases = $phases->where('id', intval($phaseId));
+            }
 
             foreach ($phases as $phase) {
+                $stages = collect($this->adara->getStages($project['id'], $phase['id']));
 
-                $stages = $stageId
-                    ? collect($this->adara->getStages($project['id'], $phase['id']))->where('id', $stageId)
-                    : collect($this->adara->getStages($project['id'], $phase['id']));
+                if ($stageId) {
+                    $stages = $stages->where('id', intval($stageId));
+                }
 
                 foreach ($stages as $stage) {
 
-                    $lots = collect($this->adara->getLots($project['id'], $phase['id'], $stage['id']));
+                    // ✅ Solo una consulta por stage
+                    $lots = collect($this->adara->getLots($project['id'], $phase['id'], $stage['id']))
+                        ->map(function ($lot) use ($statusMap) {
+                            $lot['mapped_status'] = $statusMap[$lot['status']] ?? 'unknown';
+                            return $lot;
+                        });
 
-                    // Filtrado opcional por status seleccionado
-                    if ($status) {
-                        $lots = $lots->where('status', $status);
+                    // ✅ Filtrando en memoria
+                    if ($filterStatus) {
+                        $lots = $lots->where('mapped_status', $filterStatus);
                     }
 
-                    // Contadores por estado (basados en la API)
-                    $total     = $lots->count();
-                    $available = $lots->where('status', 'for_sale')->count();
-                    $sold      = $lots->where('status', 'sold')->count();
-                    $reserved  = $lots->where('status', 'reserved')->count();
-                    $blocked   = $lots->where('status', 'locked_sale')->count();
+                    // ✅ Contadores correctos
+                    $stats['total']     += $lots->count();
+                    $stats['available'] += $lots->where('mapped_status', 'available')->count();
+                    $stats['sold']      += $lots->where('mapped_status', 'sold')->count();
+                    $stats['reserved']  += $lots->where('mapped_status', 'reserved')->count();
+                    $stats['blocked']   += $lots->where('mapped_status', 'blocked')->count();
 
-                    // Acumuladores globales
-                    $stats['total']     += $total;
-                    $stats['available'] += $available;
-                    $stats['sold']      += $sold;
-                    $stats['reserved']  += $reserved;
-                    $stats['blocked']   += $blocked;
-
-                    // Agrega resumen del nivel
+                    // ✅ Resumen para tabla
                     $stats['resume'][] = [
                         'project'   => $project['name'],
                         'phase'     => $phase['name'],
                         'stage'     => $stage['name'],
-                        'total'     => $total,
-                        'available' => $available,
-                        'sold'      => $sold,
-                        'reserved'  => $reserved,
-                        'blocked'   => $blocked,
+                        'total'     => $lots->count(),
+                        'available' => $lots->where('mapped_status', 'available')->count(),
+                        'sold'      => $lots->where('mapped_status', 'sold')->count(),
+                        'reserved'  => $lots->where('mapped_status', 'reserved')->count(),
+                        'blocked'   => $lots->where('mapped_status', 'blocked')->count(),
                     ];
                 }
             }
@@ -93,6 +103,7 @@ class DashboardController extends Controller
 
         return response()->json($stats);
     }
+
 
 
 }

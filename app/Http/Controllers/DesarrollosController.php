@@ -162,16 +162,19 @@ class DesarrollosController extends Controller
             if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
                 $lots = $this->adaraService->getLots($lot->project_id, $lot->phase_id, $lot->stage_id);
             }
+
+        $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
+
         } elseif ($sourceType === 'naboo') {
             $projects = Desarrollos::all();
-            $lots = Lote::where([
-                'desarrollo_id' => $lot->id,
-                'project_id' => $lot->project_id,
-                'phase_id' => $lot->phase_id,
-                'stage_id' => $lot->stage_id
-            ])->get();
 
-            $dbLotes = Lot::where('stage_id', $lot->stage_id)->get();
+            $lots = Lot::where('stage_id', $lot->stage_id)->get();
+            $dbLotes = Lote::where([
+                            'desarrollo_id' => $lot->id,
+                            'project_id' => $lot->project_id,
+                            'phase_id' => $lot->phase_id,
+                            'stage_id' => $lot->stage_id
+                        ])->get();
         }
 
         return view('desarrollos.configurator', compact('lot','projects','lots','dbLotes','desarrollos'))
