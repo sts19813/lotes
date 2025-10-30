@@ -34,11 +34,6 @@
 			--bs-table-bg: #FFFFFF !important;
 		}
 
-		.text-success {
-			color: #1c9e4d !important;
-			/* Verde como el de la imagen */
-		}
-
 		.text-primary {
 			color: #1a73e8 !important;
 			/* Azul tipo Google */
@@ -52,11 +47,47 @@
 		#divloteIntereses {
 			display: none
 		}
+
+		svg:focus,
+		svg g:focus,
+		svg path:focus,
+		svg rect:focus,
+		svg polygon:focus {
+			outline: none !important;
+			box-shadow: none !important;
+		}
+
+		.btn-guardar-flotante {
+			position: fixed;
+			bottom: 30px;
+			right: 30px;
+			z-index: 1050;
+			/* por encima de tooltips o SVG */
+			padding: 12px 20px;
+			font-weight: 600;
+			border-radius: 8px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+			transition: all 0.2s ease-in-out;
+		}
+
+		.btn-guardar-flotante:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+		}
+
+		/* Cursor siempre como flecha */
+		body, html, div, span, p, a, button, input, textarea, svg, g, path, polygon, rect {
+			cursor: default !important;
+			user-select: none; /* opcional: evita selección de texto si no quieres que se marque */
+		}
 	</style>
 
-<div class="text-center mt-3">
-    <button id="btnGuardarAsientos" class="btn btn-warning">Guardar Asientos Seleccionados</button>
-</div>
+	@if(auth()->check() && auth()->user()->isAdmin())
+		<button id="btnGuardarAsientos" class="btn btn-warning btn-guardar-flotante">
+			Guardar Asientos
+		</button>
+	@endif
+
 	<div class="text-center">
 		<div style="position: relative; display: inline-block;">
 
@@ -90,16 +121,15 @@
 					</a>
 				@endif
 			</div>
-
 		</div>
-
 	</div>
-
-
 
 @endsection
 
 @push('scripts')
+<script>
+    window.isAdmin = @json(auth()->check() && auth()->user()->isAdmin());
+</script>
 	<script>
 		let selector = @json($lot->modal_selector ?? 'svg g *');
 

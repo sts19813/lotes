@@ -18,19 +18,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const svgElements = document.querySelectorAll(selector);
 
     svgElements.forEach(el => {
+        
+        if (!window.isAdmin) {
+            // Bloquear interacción si no es admin
+            el.style.cursor = "not-allowed";
+            el.addEventListener('click', (e) => e.preventDefault());
+            return; // no agrega el listener normal
+        }
+
         el.addEventListener('click', function (e) {
             e.preventDefault();
 
-            let elementId = (this.id && this.id.trim() !== "") ? this.id : null;
-            if (!elementId) {
-                const parentG = this.closest("g");
-                if (parentG && parentG.id && parentG.id.trim() !== "") {
-                    elementId = parentG.id;
-                }
-            }
-
-            const clickedSVG = document.getElementById(elementId);
+            // Siempre obtener el grupo <g> más cercano con ID
+            const clickedSVG = e.target.closest('g[id]');
             if (!clickedSVG) return;
+
+            // Evita conflictos con tooltips o overlays
+            e.stopPropagation();
 
             const info = JSON.parse(clickedSVG.dataset.loteInfo);
             const originalStatus = info.status;
@@ -44,8 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Restaurar color original según su status
                 let fillColor;
                 switch (originalStatus) {
-                    case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.7)'; break;
-                    case 'sold': fillColor = 'rgba(200, 0, 0, 0.6)'; break;
+                    case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.4)'; break;
+                    case 'sold': fillColor = 'rgba(200, 0, 0, 0.4)'; break;
                     case 'reserved': fillColor = 'rgba(255, 200, 0, 0.6)'; break;
                     default: fillColor = 'rgba(100, 100, 100, .9)';
                 }
@@ -100,8 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 // === Color por status ===
                 let fillColor;
                 switch (matchedLot.status) {
-                    case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.7)'; break;
-                    case 'sold': fillColor = 'rgba(200, 0, 0, 0.6)'; break;
+                    case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.4)'; break;
+                    case 'sold': fillColor = 'rgba(200, 0, 0, 0.4)'; break;
                     case 'reserved': fillColor = 'rgba(255, 200, 0, 0.6)'; break;
                     default: fillColor = 'rgba(100, 100, 100, .9)';
                 }
@@ -116,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const statusText = statusMap[matchedLot.status] || matchedLot.status;
                 const tooltipContent = `Asiento ${matchedLot.name} - ${statusText}`;
                 svgElement.setAttribute("data-bs-toggle", "tooltip");
-                svgElement.setAttribute("data-bs-html", "true"); 
+                svgElement.setAttribute("data-bs-html", "true");
                 svgElement.setAttribute("data-bs-title", tooltipContent);
                 new bootstrap.Tooltip(svgElement);
 
@@ -150,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         };
                         const finalColor = hex8ToRgba(color);
                         svgElement.querySelectorAll('*').forEach(el => {
-                            el.removeAttribute('fill'); 
+                            el.removeAttribute('fill');
                             el.style.setProperty('fill', finalColor, 'important');
                         });
                         svgElement.removeAttribute('fill');
@@ -177,34 +181,64 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
-
 });
 
-// === Guardar cambios ===
-document.getElementById('btnGuardarAsientos').addEventListener('click', function() {
+
+document.getElementById('btnGuardarAsientos').addEventListener('click', function () {
     if (selectedLots.length === 0) return;
 
-    // Determinar nuevo estatus según modo
     const newStatus = (selectionMode === 'available') ? 'sold' : 'for_sale';
+    const changingSoldToAvailable = newStatus === 'for_sale' && selectedLots.some(l => l.status === 'sold');
 
-    fetch('/lotes/guardar-asientos', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ 
-            lots: selectedLots.map(l => l.id),
-            status: newStatus
+    const proceed = () => {
+        fetch('/lotes/guardar-asientos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                lots: selectedLots.map(l => l.id),
+                status: newStatus
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert('Ocurrió un error al guardar los asientos.');
-        }
-    })
-    .catch(err => console.error(err));
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else if (data.concurrency) {
+                    const conflictIds = data.conflictLots.map(l => l.id);
+                    // Resaltar lotes en conflicto en amarillo
+                    conflictIds.forEach(id => {
+                        document.querySelectorAll(`.svg g *[data-lot-id="${id}"]`).forEach(el => {
+                            el.style.fill = 'yellow';
+                        });
+                    });
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Concurrencia detectada',
+                        html: `Los siguientes lotes ya fueron vendidos o cambiados: <b>${conflictIds.join(', ')}</b>.<br>No se guardó ningún cambio.`
+                    });
+                } else {
+                    Swal.fire('Error', 'Ocurrió un error al guardar los asientos.', 'error');
+                }
+            })
+            .catch(err => console.error(err));
+    };
+
+    if (changingSoldToAvailable) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Confirmación',
+            html: 'Estás intentando cambiar lotes vendidos a disponibles. ¿Deseas continuar?',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'Cancelar'
+        }).then(result => {
+            if (result.isConfirmed) proceed();
+        });
+    } else {
+        proceed();
+    }
 });

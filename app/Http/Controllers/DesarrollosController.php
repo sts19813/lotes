@@ -132,19 +132,32 @@ class DesarrollosController extends Controller
     public function guardarAsientos(Request $request)
     {
         $lotIds = $request->input('lots', []);
-        $newStatus = $request->input('status', 'sold'); // por defecto 'sold'
+        $newStatus = $request->input('status', 'sold');
 
         if (empty($lotIds)) {
             return response()->json(['success' => false, 'message' => 'No se enviaron lotes']);
         }
 
-        $updated = Lot::whereIn('id', $lotIds)->update(['status' => $newStatus]);
+        // Traer los lotes actuales desde DB
+        $lots = Lot::whereIn('id', $lotIds)->get();
 
-        if ($updated) {
-            return response()->json(['success' => true]);
+        $conflictLots = $lots->filter(function($lot) use ($newStatus) {
+            return $newStatus === 'sold' && $lot->status === 'sold';
+        });
+
+        if ($conflictLots->isNotEmpty()) {
+            return response()->json([
+                'success' => false,
+                'concurrency' => true,
+                'message' => 'Algunos lotes ya fueron vendidos',
+                'conflictLots' => $conflictLots->map(fn($l) => ['id' => $l->id, 'status' => $l->status])
+            ]);
         }
 
-        return response()->json(['success' => false, 'message' => 'No se pudieron actualizar los lotes']);
+        // Actualizar todos los lotes permitidos
+        Lot::whereIn('id', $lotIds)->update(['status' => $newStatus]);
+
+        return response()->json(['success' => true]);
     }
 
 
