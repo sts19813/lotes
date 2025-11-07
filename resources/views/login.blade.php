@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Iniciar Sesión - UONDR</title>
+    <title>Iniciar Sesión - Naboo</title>
 
     {{-- Fuentes y estilos --}}
     <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" rel="stylesheet" />
@@ -104,7 +104,7 @@
                     <!--img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
                          src="{{ asset('assets/media/misc/auth-screens.png') }}" alt="" /-->
                     <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">
-                        Bienvenido 
+                        Bienvenido a Naboo
                     </h1>
                     <div class="d-none d-lg-block text-white fs-base text-center">
                         Gestiona y accede fácilmente a tu cuenta.

@@ -18,7 +18,8 @@
 	<meta property="og:site_name" content="Metronic by Keenthemes" />
 	<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
 	<link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
- <meta name="csrf-token" content="{{ csrf_token() }}">
+ 	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 	<!-- Fonts -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -154,6 +155,9 @@
 	<!-- Load Pickr -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
 	<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr"></script>
+
+	<!-- Select2 -->
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 	<!-- Para cargar scripts adicionales desde otras vistas -->
 	@stack('scripts')

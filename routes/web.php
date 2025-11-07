@@ -14,6 +14,7 @@ use App\Http\Controllers\View\PhaseViewController;
 use App\Http\Controllers\View\StageViewController;
 use App\Http\Controllers\View\LotViewController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FinanciamientoController;
 
 use App\Http\Controllers\View\ProjectViewController;
 Route::view('/', 'login');
@@ -110,7 +111,13 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::get('/dashboards', [DashboardController::class, 'index'])->name('dashboards.index');
         Route::post('/dashboards/data', [DashboardController::class, 'getData'])->name('dashboards.data');
 
-
+        //Financiamiento
+        Route::get('/financiamientos', [FinanciamientoController::class, 'index'])->name('financiamientos.index');
+        Route::get('/financiamientos/data', [FinanciamientoController::class, 'data'])->name('financiamientos.data');
+        Route::post('/financiamientos', [FinanciamientoController::class, 'store'])->name('financiamientos.store');
+        Route::get('/financiamientos/{financiamiento}/edit', [FinanciamientoController::class, 'edit'])->name('financiamientos.edit');
+        Route::put('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'update'])->name('financiamientos.update');
+        Route::delete('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'destroy'])->name('financiamientos.destroy');
 });
 
 // =========================

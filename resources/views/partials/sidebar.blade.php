@@ -108,11 +108,11 @@
 
                 <!--begin: Financiamiento -->
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->is('financing*') ? 'active' : '' }}" href="/financing">
+                    <a class="menu-link {{ request()->is('financiamientos*') ? 'active' : '' }}" href="/financiamientos">
                         <span class="menu-icon">
                             <i class="ki-outline ki-calculator fs-2"></i>
                         </span>
-                        <span class="menu-title">Financiamiento</span>
+                        <span class="menu-title">Modelos de financiamiento</span>
                     </a>
                 </div>
                 <!--end: Financiamiento -->
