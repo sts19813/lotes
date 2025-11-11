@@ -118,7 +118,9 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::get('/financiamientos/{financiamiento}/edit', [FinanciamientoController::class, 'edit'])->name('financiamientos.edit');
         Route::put('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'update'])->name('financiamientos.update');
         Route::delete('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'destroy'])->name('financiamientos.destroy');
-});
+        // Página para crear financiamiento
+        Route::get('/financiamientos/create', [FinanciamientoController::class, 'create'])->name('financiamientos.create');
+    });
 
 // =========================
 // API Endpoints Adara

@@ -17,16 +17,36 @@ class Financiamiento extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
-        'meses',
+        'visible',
+
+        // Porcentajes principales
         'porcentaje_enganche',
-        'interes_anual',
+        'porcentaje_financiamiento',
+        'porcentaje_saldo',
+
+        // Descuentos e intereses
         'descuento_porcentaje',
-        'monto_minimo',
-        'monto_maximo',
-        'periodicidad_pago',
-        'cargo_apertura',
-        'penalizacion_mora',
-        'plazo_gracia_meses',
+        'financiamiento_interes',
+        'financiamiento_cuota_apertura',
+
+        // Enganche
+        'enganche_diferido',
+        'enganche_num_pagos',
+
+        // Financiamiento
+        'financiamiento_meses',
+
+        // Anualidad
+        'tiene_anualidad',
+        'porcentaje_anualidad',
+        'numero_anualidades',
+        'pagos_por_anualidad',
+
+        // Saldo / Contado
+        'saldo_diferido',
+        'saldo_num_pagos',
+
+        // Estado
         'activo',
     ];
 
@@ -34,14 +54,20 @@ class Financiamiento extends Model
      * Casts automáticos
      */
     protected $casts = [
+        'visible' => 'boolean',
         'activo' => 'boolean',
+
         'porcentaje_enganche' => 'decimal:2',
-        'interes_anual' => 'decimal:2',
+        'porcentaje_financiamiento' => 'decimal:2',
+        'porcentaje_saldo' => 'decimal:2',
         'descuento_porcentaje' => 'decimal:2',
-        'monto_minimo' => 'decimal:2',
-        'monto_maximo' => 'decimal:2',
-        'cargo_apertura' => 'decimal:2',
-        'penalizacion_mora' => 'decimal:2',
+        'financiamiento_interes' => 'decimal:2',
+        'financiamiento_cuota_apertura' => 'decimal:2',
+        'porcentaje_anualidad' => 'decimal:2',
+
+        'enganche_diferido' => 'boolean',
+        'tiene_anualidad' => 'boolean',
+        'saldo_diferido' => 'boolean',
     ];
 
     /**
@@ -50,24 +76,26 @@ class Financiamiento extends Model
     public function desarrollos()
     {
         return $this->belongsToMany(
-            Desarrollos::class, 
-            'desarrollo_financiamiento', 
-            'financiamiento_id', 
+            Desarrollos::class,
+            'desarrollo_financiamiento',
+            'financiamiento_id',
             'desarrollo_id'
         );
     }
 
     /**
-     * Accesor para mostrar el nombre completo del plan
-     * Ejemplo: "Plan Oro (60 meses - 8% interés)"
+     * Accesor para mostrar nombre completo del plan
+     * Ejemplo: "Plan Premium (60 meses - 2.5% interés anual)"
      */
     public function getNombreCompletoAttribute()
     {
-        return "{$this->nombre} ({$this->meses} meses - {$this->interes_anual}% interés)";
+        $interes = $this->financiamiento_interes ? "{$this->financiamiento_interes}%" : "0%";
+        $meses = $this->financiamiento_meses ?? 0;
+        return "{$this->nombre} ({$meses} meses - {$interes} interés)";
     }
 
     /**
-     * Scope: solo modelos activos
+     * Scope: solo planes activos
      */
     public function scopeActivos($query)
     {

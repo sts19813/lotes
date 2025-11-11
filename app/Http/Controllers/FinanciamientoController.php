@@ -1,21 +1,31 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Financiamiento;
 use App\Models\Desarrollos;
-
 use Illuminate\Http\Request;
 
 class FinanciamientoController extends Controller
 {
+    /**
+     * Mostrar vista principal
+     */
     public function index()
     {
         $desarrollos = Desarrollos::orderBy('created_at', 'desc')->get();
-
         return view('financiamientos.index', compact('desarrollos'));
-
     }
 
+    public function create()
+    {
+        $desarrollos = Desarrollos::all(); // Trae los desarrollos disponibles
+        return view('financiamientos.create', compact('desarrollos'));
+    }
+
+    /**
+     * Retornar datos en formato JSON para DataTable
+     */
     public function data()
     {
         $data = Financiamiento::with('desarrollos:id,name')->get();
@@ -25,31 +35,55 @@ class FinanciamientoController extends Controller
         ]);
     }
 
+    /**
+     * Guardar nuevo financiamiento
+     */
     public function store(Request $request)
     {
-        // Validación
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:255',
-            'meses' => 'required|integer|min:1',
+            'visible' => 'required|boolean',
+
+            // Porcentajes principales
             'porcentaje_enganche' => 'required|numeric|min:0',
-            'interes_anual' => 'required|numeric|min:0',
+            'porcentaje_financiamiento' => 'required|numeric|min:0',
+            'porcentaje_saldo' => 'required|numeric|min:0',
+
+            // Interés y descuentos
             'descuento_porcentaje' => 'nullable|numeric|min:0',
-            'monto_minimo' => 'nullable|numeric|min:0',
-            'monto_maximo' => 'nullable|numeric|min:0',
-            'periodicidad_pago' => 'required|in:mensual,bimestral,trimestral',
-            'cargo_apertura' => 'nullable|numeric|min:0',
-            'penalizacion_mora' => 'nullable|numeric|min:0',
-            'plazo_gracia_meses' => 'nullable|integer|min:0',
-            'activo' => 'required|boolean',
+            'financiamiento_interes' => 'nullable|numeric|min:0',
+            'financiamiento_cuota_apertura' => 'nullable|numeric|min:0',
+
+            // Enganche
+            'enganche_diferido' => 'required|boolean',
+            'enganche_num_pagos' => 'nullable|integer|min:1',
+
+            // Financiamiento
+            'financiamiento_meses' => 'nullable|integer|min:1',
+
+            // Anualidad
+            'tiene_anualidad' => 'required|boolean',
+            'porcentaje_anualidad' => 'nullable|numeric|min:0',
+            'numero_anualidades' => 'nullable|integer|min:0',
+            'pagos_por_anualidad' => 'nullable|integer|min:0',
+
+            // Saldo / Contado
+            'saldo_diferido' => 'required|boolean',
+            'saldo_num_pagos' => 'nullable|integer|min:1',
+
+            // Estado
+            'activo' => 'sometimes|boolean',
+
+            // Relación
             'desarrollos' => 'nullable|array',
             'desarrollos.*' => 'exists:desarrollos,id',
         ]);
 
-        // Crear financiamiento
+        $validated['activo'] = $request->input('activo', true);
+
         $financiamiento = Financiamiento::create($validated);
 
-        // Relacionar desarrollos si existen
         if (!empty($validated['desarrollos'])) {
             $financiamiento->desarrollos()->sync($validated['desarrollos']);
         }
@@ -60,32 +94,56 @@ class FinanciamientoController extends Controller
         ]);
     }
 
-
-    public function edit(Financiamiento $financiamiento)
+    /**
+     * Editar financiamiento (retorna datos JSON)
+     */
+    public function edit($id)
     {
-        $desarrollos = Desarrollos::orderBy('created_at', 'desc')->get();
-        return response()->json([
-            'financiamiento' => $financiamiento->load('desarrollos'),
-            'desarrollos' => $desarrollos
-        ]);
+        $financiamiento = Financiamiento::with('desarrollos')->findOrFail($id);
+        $desarrollos = Desarrollos::all();
+
+        // Aseguramos los booleanos sean 0 o 1 para el frontend
+        $financiamiento->visible = (int) $financiamiento->visible;
+        $financiamiento->enganche_diferido = (int) $financiamiento->enganche_diferido;
+        $financiamiento->tiene_anualidad = (int) $financiamiento->tiene_anualidad;
+        $financiamiento->saldo_diferido = (int) $financiamiento->saldo_diferido;
+
+        return view('financiamientos.edit', compact('financiamiento', 'desarrollos'));
     }
 
+    /**
+     * Actualizar financiamiento existente
+     */
     public function update(Request $request, Financiamiento $financiamiento)
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:255',
-            'meses' => 'required|integer|min:1',
+            'visible' => 'required|boolean',
+
             'porcentaje_enganche' => 'required|numeric|min:0',
-            'interes_anual' => 'required|numeric|min:0',
+            'porcentaje_financiamiento' => 'required|numeric|min:0',
+            'porcentaje_saldo' => 'required|numeric|min:0',
+
             'descuento_porcentaje' => 'nullable|numeric|min:0',
-            'monto_minimo' => 'nullable|numeric|min:0',
-            'monto_maximo' => 'nullable|numeric|min:0',
-            'periodicidad_pago' => 'required|in:mensual,bimestral,trimestral',
-            'cargo_apertura' => 'nullable|numeric|min:0',
-            'penalizacion_mora' => 'nullable|numeric|min:0',
-            'plazo_gracia_meses' => 'nullable|integer|min:0',
-            'activo' => 'required|boolean',
+            'financiamiento_interes' => 'nullable|numeric|min:0',
+            'financiamiento_cuota_apertura' => 'nullable|numeric|min:0',
+
+            'enganche_diferido' => 'required|boolean',
+            'enganche_num_pagos' => 'nullable|integer|min:1',
+
+            'financiamiento_meses' => 'nullable|integer|min:1',
+
+            'tiene_anualidad' => 'required|boolean',
+            'porcentaje_anualidad' => 'nullable|numeric|min:0',
+            'numero_anualidades' => 'nullable|integer|min:0',
+            'pagos_por_anualidad' => 'nullable|integer|min:0',
+
+            'saldo_diferido' => 'required|boolean',
+            'saldo_num_pagos' => 'nullable|integer|min:1',
+
+            'activo' => 'sometimes|boolean',
+
             'desarrollos' => 'nullable|array',
             'desarrollos.*' => 'exists:desarrollos,id',
         ]);
@@ -104,6 +162,9 @@ class FinanciamientoController extends Controller
         ]);
     }
 
+    /**
+     * Eliminar financiamiento
+     */
     public function destroy(Financiamiento $financiamiento)
     {
         $financiamiento->desarrollos()->detach();
