@@ -147,4 +147,62 @@ class LotController extends Controller
             'errors' => $errors
         ], 200);
     }
+
+
+    /**
+     * Metodo para realizar el cambio de un estatus desde el combo del datatables del registro
+     * @param Request $request contiene el nuevo estatus
+     * @param Lot $lot unidad o lote a cambiar su estatus
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateStatus(Request $request, Lot $lot)
+    {
+        $request->validate([
+            'status' => 'required|in:for_sale,sold,reserved,locked_sale'
+        ]);
+
+        $lot->status = $request->status;
+        $lot->save();
+
+        return response()->json(['message' => 'Status actualizado']);
+    }
+
+    /**
+     * metodo para subir una chepina de una unidad. desde el datatables
+     * @param Request $request contiene la imagen nueva a cargar
+     * @param Lot $lot contiene la unidad a la que se le actualizara el registro de la chepina  
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadChepina(Request $request, Lot $lot)
+    {
+        if (!$request->hasFile('chepina')) {
+            return response()->json([
+                'message' => 'No se envió ningún archivo'
+            ], 400);
+        }
+
+        $file = $request->file('chepina');
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+        // Ruta absoluta hacia public/chepinas
+        $destination = public_path('chepinas');
+
+        // Crear carpeta si no existe
+        if (!file_exists($destination)) {
+            mkdir($destination, 0777, true);
+        }
+
+        // Mover archivo directamente al public/
+        $file->move($destination, $filename);
+
+        // Guardar nombre en BD
+        $lot->update([
+            'chepina' => $filename
+        ]);
+
+        return response()->json([
+            'message' => 'Imagen subida correctamente',
+            'file' => $filename
+        ]);
+    }
 }

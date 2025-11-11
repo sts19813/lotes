@@ -19,3 +19,5 @@ Route::apiResource('lots', LotController::class);
 
 
 Route::post('/lots/import', [LotController::class, 'import']);
+Route::put('/lots/{lot}/status', [LotController::class, 'updateStatus']);
+Route::post('/lots/{lot}/chepina', [LotController::class, 'uploadChepina']);
