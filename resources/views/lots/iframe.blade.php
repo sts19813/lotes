@@ -138,23 +138,42 @@
 
 							</select>
 						</div>
-						<p class="label"> Monto de Enganche: <strong>$213,300.00 MXN</strong></p>
+						<p class="label"> Monto de Enganche: <strong>$0MXN</strong></p>
 
 
 						<div class="linea-discontinua "></div>
-						<!-- Planes -->
+						<!-- Planes dinámicos -->
 						<div class="row row-cols-2 g-3 mt-3">
 
-							<div class="col">
-								<div class="plan-box active" style="padding: 40px;">
-									<img src="/assets/img/Plan.svg" width="80">
-									<p class="mb-1 fw-bold"> <span style="font-size: 44px;">60</span> <br> <span
-											style="font-size: 12px;">Meses</span></p>
-									<small id="monthlyPayment"
-										style="font-size: 13px;font-family: 'Poppins';color: #F2F2F2 !important;">$0</small><br>
-									<small style="color: #D9D9D6; font-family: poppins; font-size: 13px;">Mensuales</small>
+							@if($financiamientos->count() > 0)
+								@foreach($financiamientos as $plan)
+									<div class="col">
+										<div class="plan-box {{ $loop->first ? 'active' : '' }}" data-financing='@json($plan)'
+											data-meses="{{ $plan->financiamiento_meses ?? $plan->months ?? $plan->financing_months ?? 60 }}"
+											role="button">
+											<img src="/assets/img/Plan.svg" width="80">
+											<p class="mb-1 fw-bold">
+												<span style="font-size: 44px;">{{ $plan->financiamiento_meses }}</span>
+												<span style="font-size: 12px;">Meses</span>
+											</p>
+											<small class="monthlyPayment">$0</small><br>
+											<small style="color: #D9D9D6; font-family: poppins; font-size: 13px;">Mensuales</small>
+										</div>
+									</div>
+								@endforeach
+							@else
+								<!-- Default: comportamiento actual -->
+								<div class="col">
+									<div class="plan-box active" style="padding: 40px;">
+										<img src="/assets/img/Plan.svg" width="80">
+										<p class="mb-1 fw-bold"> <span style="font-size: 44px;">60</span> <br> <span
+												style="font-size: 12px;">Meses</span></p>
+										<small class="monthlyPayment"
+											style="font-size: 13px;font-family: 'Poppins';color: #F2F2F2 !important;">$0</small><br>
+										<small style="color: #D9D9D6; font-family: poppins; font-size: 13px;">Mensuales</small>
+									</div>
 								</div>
-							</div>
+							@endif
 						</div>
 					</div>
 
@@ -372,6 +391,7 @@
 			}
 		};
 
+		window.currentLoteFinanciamientos = @json($financiamientos);
 		window.preloadedLots = @json($lots);
 		window.currentLot = @json($lot);
 		window.projects = @json($projects);

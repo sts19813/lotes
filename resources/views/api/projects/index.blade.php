@@ -45,12 +45,17 @@
                 <form id="formProject">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label">Usuario</label>
-                        <input type="number" name="user_id" class="form-control" placeholder="ID del usuario" required>
+                       <select name="user_id" id="userSelect" class="form-select" required>
+                            <option value="">Selecciona un usuario</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Nombre</label>
+                        <label class="form-label">Nombre del Desarrollo/Proyecto </label>
                         <input type="text" name="name" class="form-control" placeholder="Nombre del proyecto" required>
                     </div>
 
@@ -93,6 +98,11 @@
 @push('scripts')
 <script>
 $(document).ready(function () {
+
+    $('#userSelect').select2({
+        placeholder: 'Selecciona un usuario',
+        width: '100%'
+    });
     const table = $('#projectsTable').DataTable({
         ajax: {
             url: '/api/projects',

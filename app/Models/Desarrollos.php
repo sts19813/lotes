@@ -29,4 +29,17 @@ class Desarrollos extends Model
         'svg_image',
         'png_image'
     ];
+
+    /**
+     * Relación: un desarrollo puede tener muchos planes de financiamiento
+     */
+    public function financiamientos()
+    {
+        return $this->belongsToMany(
+            \App\Models\Financiamiento::class,
+            'desarrollo_financiamiento',
+            'desarrollo_id',
+            'financiamiento_id'
+        );
+    }
 }

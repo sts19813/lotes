@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalEl = document.getElementById('polygonModal');
     polygonModal = new bootstrap.Modal(modalEl); // se crea una sola instancia
 
-    // 1️⃣ Detectar click sobre polygons/path con clase .cls-1
     const svgElements = document.querySelectorAll(selector);
     svgElements.forEach(el => {
         el.addEventListener('click', function (e) {
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             info = JSON.parse(document.getElementById(elementId).getAttribute("data-lote-info"));
-
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -276,11 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
-
-
 function llenarModal(lote) {
-    // Guardamos el lote globalmente para usarlo en el submit
     window.currentLoteInfo = lote;
 
     // --- IMAGEN ---
@@ -289,88 +283,157 @@ function llenarModal(lote) {
 
     // --- DATOS BASE DEL LOTE ---
     document.querySelector("#loteName").textContent = lote.name;
-    document.querySelector("#lotearea").textContent =`${parseFloat(lote.area).toFixed(2)} m²`;
+    document.querySelector("#lotearea").textContent = `${parseFloat(lote.area).toFixed(2)} m²`;
     document.querySelector("#lotePrecioMetro").textContent = formatMoney(lote.price_square_meter);
 
     const precioTotal = lote.area * lote.price_square_meter;
     document.querySelector("#lotePrecioTotal").textContent = formatMoney(precioTotal);
 
-    // --- FINANCIAMIENTO ---
-    const enganchePorc = lote.down_payment_percent || 30;
+    // --- CALCULAR mensualidad de todos los planes ---
+    document.querySelectorAll(".plan-box").forEach(box => {
+        const plan = JSON.parse(box.dataset.financing || "{}");
+        const mesesPlan = parseInt(box.dataset.meses || plan.financiamiento_meses || plan.months || plan.financing_months || 60);
+        const enganchePorc = parseFloat(plan.down_payment_percent || 30);
+        const engancheMonto = precioTotal * (enganchePorc / 100);
+        const mensualidad = (precioTotal - engancheMonto) / mesesPlan;
+
+        const monthlyElem = box.querySelector(".monthlyPayment");
+        if (monthlyElem) monthlyElem.textContent = formatMoney(mensualidad);
+    });
+
+    // --- FINANCIAMIENTO POR DEFAULT Y TABLA DE PROYECCIÓN ---
+    const firstPlanBox = document.querySelector(".plan-box.active") || document.querySelector(".plan-box");
+    if (firstPlanBox) {
+        actualizarFinanciamiento(firstPlanBox, precioTotal);
+    }
+
+    // --- EVENTO CLICK PLANES ---
+    document.querySelectorAll(".plan-box").forEach(box => {
+        box.addEventListener("click", function() {
+            // Remover clase active de todos
+            document.querySelectorAll(".plan-box").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+
+            // Actualizar financiamiento y proyección
+            actualizarFinanciamiento(this, precioTotal);
+        });
+    });
+}
+
+// Función para actualizar los datos de financiamiento en el modal
+function actualizarFinanciamiento(box, precioTotal) {
+    const plan = JSON.parse(box.dataset.financing || "{}");
+    const meses = parseInt(box.dataset.meses || plan.financiamiento_meses || plan.months || plan.financing_months || 60);
+    const enganchePorc = parseFloat(plan.down_payment_percent || 30);
     const engancheMonto = precioTotal * (enganchePorc / 100);
 
-    document.querySelector(".form-select").value = `${enganchePorc}% de enganche`;
-    document.querySelector("p.label strong").textContent = `${formatMoney(engancheMonto)} MXN`;
+    // Formulario de enganche
+    const selectEnganche = document.querySelector(".form-select");
+    if (selectEnganche) selectEnganche.value = `${enganchePorc}% de enganche`;
 
-    const intereses = lote.interest_rate || 0;
-    const descuento = lote.discount_percent || 0;
+    const labelStrong = document.querySelector("p.label strong");
+    if (labelStrong) labelStrong.textContent = formatMoney(engancheMonto);
 
-    document.querySelector("#tab1 .value.text-primary.fw-bold").textContent = `${enganchePorc}%`;
-    document.querySelector("#loteIntereses").textContent = formatPercent(intereses);
-    document.querySelector("#loteDescuento").textContent = formatPercent(descuento);
+    // Intereses y descuento
+    const intereses = parseFloat(plan.interest_rate || 0);
+    const descuento = parseFloat(plan.discount_percent || 0);
 
-    const meses = window.currentLot?.financing_months || lote.financing_months || 60;
+    const tab1Enganche = document.querySelector("#tab1 .value.text-primary.fw-bold");
+    if (tab1Enganche) tab1Enganche.textContent = `${enganchePorc}%`;
 
-    // Actualizar meses en UI
-    const planBox = document.querySelector(".plan-box p span");
-    if (planBox) planBox.textContent = meses;
+    const loteIntereses = document.getElementById("loteIntereses");
+    if (loteIntereses) loteIntereses.textContent = formatPercent(intereses);
 
+    const loteDescuento = document.getElementById("loteDescuento");
+    if (loteDescuento) loteDescuento.textContent = formatPercent(descuento);
+
+    // Mensualidad
     const mensualidad = (precioTotal - engancheMonto) / meses;
-    document.querySelector("#tab1 .col-4 .value.fw-bold").textContent = `${meses} meses`;
-    document.getElementById("loteMensualidad").textContent = formatMoney(mensualidad);
-    document.getElementById("monthlyPayment").textContent = formatMoney(mensualidad);
 
-    document.getElementById("loteMontoFinanciado").textContent = formatMoney(precioTotal - engancheMonto);
-    document.getElementById("loteContraEntrega").textContent = formatMoney(engancheMonto);
-    document.getElementById("loteCostoTotal").textContent = formatMoney(precioTotal);
+    const mesesSpan = document.querySelector("#tab1 .col-4 .value.fw-bold");
+    if (mesesSpan) mesesSpan.textContent = `${meses} meses`;
 
-    // --- PROYECCIÓN PLUSVALÍA & ROI 5 AÑOS ---
-    const plusvaliaRate = parseFloat(window.currentLot?.plusvalia) || 0.15;
+    const loteMensualidad = document.getElementById("loteMensualidad");
+    if (loteMensualidad) loteMensualidad.textContent = formatMoney(mensualidad);
+
+    const monthlyElem = box.querySelector(".monthlyPayment");
+    if (monthlyElem) monthlyElem.textContent = formatMoney(mensualidad);
+
+    // Montos totales
+    const loteMontoFinanciado = document.getElementById("loteMontoFinanciado");
+    if (loteMontoFinanciado) loteMontoFinanciado.textContent = formatMoney(precioTotal - engancheMonto);
+
+    const loteContraEntrega = document.getElementById("loteContraEntrega");
+    if (loteContraEntrega) loteContraEntrega.textContent = formatMoney(engancheMonto);
+
+    const loteCostoTotal = document.getElementById("loteCostoTotal");
+    if (loteCostoTotal) loteCostoTotal.textContent = formatMoney(precioTotal);
+
+    // Guardar info del plan actual
+    window.currentPlan = plan;
+    window.currentMeses = meses;
+    window.currentMensualidad = mensualidad;
+    // Actualizar tabla de proyección
+    actualizarProyeccion(precioTotal, window.currentLot?.plusvalia || 0.15, plan);
+}
+
+// Función para actualizar la proyección de plusvalía y ROI
+function actualizarProyeccion(precioTotal, plusvaliaRate, plan) {
+
+        // Convertir a número por si viene como string
+    plusvaliaRate = parseFloat(plusvaliaRate);
+    if (isNaN(plusvaliaRate)) plusvaliaRate = 0.15; // fallback
+
     const valorFinal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
     const plusvaliaTotal = valorFinal - precioTotal;
     const roi = ((valorFinal - precioTotal) / precioTotal) * 100;
 
-    document.querySelector(".background-verde h6").textContent = formatMoney(plusvaliaTotal);
-    document.querySelector(".background-azul h6").textContent = formatPercent(roi);
-    document.querySelector(".background-morado h6").textContent = formatPercent(plusvaliaRate * 100);
-    document.querySelector(".background-amarillo h6").textContent = formatMoney(valorFinal);
+    const bgVerde = document.querySelector(".background-verde h6");
+    if (bgVerde) bgVerde.textContent = formatMoney(plusvaliaTotal);
+
+    const bgAzul = document.querySelector(".background-azul h6");
+    if (bgAzul) bgAzul.textContent = formatPercent(roi);
+
+    const bgMorado = document.querySelector(".background-morado h6");
+    if (bgMorado) bgMorado.textContent = formatPercent(plusvaliaRate * 100);
+
+    const bgAmarillo = document.querySelector(".background-amarillo h6");
+    if (bgAmarillo) bgAmarillo.textContent = formatMoney(valorFinal);
 
     // --- TABLA DE PROYECCIÓN ---
     const tbody = document.querySelector(".table-responsive tbody");
-    if (tbody) {
-        tbody.innerHTML = "";
-        const totalAnios = 5; // proyección a 5 años
+    if (!tbody) return;
 
-        for (let year = 0; year <= totalAnios; year++) {
-            const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
+    tbody.innerHTML = "";
+    const totalAnios = 5;
+    const meses = window.currentMeses || 60;
+    const engancheMonto = precioTotal * ((plan?.down_payment_percent || 30) / 100);
+    const mensualidad = window.currentMensualidad || (precioTotal - engancheMonto) / meses;
 
-            // Ajuste meses pagados según el año
-            let mesesPagados = 0;
-            if (year === 0) {
-                mesesPagados = 0; // solo enganche
-            } else if (year === 1) {
-                mesesPagados = Math.min(meses, 11);
-            } else {
-                mesesPagados = Math.min(meses, (year - 1) * 12 + 11);
-            }
+    for (let year = 0; year <= totalAnios; year++) {
+        const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
 
-            const montoPagado = engancheMonto + (mensualidad * mesesPagados);
-            const plusvaliaAcum = valorProp - precioTotal;
-            const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
+        let mesesPagados = 0;
+        if (year === 0) mesesPagados = 0;
+        else if (year === 1) mesesPagados = Math.min(meses, 11);
+        else mesesPagados = Math.min(meses, (year - 1) * 12 + 11);
 
-            const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
-            const roiColor = roiAnual > 0 ? "text-primary fw-semibold" : "";
+        const montoPagado = engancheMonto + (mensualidad * mesesPagados);
+        const plusvaliaAcum = valorProp - precioTotal;
+        const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${year}</td>
-                <td>${formatMoney(valorProp)}</td>
-                <td>${formatMoney(montoPagado)}</td>
-                <td class="${plusColor}">+${formatMoney(plusvaliaAcum)}</td>
-                <td class="${roiColor}">${formatPercent(roiAnual)}</td>
-            `;
-            tbody.appendChild(tr);
-        }
+        const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
+        const roiColor = roiAnual > 0 ? "text-primary fw-semibold" : "";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${year}</td>
+            <td>${formatMoney(valorProp)}</td>
+            <td>${formatMoney(montoPagado)}</td>
+            <td class="${plusColor}">+${formatMoney(plusvaliaAcum)}</td>
+            <td class="${roiColor}">${formatPercent(roiAnual)}</td>
+        `;
+        tbody.appendChild(tr);
     }
 }
 
