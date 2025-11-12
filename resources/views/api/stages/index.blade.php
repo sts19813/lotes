@@ -121,7 +121,7 @@ $(document).ready(function () {
         ]
     });
 
-    // 🔹 Filtrar fases por proyecto
+    //  Filtrar fases por proyecto
     $('#filterProject').on('change', function () {
         const projectId = $(this).val();
         const phaseSelect = $('#filterPhase');
@@ -133,7 +133,7 @@ $(document).ready(function () {
             return;
         }
 
-        // 🔹 Obtener fases del proyecto seleccionado
+        //  Obtener fases del proyecto seleccionado
         $.get(`/api/phases?project_id=${projectId}`, function(phases) {
             phaseSelect.prop('disabled', false).html('<option value="">Seleccionar...</option>');
             phases.forEach(p => phaseSelect.append(`<option value="${p.id}">${p.name}</option>`));
@@ -142,7 +142,7 @@ $(document).ready(function () {
         table.ajax.url(`/api/stages?project_id=${projectId}`).load();
     });
 
-    // 🔹 Filtrar etapas por fase
+    //  Filtrar etapas por fase
     $('#filterPhase').on('change', function () {
         const phaseId = $(this).val();
         const projectId = $('#filterProject').val();
@@ -155,7 +155,7 @@ $(document).ready(function () {
         table.ajax.url(`/api/stages?${query}`).load();
     });
 
-    // 🔹 Mantener lógica de modal para crear etapa
+    //  Mantener lógica de modal para crear etapa
     $('#projectSelect').on('change', function () {
         let projectId = $(this).val();
         let phaseSelect = $('#phaseSelect');

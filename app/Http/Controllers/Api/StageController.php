@@ -39,7 +39,7 @@ class StageController extends Controller
         return response()->json(
             $stage->load([
                 'phase.project', 
-                'enterprise',     // 🔹 Agregado
+                'enterprise',    
                 'customFields'
             ]),
             201
@@ -50,7 +50,7 @@ class StageController extends Controller
     {
         return $stage->load([
             'phase.project', 
-            'enterprise',       // 🔹 Agregado
+            'enterprise',       
             'lots', 
             'customFields'
         ]);
@@ -72,7 +72,7 @@ class StageController extends Controller
         return response()->json(
             $stage->load([
                 'phase.project', 
-                'enterprise',       // 🔹 Agregado
+                'enterprise',
                 'customFields'
             ])
         );

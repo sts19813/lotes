@@ -145,7 +145,7 @@ Route::get('/reports', [ReportController::class, 'index'])
     ->name('reports.index');
     
 Route::get('/iframe/{lot}/', [DesarrollosController::class, 'iframe'])
-    ->name('lots.iframe');
+    ->name('iframe.index');
     
 // =========================
 // Auth Routes

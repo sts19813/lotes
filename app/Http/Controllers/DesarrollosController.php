@@ -208,10 +208,10 @@ class DesarrollosController extends Controller
             ])->get();
         }
 
-         // 🔹 Obtener financiamientos relacionados (solo activos)
+         //  Obtener financiamientos relacionados (solo activos)
         $financiamientos = $lot->financiamientos()->activos()->get();
 
-        return view('lots.iframe', compact('lot','projects','lots','dbLotes', 'financiamientos'));
+        return view('iframe.index', compact('lot','projects','lots','dbLotes', 'financiamientos'));
     }
 
     /**

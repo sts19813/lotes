@@ -20,7 +20,7 @@
             </button>
         </div>
     </div>
-    <!-- 🔹 Filtros arriba -->
+    <!--  Filtros arriba -->
     <div class="row mb-5">
         <div class="col-md-4">
             <select id="filterProject" class="form-select">

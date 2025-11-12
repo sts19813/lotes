@@ -36,7 +36,6 @@ class DashboardController extends Controller
             'resume'       => []
         ];
 
-        // 🔥 Mapeo real API → Dashboard
         $statusMap = [
             'for_sale'    => 'available',
             'sold'        => 'sold',
@@ -44,7 +43,7 @@ class DashboardController extends Controller
             'locked_sale' => 'blocked'
         ];
 
-        // 👉 Cargar lotes SOLO UNA VEZ por Stage ✅
+        // Cargar lotes SOLO UNA VEZ por Stage
         $projects = collect($this->adara->getProjects());
 
         if ($projectId) {
@@ -67,26 +66,26 @@ class DashboardController extends Controller
 
                 foreach ($stages as $stage) {
 
-                    // ✅ Solo una consulta por stage
+                    // Solo una consulta por stage
                     $lots = collect($this->adara->getLots($project['id'], $phase['id'], $stage['id']))
                         ->map(function ($lot) use ($statusMap) {
                             $lot['mapped_status'] = $statusMap[$lot['status']] ?? 'unknown';
                             return $lot;
                         });
 
-                    // ✅ Filtrando en memoria
+                    // Filtrando en memoria
                     if ($filterStatus) {
                         $lots = $lots->where('mapped_status', $filterStatus);
                     }
 
-                    // ✅ Contadores correctos
+                    // Contadores correctos
                     $stats['total']     += $lots->count();
                     $stats['available'] += $lots->where('mapped_status', 'available')->count();
                     $stats['sold']      += $lots->where('mapped_status', 'sold')->count();
                     $stats['reserved']  += $lots->where('mapped_status', 'reserved')->count();
                     $stats['blocked']   += $lots->where('mapped_status', 'blocked')->count();
 
-                    // ✅ Resumen para tabla
+                    // Resumen para tabla
                     $stats['resume'][] = [
                         'project'   => $project['name'],
                         'phase'     => $phase['name'],

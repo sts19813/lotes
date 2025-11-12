@@ -1,0 +1,38 @@
+.table {
+    font-family: 'Inter', sans-serif;
+    /* Fuente limpia como en la imagen */
+    font-size: 0.95rem;
+}
+
+.table th {
+    font-weight: 600;
+    color: #333;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table td,
+.table th {
+    border: none !important;
+}
+
+.table-light {
+    font-weight: bold !important;
+    --bs-table-bg: #FFFFFF !important;
+}
+
+.text-success {
+    color: #1c9e4d !important;
+    /* Verde como el de la imagen */
+}
+
+.text-primary {
+    color: #1a73e8 !important;
+    /* Azul tipo Google */
+}
+
+.fw-semibold {
+    font-weight: 600;
+}

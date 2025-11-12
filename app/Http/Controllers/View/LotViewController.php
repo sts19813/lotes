@@ -10,14 +10,14 @@ class LotViewController extends Controller
 {
     public function index()
     {
-        // 🔹 Cargar todos los proyectos para el combo
+        //  Cargar todos los proyectos para el combo
         $projects = Project::select('id', 'name')->get();
 
-        // 🔹 Opcional: cargar fases y etapas vacías, se llenarán dinámicamente según selección
+        //  Opcional: cargar fases y etapas vacías, se llenarán dinámicamente según selección
         $phases = collect(); // inicialmente vacío
         $stages = collect(); // inicialmente vacío
 
-        // 🔹 Retornar la vista con los combos
+        //  Retornar la vista con los combos
         return view('api.lots.index', compact('projects', 'phases', 'stages'));
     }
 }

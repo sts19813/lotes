@@ -104,7 +104,7 @@ $(document).ready(function () {
         ]
     });
 
-    // 🔹 Filtrar por proyecto
+    //  Filtrar por proyecto
     $('#filterProject').on('change', function () {
         const projectId = $(this).val();
         let url = '/api/phases';
@@ -114,7 +114,7 @@ $(document).ready(function () {
         table.ajax.url(url).load();
     });
 
-    // 🔹 Guardar fase
+    //  Guardar fase
     $('#formPhase').on('submit', function(e) {
         e.preventDefault();
         $.post('/api/phases', $(this).serialize())
