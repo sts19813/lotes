@@ -15,8 +15,13 @@ use App\Http\Controllers\View\StageViewController;
 use App\Http\Controllers\View\LotViewController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinanciamientoController;
-
+use App\Http\Controllers\BitacoraController;
+use App\Http\Controllers\MigracionController;
 use App\Http\Controllers\View\ProjectViewController;
+use App\Http\Controllers\ConnectionController;
+
+
+
 Route::view('/', 'login');
 
 // =========================
@@ -118,8 +123,24 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::get('/financiamientos/{financiamiento}/edit', [FinanciamientoController::class, 'edit'])->name('financiamientos.edit');
         Route::put('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'update'])->name('financiamientos.update');
         Route::delete('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'destroy'])->name('financiamientos.destroy');
-        // Página para crear financiamiento
         Route::get('/financiamientos/create', [FinanciamientoController::class, 'create'])->name('financiamientos.create');
+
+
+        //bitacora
+        Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora.index');
+
+        //migracion
+        Route::get('/migracion', [MigracionController::class, 'index'])->name('migracion.index');
+        Route::post('/migracion/importar', [MigracionController::class, 'importar'])->name('migracion.importar');
+
+        //catalogo de conexiones.
+        Route::get('/connections', [ConnectionController::class, 'index'])->name('connections.index');
+        Route::get('/connections/create', [ConnectionController::class, 'create'])->name('connections.create');
+        Route::post('/connections', [ConnectionController::class, 'store'])->name('connections.store');
+        Route::get('/connections/{connection}/edit', [ConnectionController::class, 'edit'])->name('connections.edit');
+        Route::put('/connections/{connection}', [ConnectionController::class, 'update'])->name('connections.update');
+        Route::delete('/connections/{connection}', [ConnectionController::class, 'destroy'])->name('connections.destroy');
+
     });
 
 // =========================

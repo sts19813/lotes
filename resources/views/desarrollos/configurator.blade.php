@@ -16,9 +16,8 @@
 			transition: fill 0.3s ease;
 		}
 
-		{{ $lot->modal_selector ?? 'svg g *' }}
-		:hover {
-			fill: rgba(0, 200, 0, 0.6) !important;
+		{{ $lot->modal_selector ?? 'svg g *' }}:hover {
+			fill: rgb(0, 200, 0) !important;
 		}
 	</style>
 
@@ -131,5 +130,5 @@
 	</script>
 
 	<script src="/assets/js/lotes.js"></script>
-	<script src="/assets/js/iframe.js"></script>
+	<script src="/assets/js/iframePublico/Mainiframe.js"></script>
 @endpush

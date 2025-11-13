@@ -108,7 +108,8 @@
 
                 <!--begin: Financiamiento -->
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->is('financiamientos*') ? 'active' : '' }}" href="/financiamientos">
+                    <a class="menu-link {{ request()->is('financiamientos*') ? 'active' : '' }}"
+                        href="/financiamientos">
                         <span class="menu-icon">
                             <i class="ki-outline ki-calculator fs-2"></i>
                         </span>
@@ -116,6 +117,28 @@
                     </a>
                 </div>
                 <!--end: Financiamiento -->
+
+                <!--begin: Bitácora -->
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->is('bitacora*') ? 'active' : '' }}" href="/bitacora">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-notepad fs-2"></i>
+                        </span>
+                        <span class="menu-title">Bitácora</span>
+                    </a>
+                </div>
+                <!--end: Bitácora -->
+
+                <!--begin: Migrar información -->
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->is('migracion*') ? 'active' : '' }}" href="/migracion">
+                        <span class="menu-icon">
+                            <i class="ki-outline ki-send fs-2"></i>
+                        </span>
+                        <span class="menu-title">Migrar info (Adara → Naboo)</span>
+                    </a>
+                </div>
+                <!--end: Migrar información -->
 
                 <!--begin: Configuraciones -->
                 <div class="menu-item menu-accordion {{ request()->is('users*', 'connections*', 'access*') ? 'show' : '' }}"
