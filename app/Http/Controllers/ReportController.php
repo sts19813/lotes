@@ -9,6 +9,8 @@ use App\Mail\CotizacionGenerada;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use App\Models\Desarrollos;
+use App\Models\Phase;
+use App\Models\Stage;
 use App\Services\AdaraService;
 
 class ReportController extends Controller
@@ -47,6 +49,7 @@ class ReportController extends Controller
             "phase_id" => "nullable|integer",
             "stage_id" => "nullable|integer",
             "project_id" => "nullable|integer",
+            "source_type" => "nullable|string"
         ]);
 
         // Cálculos principales
@@ -92,19 +95,35 @@ class ReportController extends Controller
 
         $desarrolloName = $phaseName = $stageName = null;
 
-        if (!empty($data["project_id"])) {
-            $desarrolloName = $this->adara->getProjectName($data["project_id"]);
+        if (!empty($data["desarrollo_id"])) {
+            $desarrollo = Desarrollos::find($data["desarrollo_id"]);
+            $sourceType = $data["source_type"] ?? $desarrollo?->source_type ?? 'adara';
+
+            if ($sourceType === 'adara') {
+                if (!empty($data["project_id"])) {
+                    $desarrolloName = $this->adara->getProjectName($data["project_id"]);
+                }
+                if (!empty($data["phase_id"])) {
+                    $phaseName = $this->adara->getPhaseName($data["project_id"], $data["phase_id"]);
+                }
+                if (!empty($data["stage_id"])) {
+                    $stageName = $this->adara->getStageName($data["project_id"], $data["phase_id"], $data["stage_id"]);
+                }
+            } else {
+                $desarrolloName = $data["desarrollo_name"];
+
+                $Phase = Phase::find($data["phase_id"]);
+                $phaseName = $Phase?->name ?? null;
+
+                $Stage = Stage::find($data["stage_id"]);
+                $stageName = $Stage?->name ?? null;
+            }
         }
-        if (!empty($data["project_id"]) && !empty($data["phase_id"])) {
-            $phaseName = $this->adara->getPhaseName($data["project_id"], $data["phase_id"]);
-        }
-        if (!empty($data["project_id"]) && !empty($data["phase_id"]) && !empty($data["stage_id"])) {
-            $stageName = $this->adara->getStageName($data["project_id"], $data["phase_id"], $data["stage_id"]);
-        }
+
 
         // Guardar en BD
         try {
-            $report = Report::create([
+            Report::create([
                 "name" => $data["name"],
                 "area" => round($data["area"], 2),
                 "price_square_meter" => round($data["price_square_meter"], 2),
@@ -128,6 +147,7 @@ class ReportController extends Controller
                 "desarrollo_name" => $desarrolloName ?? null,
                 "phase_id" => $data["phase_id"] ?? null,
                 "stage_id" => $data["stage_id"] ?? null,
+                "source_type" => $data["source_type"] ?? null,
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -135,7 +155,6 @@ class ReportController extends Controller
 
         $desarrollo = $data['desarrollo_id'] ? Desarrollos::find($data['desarrollo_id']) : null;
         $desarrolloLogo = $desarrollo?->path_logo ?? null;
-        $desarrolloNombre = $desarrollo?->name ?? null;
 
         $pdfData = array_merge($data, [
             "precioTotal" => $precioTotal,
@@ -180,16 +199,29 @@ class ReportController extends Controller
 
     public function download(Report $report)
     {
+        $desarrollo = Desarrollos::find($report->desarrollo_id);
+        $sourceType = $report->source_type ?? $desarrollo?->source_type ?? 'adara';
+
         $desarrolloName = $phaseName = $stageName = null;
 
-        if (!empty($report->desarrollo_id)) {
-            $desarrolloName = $this->adara->getProjectName($report->desarrollo_id);
-        }
-        if (!empty($report->desarrollo_id) && !empty($report->phase_id)) {
-            $phaseName = $this->adara->getPhaseName($report->desarrollo_id, $report->phase_id);
-        }
-        if (!empty($report->desarrollo_id) && !empty($report->phase_id) && !empty($report->stage_id)) {
-            $stageName = $this->adara->getStageName($report->desarrollo_id, $report->phase_id, $report->stage_id);
+        if ($sourceType === 'adara') {
+            if (!empty($report->desarrollo_id)) {
+                $desarrolloName = $this->adara->getProjectName($report->desarrollo_id);
+            }
+            if (!empty($report->phase_id)) {
+                $phaseName = $this->adara->getPhaseName($report->desarrollo_id, $report->phase_id);
+            }
+            if (!empty($report->stage_id)) {
+                $stageName = $this->adara->getStageName($report->desarrollo_id, $report->phase_id, $report->stage_id);
+            }
+        } else {
+            $desarrolloName = $report->desarrollo_name;
+            
+            $Phase = Phase::find($report->phase_id);
+            $phaseName = $Phase?->name ?? null;
+
+            $Stage = Stage::find($report->stage_id);
+            $stageName = $Stage?->name ?? null;
         }
 
         $chepinaBase64 = $this->getChepinaBase64($report->chepina ?? null);

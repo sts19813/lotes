@@ -70,7 +70,8 @@ $(document).ready(function () {
             desarrollo_name: window.currentLot.name,
             phase_id: window.currentLot.phase_id,
             stage_id: window.currentLot.stage_id,
-            project_id: window.currentLot.project_id
+            project_id: window.currentLot.project_id,
+            source_type: window.currentLot.source_type
         });
 
         const url = `/reports/generate?${params.toString()}`;

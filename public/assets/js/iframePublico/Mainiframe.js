@@ -57,7 +57,7 @@ $(document).ready(function () {
             // --- Validaciones de estatus ---
             if (elementId) {
                 if (info.status === "sold" || info.status === "locked_sale") {
-                    console.log(`Este lote está ${statusMap[info.status]}`);
+                    console.log(`Esta Unidad está ${statusMap[info.status]}`);
                     return; // No abrir modal
                 }
 
@@ -110,7 +110,7 @@ $(document).ready(function () {
 
             // --- Crear tooltip (estatus + número de lote + área) ---
             const statusText = statusMap[matchedLot.status] || matchedLot.status;
-            const tooltipContent = `Lote ${matchedLot.name} - ${statusText}<br>Área: ${matchedLot.area} m²`;
+            const tooltipContent = `Unidad: ${matchedLot.name} - ${statusText}<br>Área: ${matchedLot.area} m²`;
 
             svgElement.setAttribute("data-bs-toggle", "tooltip");
             svgElement.setAttribute("data-bs-html", "true");

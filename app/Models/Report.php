@@ -33,6 +33,7 @@ class Report extends Model
         'desarrollo_name',
         'phase_id',
         'stage_id',
+        'source_type',
     ];
 
     protected $casts = [

@@ -77,7 +77,6 @@
 			@if(!empty($desarrollo_logo))
 				<img src="{{ url($desarrollo_logo) }}" alt="Logo" style="height:50px; margin-bottom:10px;">
 			@else
-				<img src="{{ url('assets/logos/Piaro.png') }}" alt="Piaro" style="height:50px; margin-bottom:10px;">
 			@endif
 			<div style="font-size:18px; font-weight:bold;">COTIZACIÓN</div>
 		</div>
@@ -93,7 +92,7 @@
 			<h2 style="font-size:16px; margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">Detalles
 				del Lote</h2>
 			<ul style="list-style:none; padding:0; font-size:14px; line-height:1.6;">
-				<li><strong>Nombre del lote:</strong> {{ $lot->name }}</li>
+				<li><strong>Nombre de la unidad:</strong> {{ $lot->name }}</li>
 				<li><strong>Área:</strong> {{ $lot->area }} m²</li>
 				<li><strong>Precio total:</strong> ${{ number_format($lot->precioTotal, 2) }}</li>
 
