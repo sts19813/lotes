@@ -19,7 +19,7 @@ use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\MigracionController;
 use App\Http\Controllers\View\ProjectViewController;
 use App\Http\Controllers\ConnectionController;
-
+use App\Http\Controllers\ProfileController;
 
 
 Route::view('/', 'login');
@@ -125,7 +125,6 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::delete('/financiamientos/{financiamiento}', [FinanciamientoController::class, 'destroy'])->name('financiamientos.destroy');
         Route::get('/financiamientos/create', [FinanciamientoController::class, 'create'])->name('financiamientos.create');
 
-
         //bitacora
         Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora.index');
 
@@ -140,6 +139,12 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::get('/connections/{connection}/edit', [ConnectionController::class, 'edit'])->name('connections.edit');
         Route::put('/connections/{connection}', [ConnectionController::class, 'update'])->name('connections.update');
         Route::delete('/connections/{connection}', [ConnectionController::class, 'destroy'])->name('connections.destroy');
+
+        //perfil
+        Route::get('/perfil', [ProfileController::class, 'index'])->name('profile.index');
+        Route::post('/perfil/actualizar', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/perfil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.update.photo');
+        Route::post('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
 
     });
 
