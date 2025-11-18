@@ -8,7 +8,7 @@
 
 	<style>
 		{{ $lot->modal_selector ?? 'svg g *' }}
-			{
+		{
 			fill: transparent !important;
 			stroke: #00aeef;
 			stroke-miterlimit: 10;
@@ -25,7 +25,7 @@
 		<div class="card-header">
 			<h3 class="card-title">Configurador: {{ $lot->name }}</h3>
 			<div class="card-toolbar">
-				<a href="{{ route('lots.form') }}" class="btn btn-secondary">Regresar</a>
+				<a href="{{ route('admin.index') }}" class="btn btn-secondary">Regresar</a>
 			</div>
 		</div>
 		<div class="card-body text-center">
@@ -105,7 +105,6 @@
 			</div>
 		</div>
 	</div>
-
 @endsection
 
 @push('scripts')

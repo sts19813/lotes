@@ -16,7 +16,7 @@
             </div>
 
             <div class="d-flex align-items-center gap-2">
-                <a href="{{ route('desarrollos.index') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                <a href="{{ route('admin.index') }}" class="btn btn-primary d-flex align-items-center gap-2">
                     <i class="ki-outline ki-arrow-left fs-2 me-2"></i> Volver a Desarrollos
                 </a>
             </div>
@@ -104,17 +104,22 @@
                             <!-- Financiamiento -->
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Meses de financiamiento</label>
+                                <i class="ki-outline ki-information-5 fs-5 ms-2" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Si no se configura un modelo de financiamiento específico, se utilizará esta configuración por defecto en el cotizador.">
+                                </i>
                                 <input type="number" name="financing_months" class="form-control" placeholder="Ej. 36">
                             </div>
 
                             <!-- Imágenes -->
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Imagen SVG</label>
-                                <input type="file" name="svg_image" accept=".svg" class="form-control" required>
+                                <input type="file" id="svg_input" name="svg_image" accept=".svg" class="form-control"
+                                    required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Imagen PNG</label>
-                                <input type="file" name="png_image" accept="image/png" class="form-control" required>
+                                <input type="file" name="png_image" accept="image" class="form-control" required>
                             </div>
                         </div>
                     </div>
@@ -145,7 +150,12 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Selector Modal</label>
-                                <input type="text" name="modal_selector" class="form-control" placeholder=".modal-class">
+                                <i class="ki-outline ki-information-5 fs-5 ms-2" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Este campo se rellena automáticamente al cargar el archivo SVG.">
+                                </i>
+                                <input type="text" id="modal_selector" name="modal_selector" class="form-control"
+                                    placeholder="svg *">
                             </div>
                         </div>
                     </div>
@@ -201,6 +211,7 @@
 
 @push('scripts')
     <script src="/assets/js/desarrollo.js"></script>
+    <script src="/assets/js/desarrollo/procesarSVG.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const pickers = document.querySelectorAll('.color-picker');

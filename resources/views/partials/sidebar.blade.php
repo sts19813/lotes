@@ -14,11 +14,11 @@
 
                 <!--begin: Desarrollos -->
                 <div class="menu-item">
-                    <a class="menu-link {{ request()->is('desarrollos*') ? 'active' : '' }}" href="/desarrollos">
+                    <a class="menu-link {{ request()->is('/') ? 'active' : '' }}" href="/">
                         <span class="menu-icon">
                             <i class="ki-outline ki-home-2 fs-2"></i>
                         </span>
-                        <span class="menu-title">Desarrollos</span>
+                        <span class="menu-title">Desarrollos / Proyectos</span>
                     </a>
                 </div>
                 <!--end: Desarrollos -->

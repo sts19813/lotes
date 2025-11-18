@@ -54,7 +54,7 @@
                         <td>{{ $lot->total_lots }}</td>
                         <td>
                             @if ($lot->png_image || $lot->svg_image)
-                            <div class="image-container" style="position: relative; width: 120px;">
+                            <div class="image-container" style="position: relative; height: 100px;">
                                 @if ($lot->png_image)
                                     <img data-src="{{ asset('/' . $lot->png_image) }}"
                                          alt="PNG"
@@ -79,7 +79,7 @@
                                 Configurar
                             </a>
                             <a href="{{ url('iframe/' . $lot->id) }}" 
-                               class="btn btn-sm btn-secondary" target="_blank">
+                               class="btn btn-sm btn-secondary" style="background-color: #3FB549 !important" target="_blank">
                                 Iframe
                             </a>
                             <a href="{{ route('desarrollos.edit', $lot->id) }}" 
@@ -116,9 +116,17 @@ $(document).ready(function() {
     // DataTable
     const table = $("#lots_table").DataTable({
         responsive: true,
-        pageLength: 5,
-        lengthMenu: [5, 10, 25, 50],
+        pageLength: 10,
+        lengthMenu: [10, 25, 50],
+        order: [],
         language: { url: '//cdn.datatables.net/plug-ins/2.3.2/i18n/es-MX.json' },
+        columnDefs: [
+            {
+                targets: 0,
+                visible: false,
+                searchable: false
+            }
+        ],
         dom: "<'row mb-3'<'col-12 d-flex justify-content-end'f>>" +
              "<'row'<'col-12'tr>>" +
              "<'row mt-3'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'p>>",

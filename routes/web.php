@@ -61,7 +61,7 @@ Route::get('/unauthorized', function () {
 Route::middleware(['auth', AdminMiddleware::class])
         ->group(function () {
 
-        Route::get('/admin', [DesarrollosController::class, 'admin'])
+        Route::get('/', [DesarrollosController::class, 'admin'])
             ->name('admin.index');
 
         Route::get('/consulta', [DesarrollosController::class, 'form'])

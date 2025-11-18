@@ -48,7 +48,7 @@ class DesarrollosController extends Controller
      */
     public function admin()
     {
-        $lots = Desarrollos::orderBy('created_at', 'desc')->get();
+        $lots = Desarrollos::orderBy('updated_at', 'desc')->get();
         return view('lots.admin', compact('lots'));
     }
 
@@ -125,7 +125,7 @@ class DesarrollosController extends Controller
 
         Desarrollos::create($data);
 
-        return redirect()->route('desarrollos.index')->with('success', 'Lote creado correctamente.');
+        return redirect()->route('admin.index')->with('success', 'Lote creado correctamente.');
     }
 
     /**
@@ -231,7 +231,9 @@ class DesarrollosController extends Controller
             if ($lot->phase_id) $stages = $this->adaraService->getStages($lot->project_id, $lot->phase_id);
         }
 
-        return view('desarrollos.edit', compact('lot','projects','phases','stages'));
+        $desarrollos = Desarrollos::select('id', 'name')->get();
+
+        return view('desarrollos.edit', compact('lot','projects','phases','stages','desarrollos'));
     }
 
     /**
@@ -277,7 +279,7 @@ class DesarrollosController extends Controller
 
         $desarrollo->update($data);
 
-        return redirect()->route('desarrollos.index')->with('success', 'Desarrollo actualizado correctamente.');
+        return redirect()->route('admin.index')->with('success', 'Desarrollo actualizado correctamente.');
     }
 
     /**
