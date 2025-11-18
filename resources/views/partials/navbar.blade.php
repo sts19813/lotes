@@ -10,15 +10,11 @@
         <div class="app-navbar-item ms-2 ms-lg-6" id="kt_header_user_menu_toggle">
             <!--begin::Menu wrapper-->
             <div class="cursor-pointer symbol symbol-circle symbol-30px symbol-lg-45px"
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-attach="parent"
+                data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end">
 
-                <img 
-                    src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/media/avatars/300-2.jpg') }}" 
-                    alt="user"
-                    style="object-fit: cover;"
-                />
+                <img src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/media/avatars/300-2.jpg') }}"
+                    alt="user" style="object-fit: cover;" />
             </div>
             <!--end::Menu wrapper-->
 
@@ -29,11 +25,9 @@
                     <div class="menu-content d-flex align-items-center px-3">
                         <!--begin::Avatar-->
                         <div class="symbol symbol-50px me-5">
-                            <img 
-                                alt="Foto de perfil" 
-                                src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/media/avatars/300-2.jpg') }}" 
-                                style="object-fit: cover;"
-                            />
+                            <img alt="Foto de perfil"
+                                src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/media/avatars/300-2.jpg') }}"
+                                style="object-fit: cover;" />
                         </div>
                         <!--end::Avatar-->
                         <!--begin::Username-->
@@ -42,7 +36,8 @@
                                 {{ Auth::user()->name }}
 
                                 @if(Auth::user()->is_admin)
-                                    <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">admin</span>
+                                    <span
+                                        class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ __('messages.admin_badge') }}</span>
                                 @endif
                             </div>
 
@@ -60,7 +55,7 @@
                 <!--end::Menu separator-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-5">
-                    <a href="{{ route('profile.index') }}" class="menu-link px-5">Mi Perfil</a>
+                    <a href="{{ route('profile.index') }}" class="menu-link px-5">{{ __('messages.user_profile') }}</a>
                 </div>
 
 
@@ -73,7 +68,7 @@
                 <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                     data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
                     <a href="#" class="menu-link px-5">
-                        <span class="menu-title position-relative">Modo
+                        <span class="menu-title position-relative">{{ __('messages.mode') }}
                             <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
                                 <i class="ki-outline ki-night-day theme-light-show fs-2"></i>
                                 <i class="ki-outline ki-moon theme-dark-show fs-2"></i>
@@ -88,7 +83,7 @@
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-night-day fs-2"></i>
                                 </span>
-                                <span class="menu-title">Claro</span>
+                                <span class="menu-title">{{ __('messages.mode_light') }}</span>
                             </a>
                         </div>
                         <!--end::Menu item-->
@@ -98,7 +93,7 @@
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-moon fs-2"></i>
                                 </span>
-                                <span class="menu-title">Oscuro</span>
+                                <span class="menu-title">{{ __('messages.mode_dark') }}</span>
                             </a>
                         </div>
                         <!--end::Menu item-->
@@ -108,7 +103,7 @@
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-screen fs-2"></i>
                                 </span>
-                                <span class="menu-title">Default del sistema</span>
+                                <span class="menu-title">{{ __('messages.mode_system') }}</span>
                             </a>
                         </div>
                         <!--end::Menu item-->
@@ -117,39 +112,64 @@
                 </div>
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
+                <!--begin::Menu item-->
                 <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                     data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
+
                     <a href="#" class="menu-link px-5">
-                        <span class="menu-title position-relative">Idioma
+                        <span class="menu-title position-relative">
+                            {{ __('messages.language') }}
+                            @php
+                                $currentLocale = app()->getLocale();
+                                $currentLangName = $currentLocale === 'en'
+                                    ? __('messages.language_english')
+                                    : __('messages.language_spanish');
+                                $currentFlag = $currentLocale === 'en'
+                                    ? 'assets/media/flags/united-states.svg'
+                                    : 'assets/media/flags/mexico.svg';
+                            @endphp
+
                             <span
-                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">Español
-                                <img class="w-15px h-15px rounded-1 ms-2" src="assets/media/flags/mexico.svg"
-                                    alt="" /></span></span>
+                                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
+                                {{ $currentLangName }}
+                                <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset($currentFlag) }}" alt="" />
+                            </span>
+                        </span>
                     </a>
+
                     <!--begin::Menu sub-->
                     <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                        <!--begin::Menu item-->
+
+                        <!-- English -->
                         <div class="menu-item px-3">
-                            <a href="account/settings.html" class="menu-link d-flex px-5">
+                            <a href="{{ route('lang.switch', 'en') }}"
+                                class="menu-link d-flex px-5 {{ $currentLocale == 'en' ? 'active' : '' }}">
                                 <span class="symbol symbol-20px me-4">
-                                    <img class="rounded-1" src="assets/media/flags/united-states.svg" alt="" />
-                                </span>English</a>
+                                    <img class="rounded-1" src="{{ asset('assets/media/flags/united-states.svg') }}"
+                                        alt="" />
+                                </span>
+                                English
+                            </a>
                         </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
+
+                        <!-- Spanish -->
                         <div class="menu-item px-3">
-                            <a href="account/settings.html" class="menu-link d-flex px-5 active">
+                            <a href="{{ route('lang.switch', 'es') }}"
+                                class="menu-link d-flex px-5 {{ $currentLocale == 'es' ? 'active' : '' }}">
                                 <span class="symbol symbol-20px me-4">
-                                    <img class="rounded-1" src="assets/media/flags/mexico.svg" alt="" />
-                                </span>Spanish</a>
-                        </div>                     
+                                    <img class="rounded-1" src="{{ asset('assets/media/flags/mexico.svg') }}" alt="" />
+                                </span>
+                                Español
+                            </a>
+                        </div>
+
                     </div>
-                    <!--end::Menu sub-->
                 </div>
+
                 <!--end::Menu item-->
                 <div class="menu-item px-5">
-                    <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                    href="#" class="menu-link px-5">Salir</a>
+                    <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="#"
+                        class="menu-link px-5">{{ __('messages.logout') }}</a>
                 </div>
             </div>
             <!--end::User account menu-->

@@ -10,18 +10,18 @@
         <div>
             <h1 class="fw-bold text-gray-800">
                 <i class="ki-outline ki-home-2 fs-2 me-2 text-primary"></i>
-                Listado de Desarrollos / Proyectos
+                {{ __('messages.title') }}
             </h1>
-            <span class="text-muted fs-7">Gestiona la configuración de todos tus desarrollos inmobiliarios</span>
+            <span class="text-muted fs-7">{{ __('messages.subtitle') }}</span>
         </div>
 
         <div class="d-flex align-items-center gap-2">
             <a href="{{ route('desarrollos.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="ki-duotone ki-plus fs-2"></i>
-                <span>Nuevo Desarrollo</span>
+                <span>{{ __('messages.new') }}</span>
             </a>
             <button class="btn btn-light-success" id="btnActualizar">
-                <i class="ki-outline ki-arrows-circle fs-2 me-1"></i> Actualizar
+                <i class="ki-outline ki-arrows-circle fs-2 me-1"></i> {{ __('messages.refresh') }}
             </button>
         </div>
     </div>
@@ -36,13 +36,13 @@
             <table id="lots_table" class="table table-striped table-row-dashed align-middle fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Total Lotes</th>
-                        <th>Mapa</th>
-                        <th>Creado</th>
-                        <th>Acciones</th>
+                        <th>{{ __('messages.table.id') }}</th>
+                        <th>{{ __('messages.table.name') }}</th>
+                        <th>{{ __('messages.table.description') }}</th>
+                        <th>{{ __('messages.table.total_lots') }}</th>
+                        <th>{{ __('messages.table.map') }}</th>
+                        <th>{{ __('messages.table.created') }}</th>
+                        <th>{{ __('messages.table.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,15 +76,16 @@
                         <td>
                             <a href="{{ route('desarrollos.configurator', $lot->id) }}" 
                                class="btn btn-sm btn-primary">
-                                Configurar
+                                {{ __('messages.buttons.configure') }}
                             </a>
                             <a href="{{ url('iframe/' . $lot->id) }}" 
                                class="btn btn-sm btn-secondary" style="background-color: #3FB549 !important" target="_blank">
-                                Iframe
+                                {{ __('messages.buttons.iframe') }}
+
                             </a>
                             <a href="{{ route('desarrollos.edit', $lot->id) }}" 
                                class="btn btn-sm btn-warning">
-                                Editar
+                                {{ __('messages.buttons.edit') }}
                             </a>
                         </td>
                     </tr>

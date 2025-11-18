@@ -55,6 +55,12 @@ Route::get('/unauthorized', function () {
     return view('unauthorized'); // <-- aquí apunta tu blade
 })->name('unauthorized');
 
+
+Route::get('/lang/{lang}', function ($lang) {
+    session(['locale' => $lang]);
+    return back();
+})->name('lang.switch');
+
 // =========================
 // Rutas del panel admin
 // =========================

@@ -18,7 +18,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-home-2 fs-2"></i>
                         </span>
-                        <span class="menu-title">Desarrollos / Proyectos</span>
+                        <span class="menu-title">{{ __('messages.desarrollos') }}</span>
                     </a>
                 </div>
                 <!--end: Desarrollos -->
@@ -29,7 +29,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-search-list fs-2"></i>
                         </span>
-                        <span class="menu-title">Consulta Adara</span>
+                        <span class="menu-title">{{ __('messages.consulta_adara') }}</span>
                     </a>
                 </div>
                 <!--end: Consulta Adara -->
@@ -40,7 +40,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-element-7 fs-2"></i>
                         </span>
-                        <span class="menu-title">Reportes</span>
+                        <span class="menu-title">{{ __('messages.reportes') }}</span>
                     </a>
                 </div>
                 <!--end: iFrames -->
@@ -52,7 +52,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-briefcase fs-2"></i>
                         </span>
-                        <span class="menu-title">Catálogo Naboo</span>
+                        <span class="menu-title">{{ __('messages.catalogo_naboo') }}</span>
                         <span class="menu-arrow"></span>
                     </span>
 
@@ -61,28 +61,28 @@
                         <div class="menu-item">
                             <a class="menu-link {{ request()->is('projects*') ? 'active' : '' }}" href="/projects">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Proyectos</span>
+                                <span class="menu-title">{{ __('messages.proyectos') }}</span>
                             </a>
                         </div>
                         <!-- Fases -->
                         <div class="menu-item">
                             <a class="menu-link {{ request()->is('phases*') ? 'active' : '' }}" href="/phases">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Fases</span>
+                                <span class="menu-title">{{ __('messages.fases') }}</span>
                             </a>
                         </div>
                         <!-- Etapas -->
                         <div class="menu-item">
                             <a class="menu-link {{ request()->is('stages*') ? 'active' : '' }}" href="/stages">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Etapas</span>
+                                <span class="menu-title">{{ __('messages.etapas') }}</span>
                             </a>
                         </div>
                         <!-- Lotes -->
                         <div class="menu-item">
                             <a class="menu-link {{ request()->is('lotsAdara*') ? 'active' : '' }}" href="/lotsAdara">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Lotes</span>
+                                <span class="menu-title">{{ __('messages.lotes') }}</span>
                             </a>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                 <div class="menu-item">
                     <a class="menu-link {{ request()->is('dashboards*') ? 'active' : '' }}" href="/dashboards">
                         <span class="menu-icon"><i class="ki-outline ki-chart-line fs-2"></i></span>
-                        <span class="menu-title">Dashboards</span>
+                        <span class="menu-title">{{ __('messages.dashboards') }}</span>
                     </a>
                 </div>
 
@@ -102,7 +102,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-magnifier fs-2"></i>
                         </span>
-                        <span class="menu-title">Búsqueda masiva</span>
+                        <span class="menu-title">{{ __('messages.busqueda_masiva') }}</span>
                     </a>
                 </div>
 
@@ -113,7 +113,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-calculator fs-2"></i>
                         </span>
-                        <span class="menu-title">Modelos de financiamiento</span>
+                        <span class="menu-title">{{ __('messages.financiamiento') }}</span>
                     </a>
                 </div>
                 <!--end: Financiamiento -->
@@ -124,7 +124,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-notepad fs-2"></i>
                         </span>
-                        <span class="menu-title">Bitácora</span>
+                        <span class="menu-title">{{ __('messages.bitacora') }}</span>
                     </a>
                 </div>
                 <!--end: Bitácora -->
@@ -135,7 +135,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-send fs-2"></i>
                         </span>
-                        <span class="menu-title">Migrar info (Adara → Naboo)</span>
+                        <span class="menu-title">{{ __('messages.migrar_info') }}</span>
                     </a>
                 </div>
                 <!--end: Migrar información -->
@@ -147,7 +147,7 @@
                         <span class="menu-icon">
                             <i class="ki-outline ki-setting-3 fs-2"></i>
                         </span>
-                        <span class="menu-title">Configuraciones</span>
+                        <span class="menu-title">{{ __('messages.configuraciones') }}</span>
                         <span class="menu-arrow"></span>
                     </span>
 
@@ -156,7 +156,7 @@
                         <div class="menu-item">
                             <a class="menu-link {{ request()->is('users*') ? 'active' : '' }}" href="/users">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Usuarios</span>
+                                <span class="menu-title">{{ __('messages.usuarios') }}</span>
                             </a>
                         </div>
 
@@ -165,7 +165,7 @@
                             <a class="menu-link {{ request()->is('connections*') ? 'active' : '' }}"
                                 href="/connections">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Conexiones APIs</span>
+                                <span class="menu-title">{{ __('messages.conexiones') }}</span>
                             </a>
                         </div>
                     </div>

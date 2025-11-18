@@ -12,8 +12,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+
+        // Alias de middlewares personalizados
+        $middleware->alias([
+            'locale' => \App\Http\Middleware\SetLocale::class,
+        ]);
+
+        // Aplicar middleware de idioma al grupo web
+        $middleware->appendToGroup('web', 'locale');
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();
