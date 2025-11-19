@@ -36,9 +36,8 @@
                     <img src="/assets/img/Plan de pagos.svg" alt="logo">
                     <div class="mb-4 mt-4">
                         <label class="label">Porcentaje de enganche</label>
-                        <select class="form-select form-select-sm">
+                        <select  id="planSelectEnganche" class="form-select form-select-sm">
                             <option>30% de enganche</option>
-
                         </select>
                     </div>
                     <p class="label"> Monto de Enganche: <strong>$0MXN</strong></p>
@@ -116,19 +115,23 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="label text-modal">Financiamiento</div>
-                                    <div class="value fw-bold" id="loteFinanciamiento">60 meses</div>
+                                    <div class="value fw-bold" id="loteFinanciamiento">0 meses</div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="label text-modal">Mensualidad</div>
-                                    <div class="value text-primary fw-bold" id="loteMensualidad">$8,295.00</div>
+                                    <div class="value text-primary fw-bold" id="loteMensualidad">$0</div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="label text-modal">Monto Financiado</div>
-                                    <div class="value fw-bold" id="loteMontoFinanciado">$497,700</div>
+                                    <div class="value fw-bold" id="loteMontoFinanciado">$0</div>
+                                </div>
+                                <div id="divSaldo" class="col-12 col-md-6 col-lg-4">
+                                    <div class="label text-modal">Contra Entrega</div>
+                                    <div class="value fw-bold" id="Saldo">$0</div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4">
-                                    <div class="label text-modal">Costo total</div>
-                                    <div class="value text-primary fw-bold" id="loteCostoTotal">$711,000.00</div>
+                                    <div class="label text-modal">Precio total</div>
+                                    <div class="value text-primary fw-bold" id="loteCostoTotal">0.00</div>
                                 </div>
                             </div>
                             <div class="linea-discontinua-black mt-4"></div>
@@ -171,7 +174,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Tabla -->
                             <div class="table-responsive small mb-3">
                                 <table class="table table-sm table-borderless">

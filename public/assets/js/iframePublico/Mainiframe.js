@@ -63,6 +63,7 @@ $(document).ready(function () {
 
                 // --- Mostrar información del lote en modal ---
                 llenarModal(info);
+                inicializarSelect();//para plantilla de combo - la plantialla de emedos no lo requiere
                 polygonModal.show();
             }
         });

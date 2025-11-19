@@ -113,9 +113,57 @@ function actualizarFinanciamiento(box, precioTotal) {
     const engancheMonto = precioConDescuento * (enganchePorc / 100);
 
     // ------------------------------------------------------------
+    // DIFERIR enganche (si aplica)
+    //
+    const divDiferido = document.getElementById("divloteDiferido");
+    const diferidoElem = document.getElementById("loteDiferido");
+    if (divDiferido && diferidoElem) {
+
+        const engancheDiferido = plan.enganche_diferido == 1 || plan.enganche_diferido === true;
+        const numPagos = parseInt(plan.enganche_num_pagos || 0);
+
+        // Si el plan tiene "enganche diferido"
+        if (engancheDiferido && numPagos > 0) {
+
+            const pagoDiferido = engancheMonto / numPagos;
+
+            divDiferido.style.display = "block";
+            diferidoElem.textContent =
+                `${numPagos} pagos de ${formatMoney(pagoDiferido)}`;
+
+        } else {
+            divDiferido.style.display = "none";
+        }
+    }
+
+    // ------------------------------------------------------------
+    // calcular saldo y DIFERIR SALDO (si aplica)
+    // ------------------------------------------------------------
+    const saldoPorc = parseFloat(plan.porcentaje_saldo || 0);
+    const saldoMonto = precioConDescuento * (saldoPorc / 100);
+    const divSaldoDiferido = document.getElementById("divSaldoDiferido");
+    const saldoDiferidoElem = document.getElementById("loteSaldoDiferido");
+    if (divSaldoDiferido && saldoDiferidoElem) {
+
+        const saldoDiferido = plan.saldo_diferido == 1 || plan.saldo_diferido === true;
+        const saldoNumPagos = parseInt(plan.saldo_num_pagos || 0);
+
+        if (saldoDiferido && saldoNumPagos > 0 && saldoMonto > 0) {
+
+            const pagoSaldoDiferido = saldoMonto / saldoNumPagos;
+
+            divSaldoDiferido.style.display = "block";
+            saldoDiferidoElem.textContent =
+                `${saldoNumPagos} pagos de ${formatMoney(pagoSaldoDiferido)}`;
+
+        } else {
+            divSaldoDiferido.style.display = "none";
+        }
+    }
+    // ------------------------------------------------------------
     // Calcular monto FINANCIADO (precio con descuento - enganche)
     // ------------------------------------------------------------
-    const montoFinanciadoBase = precioConDescuento - engancheMonto;
+    const montoFinanciadoBase = precioConDescuento - engancheMonto - saldoMonto;
 
     // ------------------------------------------------------------
     // Aplicar INTERESES sobre el monto financiado
@@ -137,10 +185,39 @@ function actualizarFinanciamiento(box, precioTotal) {
     if (divIntereses) divIntereses.style.display = interesPorc > 0 ? "block" : "none";
 
     // ------------------------------------------------------------
+    // CALCULAR SALDO (Contra Entrega)
+    // ------------------------------------------------------------
+    const divSaldo = document.getElementById("divSaldo");
+
+    // Para plantilla COMPLETA default
+    const saldoPorcentajeElem = document.getElementById("SaldoPorcentaje");
+    const saldoMontoElem = document.getElementById("SaldoMonto");
+    const saldoSimpleElem = document.getElementById("Saldo");
+    if (divSaldo) {
+        if (saldoMonto > 0) {
+            divSaldo.style.display = "block";
+
+            //  default 
+            if (saldoPorcentajeElem && saldoMontoElem) {
+                saldoPorcentajeElem.textContent = `${saldoPorc}%`;
+                saldoMontoElem.textContent = formatMoney(saldoMonto);
+            }
+
+            // emedos
+            if (saldoSimpleElem) {
+                saldoSimpleElem.textContent = `${saldoPorc}% — ${formatMoney(saldoMonto)}`;
+            }
+
+        } else {
+            divSaldo.style.display = "none";
+        }
+    }
+
+    // ------------------------------------------------------------
     // Actualizar elementos del DOM con los valores calculados
     // ------------------------------------------------------------
     // Enganche
-    const selectEnganche = document.querySelector(".form-select");
+    const selectEnganche = document.querySelector("#planSelectEnganche");
     if (selectEnganche) selectEnganche.innerHTML = `<option>${enganchePorc}% de enganche</option>`;
 
     const labelStrong = document.querySelector("p.label strong");
@@ -174,9 +251,10 @@ function actualizarFinanciamiento(box, precioTotal) {
     if (loteCostoTotal) loteCostoTotal.textContent = formatMoney(precioConDescuento + interesMonto);
 
     // Actualizar texto dentro del plan seleccionado
-    const monthlyElem = box.querySelector(".monthlyPayment");
-    if (monthlyElem) monthlyElem.textContent = formatMoney(mensualidad);
-
+    if (box.querySelector) {
+        const monthlyElem = box.querySelector(".monthlyPayment");
+        if (monthlyElem) monthlyElem.textContent = formatMoney(mensualidad);
+    }
     // ------------------------------------------------------------
     // Guardar datos globales y actualizar proyección
     // ------------------------------------------------------------
@@ -281,4 +359,31 @@ function formatMoney(value) {
 // Formatea valores numéricos a porcentaje con 2 decimales
 function formatPercent(value) {
     return `${value.toFixed(2)}%`;
+}
+
+//funcion para inicializar el select de los planes de financiamiento esto no se ejecuta si la plantilla no tiene el select
+function inicializarSelect() {
+    const planSelect = document.getElementById("planSelect");
+    if (!planSelect || !window.currentLoteInfo) return;
+
+    // Tomamos el primer plan por defecto
+    const precioTotal = window.currentLoteInfo.area * window.currentLoteInfo.price_square_meter;
+
+    // Función para actualizar plan usando tu JS original
+    const actualizarPlanDesdeSelect = () => {
+        const selectedOption = planSelect.selectedOptions[0];
+        if (!selectedOption) return;
+
+        const financing = JSON.parse(selectedOption.dataset.financing || "{}");
+
+        // Creamos un "box temporal" para no tocar tu JS
+        const tempBox = { dataset: { financing: JSON.stringify(financing) } };
+        actualizarFinanciamiento(tempBox, precioTotal);
+    };
+
+    // Evento change
+    planSelect.addEventListener("change", actualizarPlanDesdeSelect);
+
+    // Inicializamos al primer plan
+    planSelect.dispatchEvent(new Event('change'));
 }

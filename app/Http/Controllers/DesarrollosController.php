@@ -210,8 +210,9 @@ class DesarrollosController extends Controller
 
          //  Obtener financiamientos relacionados (solo activos)
         $financiamientos = $lot->financiamientos()->activos()->get();
+        $templateModal = $lot->iframe_template_modal ?? 'emedos';
 
-        return view('iframe.index', compact('lot','projects','lots','dbLotes', 'financiamientos'));
+        return view('iframe.index', compact('lot','projects','lots','dbLotes', 'financiamientos', 'templateModal'));
     }
 
     /**
@@ -261,12 +262,13 @@ class DesarrollosController extends Controller
             'redirect_next' => 'nullable|string|max:255',
             'redirect_previous' => 'nullable|string|max:255',
             'plusvalia' => 'nullable|numeric|min:0|max:100',
+            'iframe_template_modal'=> 'nullable|string|max:255',
         ]);
 
         $data = $request->only([
             'name','description','total_lots','project_id','phase_id','stage_id',
             'modal_color','modal_selector','color_primario','color_acento',
-            'financing_months','redirect_return','redirect_next','redirect_previous','plusvalia','source_type'
+            'financing_months','redirect_return','redirect_next','redirect_previous','plusvalia','source_type','iframe_template_modal'
         ]);
 
         // Manejo de archivos

@@ -69,6 +69,7 @@ return [
     'primary_color_label' => 'Primary Color',
     'accent_color_label' => 'Accent Color',
     'modal_selector_label' => 'Modal Selector',
+    'modal_selector_Plantilla' => 'Template',
     'selector_tooltip' => 'This field is filled automatically when uploading the SVG file.',
     'redirects_title' => 'Redirects',
     'redirect_return_label' => 'Return URL',

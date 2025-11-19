@@ -27,7 +27,8 @@ class Desarrollos extends Model
         'redirect_previous',
         'plusvalia',
         'svg_image',
-        'png_image'
+        'png_image',
+        'iframe_template_modal',
     ];
 
     /**

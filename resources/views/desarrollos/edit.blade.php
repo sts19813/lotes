@@ -191,10 +191,30 @@
                                     value="{{ old('color_acento', $lot->color_acento) }}">
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <label class="form-label">{{ __('messages.modal_selector_label') }}</label>
                                 <input type="text" name="modal_selector" id="modal_selector" class="form-control"
                                     value="{{ old('modal_selector', $lot->modal_selector) }}">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">{{ __('messages.modal_selector_Plantilla') }}</label>
+
+                                <select name="iframe_template_modal" class="form-select" required>
+                                    <option value="">Seleccione una plantilla</option>
+                                    @php
+                                        $templates = [
+                                            'emedos' => 'Eme Dos Desarrollos',
+                                            'portamarina' => 'Porta Marina',
+                                        ];
+                                    @endphp
+
+                                    @foreach ($templates as $value => $label)
+                                        <option value="{{ $value }}" {{ $lot->iframe_template_modal == $value ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>

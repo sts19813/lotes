@@ -70,6 +70,7 @@ return [
     'primary_color_label' => 'Color Primario',
     'accent_color_label' => 'Color Acento',
     'modal_selector_label' => 'Selector Modal',
+    'modal_selector_Plantilla' => 'Plantilla',
     'selector_tooltip' => 'Este campo se rellena automáticamente al cargar el archivo SVG.',
     'redirects_title' => 'Redirecciones',
     'redirect_return_label' => 'URL Regresar',

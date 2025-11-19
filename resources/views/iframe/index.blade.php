@@ -45,7 +45,7 @@
 		</div>
 	</div>
 
-	@include('iframe.modalCotizador')
+	@include("iframe.modals.$templateModal")
 	@include('iframe.modalLead')
 
 @endsection
