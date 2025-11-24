@@ -3,6 +3,11 @@
         <!--begin::Search-->
 
     </div>
+
+    @php
+        $name = Auth::user()->name;
+        $initials = collect(explode(' ', $name))->map(fn($w) => mb_substr($w, 0, 1))->join('');
+    @endphp
     <!--begin::Notifications-->
     <div class="app-navbar-item ms-2 ms-lg-6">
 
@@ -10,11 +15,22 @@
         <div class="app-navbar-item ms-2 ms-lg-6" id="kt_header_user_menu_toggle">
             <!--begin::Menu wrapper-->
             <div class="cursor-pointer symbol symbol-circle symbol-30px symbol-lg-45px"
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
+                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end">
 
-                <img src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/media/avatars/300-2.jpg') }}"
-                    alt="user" style="object-fit: cover;" />
+                @if (Auth::user()->profile_photo)
+                    <img src="{{ asset(Auth::user()->profile_photo) }}" 
+                        alt="user"
+                        class="symbol-label"
+                        style="object-fit: cover;">
+                @else
+                    <div class="symbol-label fw-bold d-flex justify-content-center align-items-center"
+                        style="background:#0d6efd; color:white;">
+                        {{ $initials }}
+                    </div>
+                @endif
+
             </div>
             <!--end::Menu wrapper-->
 
@@ -23,11 +39,19 @@
                 <!--begin::Menu item-->
                 <div class="menu-item px-3">
                     <div class="menu-content d-flex align-items-center px-3">
-                        <!--begin::Avatar-->
-                        <div class="symbol symbol-50px me-5">
-                            <img alt="Foto de perfil"
-                                src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/media/avatars/300-2.jpg') }}"
-                                style="object-fit: cover;" />
+                       <div class="symbol symbol-50px me-5">
+                            @if (Auth::user()->profile_photo)
+                                <img src="{{ asset(Auth::user()->profile_photo) }}"
+                                    alt="Foto de perfil"
+                                    class="symbol-label"
+                                    style="object-fit: cover;">
+                            @else
+                                <div class="symbol-label fw-bold d-flex justify-content-center align-items-center"
+                                    style="background:#0d6efd; color:white; font-size:18px;">
+                                    {{ $initials }}
+                                </div>
+                            @endif
+
                         </div>
                         <!--end::Avatar-->
                         <!--begin::Username-->
