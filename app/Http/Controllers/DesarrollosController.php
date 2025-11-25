@@ -216,6 +216,15 @@ class DesarrollosController extends Controller
     }
 
     /**
+     * Vista para el Centro de Congresos CIC
+     */
+    public function clic($id){
+        $lot = Desarrollos::findOrFail($id);
+        
+        return view('iframe.cic', compact('lot'));
+    }
+
+    /**
      * Formulario de edición de un desarrollo
      */
     public function edit($id)
