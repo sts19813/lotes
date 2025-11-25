@@ -8,17 +8,13 @@
                     <div class="col-lg-6 p-4 cotizador-left d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h4 class="fw-bold text-white titleCotizador m-0 d-flex align-items-center gap-2 flex-wrap">
-                                Cotizador - <span class="value" id="loteName"></span>
-                                <small class="value d-none" id="lotearea">0.0 m²</small>
-                                <small class="monthlyPayment d-none" id="monthlyPayment">$0</small>
-                                <small class="value d-none" id="lotePrecioMetro">$0.0</small>
-                             
+                                Cotizador
                             </h4>
 
           
                                 
                             <!-- Selects idioma y moneda -->
-                            <div class="d-flex gap-2 col-6 col-md-6">
+                            <div class="d-none gap-2 col-6 col-md-6">
                                 <select class="form-select selector-select form-select-combo">
                                     <option>Es</option>
                                     <option>En</option>
@@ -29,6 +25,24 @@
                                 </select>
                             </div>
                         </div>
+
+
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="form-label text-white">Unidad</label>
+                                 <span class="value color-Primario" id="loteName"></span>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label text-white">Área</label>
+                                 <span class="value color-Primario" id="lotearea"></span>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label text-white">Precio m2</label>
+                                 <span class="value color-Primario" id="lotePrecioMetro"></span>
+                            </div>
+                            
+                        </div>
+
 
                         <div class="row mb-3 align-items-end">
                             <div class="col-12 col-md-8">
@@ -76,7 +90,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-control form-control-plaintext text-white fw-bold p-2 color-Primario"
-                                    id="loteContraEntrega">$213,300.00</div>
+                                    id="loteContraEntrega">$0</div>
                             </div>
                         </div>
 
@@ -87,15 +101,16 @@
                         </div>
 
                        <!-- Financiamiento -->
-                        <label class="form-label text-white">Financiamiento</label>
-                        <div class="row mb-3">
+                       <div class="row mb-3">
                             <div class="col-8">
-                                <div class="form-control form-control-plaintext text-white fw-bold p-2 justify-content-between align-items-center color-Primario">
-                                    <div id="loteFinanciamiento" style="display: inline-block;"></div>, 
-                                    <div id="loteMensualidad" style="display: inline-block;"></div> Mensuales
+                                <label class="form-label text-white">Financiamiento</label>
+                                <div class="form-control form-control-plaintext text-white fw-bold p-2 justify-content-between align-items-center text-white">
+                                    <div id="loteFinanciamiento" class="color-Primario" style="display: inline-block;"></div> 
+                                    <div id="loteMensualidad" style="display: inline-block;"></div> <span style="font-weight: 300"> Mensuales</span> 
                                 </div>
                             </div>
                             <div class="col-4">
+                                <label class="form-label text-white">Monto financiado</label>
                                 <div class="form-control form-control-plaintext text-white fw-bold p-2 color-Primario" id="loteMontoFinanciado">$0.00</div>
                             </div>
                         </div>
@@ -152,46 +167,47 @@
                                 </div>
                                 <div class="row g-3 mb-3 mt-4">
                                     <div class="col-12">
-                                        <div class="card p-3 d-flex flex-row align-items-center mb-2"
+                                        <div class="card p-4 d-flex flex-row align-items-center mb-2 background-verde"
                                             style="border-radius: 10px; background-color: #f8f9fa;">
                                             <img src="/assets/img/dinero.svg" alt="logo" class="me-3"
-                                                style="width:40px; height:40px;">
+                                                style="width:20px; height:20px;">
                                             <small class="text-muted me-auto">Plusvalía Total</small>
-                                            <h6 class="fw-bold text-success mb-0" id="PlusvaliaTotal">$719,074.97</h6>
+                                            <h6 class="fw-bold text-success mb-0" id="PlusvaliaTotal">$0</h6>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="card p-3 d-flex flex-row align-items-center mb-2"
+                                        <div class="card p-4 d-flex flex-row align-items-center mb-2 background-azul"
                                             style="border-radius: 10px; background-color: #f8f9fa;">
                                             <img src="/assets/img/mira.svg" alt="logo" class="me-3"
-                                                style="width:40px; height:40px;">
+                                                style="width200px; height:20px;">
                                             <small class="text-muted me-auto">ROI Proyectado</small>
-                                            <h6 class="fw-bold text-primary mb-0" id="ROIProyectado">101.4%</h6>
+                                            <h6 class="fw-bold text-primary mb-0" id="ROIProyectado">0%</h6>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="card p-3 d-flex flex-row align-items-center mb-2"
+                                        <div class="card p-4 d-flex flex-row align-items-center mb-2 background-morado"
                                             style="border-radius: 10px; background-color: #f8f9fa;">
                                             <img src="/assets/img/calendario.svg" alt="logo" class="me-3"
-                                                style="width:40px; height:40px;">
+                                                style="width:20px; height:20px;">
                                             <small class="text-muted me-auto">Plusvalía Anual</small>
-                                            <h6 class="fw-bold text-warning mb-0" id="PlusvaliaAnual">15%</h6>
+                                            <h6 class="fw-bold text-warning mb-0" id="PlusvaliaAnual">0%</h6>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="card p-3 d-flex flex-row align-items-center mb-2"
+                                        <div class="card p-4 d-flex flex-row align-items-center mb-2 background-amarillo"
                                             style="border-radius: 10px; background-color: #f8f9fa;">
                                             <img src="/assets/img/arriba.svg" alt="logo" class="me-3"
-                                                style="width:40px; height:40px;">
+                                                style="width:20px; height:20px;">
                                             <small class="text-muted me-auto">Valor Final</small>
-                                            <h6 class="fw-bold text-success mb-0" id="ValorFinal">$719,074.97</h6>
+                                            <h6 class="fw-bold text-success mb-0" id="ValorFinal">$0</h6>
                                         </div>
                                     </div>
                                 </div>
+                                <br><br>
 
                                 <!-- Tabla resumen -->
                                 <!-- Tabla -->
-                                <div class="table-responsive small mb-3 mt-4">
+                                <div class="table-responsive small mb-4 mt-4">
                                     <table class="table table-sm table-borderless">
                                         <thead class="table-light mb-4 mt-4">
                                             <tr>
@@ -238,13 +254,47 @@
     </div>
 </div>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@300&family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
 
+                
 <style>
+
+@font-face {
+    font-family: "RFlex";
+    src: url("/assets/fonts/R-FLEX-REGULAR.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "RFlex";
+    src: url("/assets/fonts/R-FLEX-LIGHT.woff2") format("woff2");
+    font-weight: 300; /* Light */
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "RFlex";
+    src: url("/assets/fonts/R-FLEX-MEDIUM.woff2") format("woff2");
+    font-weight: 500; /* Medium */
+    font-style: normal;
+    font-display: swap;
+}
+
+
+    .pago-monto,.saldo-monto{
+        color: white !important;
+        margin-left: 15px !important;
+        font-weight: 300 !important
+    }
+    #loteMensualidad{
+        font-size: 16px !important;
+        margin-left: 10px !important;
+        font-weight: 300 !important
+
+    }
     .titleCotizador {
-        font-family: "Roboto Flex", sans-serif;
+        font-family: "RFlex", sans-serif;
         font-size: 26px;
         font-weight: 700;
     }
@@ -281,7 +331,7 @@
 
     .color-Primario{
         font-size: 16px !important;
-        font-family: "Roboto Flex", sans-serif !important;
+        font-family: "RFlex", sans-serif !important;
         color: {{ $lot->color_primario ?? '#8C470F' }} !important;
     }
 
@@ -310,7 +360,7 @@
     }
 
     .form-label{
-        font-family: "Roboto Flex", sans-serif !important;
+        font-family: "RFlex", sans-serif !important;
         font-weight: 300 !important;
         font-size: 16px !important;
     } 
@@ -368,7 +418,7 @@
     }
 
     .text-muted{
-        font-family: "Roboto Flex", sans-serif !important;
+        font-family: "RFlex", sans-serif !important;
         font-size: 14px !important;
         color: #323232 !important;
     }

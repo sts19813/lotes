@@ -19,10 +19,20 @@
 
 			{{-- SVG encima --}}
 			@if ($lot->svg_image)
-				<div style="position: absolute; top:0; left:0; width:100%;">
-					{!! file_get_contents(public_path($lot->svg_image)) !!}
-				</div>
-			@endif
+				@php
+					$svgPath = public_path($lot->svg_image);
+				@endphp
+
+				@if (file_exists($svgPath))
+					<div style="position: absolute; top:0; left:0; width:100%;">
+						{!! file_get_contents($svgPath) !!}
+					</div>
+				@else
+					<div class="alert alert-warning mt-2">
+						⚠️ El archivo SVG no se encuentra. Por favor cárguelo nuevamente.
+					</div>
+				@endif
+            @endif
 
 			{{-- 🔗 Iconos flotantes --}}
 			<div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 8px;">

@@ -128,8 +128,9 @@ function actualizarFinanciamiento(box, precioTotal) {
             const pagoDiferido = engancheMonto / numPagos;
 
             divDiferido.style.display = "block";
-            diferidoElem.textContent =
-                `${numPagos} pagos de ${formatMoney(pagoDiferido)}`;
+            diferidoElem.innerHTML =
+                `<span class="pagos-text">${numPagos} pagos de</span>
+                <span class="pago-monto">${formatMoney(pagoDiferido)}</span>`;
 
         } else {
             divDiferido.style.display = "none";
@@ -153,9 +154,8 @@ function actualizarFinanciamiento(box, precioTotal) {
             const pagoSaldoDiferido = saldoMonto / saldoNumPagos;
 
             divSaldoDiferido.style.display = "block";
-            saldoDiferidoElem.textContent =
-                `${saldoNumPagos} pagos de ${formatMoney(pagoSaldoDiferido)}`;
-
+            saldoDiferidoElem.innerHTML =
+            `${`<span class="saldo-num-pagos">${saldoNumPagos} pagos de </span>`}<span class="saldo-monto">${formatMoney(pagoSaldoDiferido)}</span>`;
         } else {
             divSaldoDiferido.style.display = "none";
         }
