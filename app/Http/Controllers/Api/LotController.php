@@ -75,7 +75,7 @@ class LotController extends Controller
     }
 
 
-    public function import(Request $request)
+   public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:xlsx'
@@ -89,11 +89,10 @@ class LotController extends Controller
         $errors = [];
         $successCount = 0;
 
-        // Se comienzan a leer datos desde la fila 3 (índice 2)
         foreach (array_slice($rows, 2) as $index => $row) {
-            $rowNumber = $index + 3; // Para indicar el número de Excel
+            $rowNumber = $index + 3;
 
-            if (empty($row[3])) continue; // Si nombre vacío, se ignora
+            if (empty($row[3])) continue;
 
             $validator = Validator::make([
                 'project_id' => $row[0],
@@ -112,11 +111,6 @@ class LotController extends Controller
                 'phase_id'   => 'required|exists:phases,id',
                 'stage_id'   => 'required|exists:stages,id',
                 'name'       => 'required|string',
-                'depth'      => 'nullable|numeric|min:0',
-                'front'      => 'nullable|numeric|min:0',
-                'area'       => 'nullable|numeric|min:0',
-                'price_square_meter' => 'nullable|numeric|min:0',
-                'total_price' => 'nullable|numeric|min:0',
             ]);
 
             if ($validator->fails()) {
@@ -126,17 +120,30 @@ class LotController extends Controller
             }
 
             Lot::create([
-                'project_id' => $row[0],
-                'phase_id' => $row[1],
-                'stage_id' => $row[2],
-                'name' => $row[3],
-                'depth' => $row[4],
-                'front' => $row[5],
-                'area' => $row[6],
-                'price_square_meter' => $row[7],
-                'total_price' => $row[8],
-                'status' => $row[9],
-                'chepina' => $row[10],
+                'project_id'        => $row[0],
+                'phase_id'          => $row[1],
+                'stage_id'          => $row[2],
+                'name'              => $row[3],
+                'depth'             => $row[4],
+                'front'             => $row[5],
+                'area'              => $row[6],
+                'price_square_meter'=> $row[7],
+                'total_price'       => $row[8],
+                'status'            => $row[9],
+                'chepina'           => $row[10],
+                'area2'             => $row[11],
+                'front2'            => $row[12],
+                'depth2'            => $row[13],
+                'height'            => $row[14],
+                'floor_resistance'  => $row[15],
+                'hanging_point'     => $row[16],
+                'auditorium'        => $row[17],
+                'school'            => $row[18],
+                'horseshoe'         => $row[19],
+                'russian_table'     => $row[20],
+                'banquet'           => $row[21],
+                'cocktail'          => $row[22],
+                'tour_link'         => $row[23],
             ]);
 
             $successCount++;

@@ -10,8 +10,7 @@ $(document).ready(function () {
     // ==========================================================
     //  CONFIGURACIONES Y VARIABLES GLOBALES
     // ==========================================================
-    const tabs = document.querySelectorAll('.switch-tabs .btn');
-    const contents = document.querySelectorAll('.tab-content > div');
+
     let info = null;
     // ==========================================================
     //  CONFIGURACIÓN DEL MODAL (instancia única)
@@ -40,22 +39,9 @@ $(document).ready(function () {
             // --- Obtener información del lote ---
             info = JSON.parse(document.getElementById(elementId).getAttribute("data-lote-info"));
 
-            // --- Configuración de pestañas internas del modal ---
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-
-                    const target = tab.getAttribute('data-tab');
-                    contents.forEach(c => {
-                        c.classList.remove('active');
-                        if (c.id === target) c.classList.add('active');
-                    });
-                });
-            });
 
             // --- Validaciones de estatus ---
-            if (elementId) {
+            if (info) {
                 if (info.status === "sold" || info.status === "locked_sale") {
                     console.log(`Esta Unidad está ${statusMap[info.status]}`);
                     return; // No abrir modal
@@ -63,8 +49,6 @@ $(document).ready(function () {
 
                 // --- Mostrar información del lote en modal ---
                 llenarModal(info);
-                inicializarSelect();//para plantilla de combo - la plantialla de emedos no lo requiere
-                polygonModal.show();
             }
         });
     });

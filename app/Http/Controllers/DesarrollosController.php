@@ -220,8 +220,31 @@ class DesarrollosController extends Controller
      */
     public function clic($id){
         $lot = Desarrollos::findOrFail($id);
-        
-        return view('iframe.cic', compact('lot'));
+        $sourceType = $lot->source_type ?? 'adara';
+
+        $projects = $sourceType === 'adara' ? $this->adaraService->getProjects() : Desarrollos::all();
+        $lots = [];
+        $dbLotes = [];
+
+        if ($sourceType === 'adara') {
+            if ($lot->project_id && $lot->phase_id && $lot->stage_id) {
+                $lots = $this->adaraService->getLots($lot->project_id, $lot->phase_id, $lot->stage_id);
+            }
+            $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
+        } elseif ($sourceType === 'naboo') {
+            $lots = Lot::where('stage_id', $lot->stage_id)->get();
+            $dbLotes = Lote::where([
+                'desarrollo_id' => $lot->id,
+                'project_id' => $lot->project_id,
+                'phase_id' => $lot->phase_id,
+                'stage_id' => $lot->stage_id
+            ])->get();
+        }
+
+         //  Obtener financiamientos relacionados (solo activos)
+        $financiamientos = $lot->financiamientos()->activos()->get();
+        $templateModal = $lot->iframe_template_modal ?? 'emedos';
+        return view('iframe.cic', compact('lot','projects','lots','dbLotes', 'financiamientos', 'templateModal'));
     }
 
     /**

@@ -5,8 +5,7 @@
 
 @section('content')
 
-
-    <!-- HEADER (simulado) -->
+    <!-- HEADER -->
     <nav class="navbar navbar-dark bg-dark px-4 py-3">
         <span class="navbar-brand mb-0 h1">Centro Internacional de Congresos de Yucatán</span>
     </nav>
@@ -20,13 +19,16 @@
             <div class="col-lg-7">
                 <div class="floor-plan">
                     <div style="position: relative; display: inline-block;">
-                        {{-- Imagen base PNG --}}
-                        @if ($lot->png_image)
-                            <img src="{{ asset('/' . $lot->png_image) }}" alt="PNG" style="width:100%; height:auto;">
+
+                        {{-- PNG base --}}
+                        @if (!empty($lot->png_image))
+                            <img src="{{ asset('/' . $lot->png_image) }}" 
+                                 alt="Plano PNG" 
+                                 style="width:100%; height:auto;">
                         @endif
 
                         {{-- SVG encima --}}
-                        @if ($lot->svg_image)
+                        @if (!empty($lot->svg_image))
                             @php
                                 $svgPath = public_path($lot->svg_image);
                             @endphp
@@ -41,6 +43,7 @@
                                 </div>
                             @endif
                         @endif
+
                     </div>
                 </div>
             </div>
@@ -59,34 +62,54 @@
 
                 <hr>
 
-                <!-- Información -->
-                <p class="mb-1"><strong>Capacidad de carga en puntos de colgante fijos</strong> 350 kg</p>
-                <p><strong>Foyer para registros, exposiciones o recepciones:</strong> 1,714 m²</p>
+                <!-- Información general -->
+                <p class="mb-1">
+                    <strong>Capacidad de carga en puntos de colgante fijos:</strong>
+                    <span id="punto-colgado">{{ $lot->hanging_point ?? '---' }}</span>
+                </p>
+
+                <p>
+                    <strong>Resistencia de piso:</strong>
+                    <span id="resistencia-piso">{{ $lot->floor_resistance ?? '---' }}</span>
+                </p>
 
                 <h6 class="mt-4"><strong>Dimensiones</strong></h6>
-                <p class="mb-1">Área: 456.34 m²</p>
-                <p class="mb-1">Largo: 45.80 m</p>
-                <p class="mb-1">Ancho: 75.90 m</p>
-                <p>Alto: 9.40 m</p>
+                <p class="mb-1">Área: <span id="area">{{ $lot->area ?? '---' }}</span> m²</p>
+                <p class="mb-1">Frente: <span id="frente">{{ $lot->front ?? '---' }}</span> m</p>
+                <p class="mb-1">Fondo: <span id="fondo">{{ $lot->depth ?? '---' }}</span> m</p>
+                <p>Altura: <span id="altura">{{ $lot->height ?? '---' }}</span> m</p>
 
                 <h6><strong>Capacidades</strong></h6>
-                <p class="mb-1">Auditorio: 450</p>
-                <p class="mb-1">Banquete: 225</p>
-                <p>Escuela: 225</p>
+                <p class="mb-1">Auditorio: <span id="auditorio">{{ $lot->auditorium ?? '---' }}</span></p>
+                <p class="mb-1">Banquete: <span id="banquete">{{ $lot->banquet ?? '---' }}</span></p>
+                <p class="mb-1">Coctel: <span id="coctel">{{ $lot->cocktail ?? '---' }}</span></p>
+                <p class="mb-1">Escuela: <span id="escuela">{{ $lot->school ?? '---' }}</span></p>
+                <p class="mb-1">Herradura: <span id="herradura">{{ $lot->horseshoe ?? '---' }}</span></p>
+                <p class="mb-1">Mesa Rusa: <span id="mesa-rusa">{{ $lot->russian_table ?? '---' }}</span></p>
 
-                <!-- Imagen -->
-                <div class="mt-4">
-                    <img src="https://via.placeholder.com/600x350" class="img-fluid rounded-3">
-                </div>
+                @if (!empty($lot->tour_link))
+                    <div class="mt-3">
+                        <a href="{{ $lot->tour_link }}" 
+                           target="_blank" 
+                           class="btn btn-outline-dark rounded-pill px-4">
+                            Ver Recorrido Virtual
+                        </a>
+                    </div>
+                @endif
 
-                <p class="mt-3">¿Necesitas más espacio?<br>Selecciona otro salón para ampliar tu espacio.</p>
+                <p class="mt-3">
+                    ¿Necesitas más espacio?<br>
+                    Selecciona otro salón para ampliar tu espacio.
+                </p>
 
                 <!-- Botones -->
                 <div class="d-flex gap-3 mt-2">
                     <button class="btn btn-light border rounded-pill px-4">Oficina 12</button>
                     <button class="btn btn-light border rounded-pill px-4">Oficina 13</button>
                 </div>
+
             </div>
+
         </div>
     </div>
 
@@ -100,22 +123,31 @@
                 <div class="col-md-3">
                     <p>Nuestros ejecutivos especializados te ayudarán a concretar tu evento.</p>
                 </div>
+
+                <!-- Área -->
                 <div class="col-md-2">
-                    <p class="metric-number">915.99 m²</p>
+                    <p id="metric-area" class="metric-number">---</p>
                     <p>Área total para evento</p>
                 </div>
+
+                <!-- Auditorio -->
                 <div class="col-md-1">
-                    <p class="metric-number">450</p>
+                    <p id="metric-auditorium" class="metric-number">---</p>
                     <p>Auditorio</p>
                 </div>
+
+                <!-- Banquete -->
                 <div class="col-md-1">
-                    <p class="metric-number">225</p>
+                    <p id="metric-banquet" class="metric-number">---</p>
                     <p>Banquete</p>
                 </div>
+
+                <!-- Escuela -->
                 <div class="col-md-1">
-                    <p class="metric-number">225</p>
+                    <p id="metric-school" class="metric-number">---</p>
                     <p>Escuela</p>
                 </div>
+
                 <div class="col-md-3">
                     <button class="btn btn-dark rounded-pill mt-4 px-5 py-2">
                         Quiero organizar mi evento
@@ -124,11 +156,36 @@
             </div>
         </div>
     </div>
+
+
+    @include("iframe.modals.$templateModal")
+    @include('iframe.modalLead')
+
 @endsection
 
 @push('scripts')
-    <script>
+<script>
+    let selector = @json($lot->modal_selector ?? 'svg g *');
 
+    window.Laravel = {
+        csrfToken: "{{ csrf_token() }}",
+        routes: {
+            lotsFetch: "{{ route('lots.fetch') }}",
+            lotesStore: "{{ route('lotes.store') }}"
+        }
+    };
 
-    </script>
+    window.currentLoteFinanciamientos = @json($financiamientos);
+    window.preloadedLots = @json($lots);
+    window.currentLot = @json($lot);
+    window.projects = @json($projects);
+    window.dbLotes = @json($dbLotes);
+
+    window.idDesarrollo = {{ $lot->id }};
+    let redireccion = true;
+</script>
+
+<script src="/assets/js/iframePublico/Mainiframe.js"></script>
+<script src="/assets/js/iframePublico/ModalIframe.js"></script>
+<script src="/assets/js/iframePublico/CotizacionIframe.js"></script>
 @endpush

@@ -438,13 +438,35 @@
                 const header = [
                     "project_id", "phase_id", "stage_id", "name",
                     "depth", "front", "area", "price_square_meter",
-                    "total_price", "status", "chepina"
+                    "total_price", "status", "chepina",
+
+                    // NUEVOS CAMPOS
+                    "area_new",
+                    "front_new",
+                    "fondo",
+                    "altura",
+                    "resistencia_piso",
+                    "punto_colgado",
+                    "auditorio",
+                    "escuela",
+                    "herradura",
+                    "mesa_rusa",
+                    "banquete",
+                    "coctel",
+                    "link_recorrido"
                 ];
 
-                const dataRows = Array.from({ length: 50 }, () => [
+
+                const dataRows = Array.from({ length: 10 }, () => [
                     projectId, phaseId, stageId, "", "", "", "", "", "",
-                    "Disponible", ""
+                    "Disponible", "",
+
+                    // Nuevos campos vacíos
+                    "", "", "", "", "", "",
+                    "", "", "", "", "", "",
+                    ""
                 ]);
+
 
                 const worksheet = XLSX.utils.aoa_to_sheet([
                     instructions,

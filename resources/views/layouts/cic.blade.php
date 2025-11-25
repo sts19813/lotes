@@ -1,32 +1,33 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>@yield('title', default: 'Dashboard')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<meta charset="utf-8" />
+	<title>@yield('title', 'Dashboard')</title>
+	<link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+	<link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <style>
-        .tabs button.active {
-            background: #000;
-            color: #fff;
-        }
-        .floor-plan {
-            border: 1px solid #ddd;
-            background: #fff;
-            height: 650px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .metrics-bar {
-            border-top: 1px solid #ccc;
-            padding: 30px 0;
-            background: #fafafa;
-        }
-        .metric-number {
-            font-size: 28px;
-            font-weight: 700;
-        }
+                .tabs button.active {
+                background: #000;
+                color: #fff;
+            }
+            .floor-plan {
+                border: 1px solid #ddd;
+                background: #fff;
+                height: 650px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .metrics-bar {
+                border-top: 1px solid #ccc;
+                padding: 30px 0;
+                background: #fafafa;
+            }
+            .metric-number {
+                font-size: 28px;
+                font-weight: 700;
+            }
     </style>
 </head>
 
@@ -34,6 +35,13 @@
     
 
 	@yield('content')
+
+	<script>
+		var hostUrl = "{{ asset('assets') }}/";
+	</script>
+	<script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+	<script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+	<!--end::Global Javascript Bundle-->
 
 	@stack('scripts')
 </body>
