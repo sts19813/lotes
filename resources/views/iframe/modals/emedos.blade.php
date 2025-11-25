@@ -117,7 +117,7 @@
                                     <div class="label text-modal">Financiamiento</div>
                                     <div class="value fw-bold" id="loteFinanciamiento">0 meses</div>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-4">
+                                <div class="col-12 col-md-6 col-lg-3">
                                     <div class="label text-modal">Mensualidad</div>
                                     <div class="value text-primary fw-bold" id="loteMensualidad">$0</div>
                                 </div>
@@ -125,7 +125,7 @@
                                     <div class="label text-modal">Monto Financiado</div>
                                     <div class="value fw-bold" id="loteMontoFinanciado">$0</div>
                                 </div>
-                                <div id="divSaldo" class="col-12 col-md-6 col-lg-4">
+                                <div id="divSaldo" class="col-12 col-md-6 col-lg-5">
                                     <div class="label text-modal">Contra Entrega</div>
                                     <div class="value fw-bold" id="Saldo">$0</div>
                                 </div>

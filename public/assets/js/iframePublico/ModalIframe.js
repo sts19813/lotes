@@ -205,7 +205,7 @@ function actualizarFinanciamiento(box, precioTotal) {
 
             // emedos
             if (saldoSimpleElem) {
-                saldoSimpleElem.textContent = `${saldoPorc}% — ${formatMoney(saldoMonto)}`;
+                saldoSimpleElem.textContent = `${saldoPorc}% (${formatMoney(saldoMonto)})`;
             }
 
         } else {
