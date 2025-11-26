@@ -24,7 +24,7 @@
                 <!--end: Desarrollos -->
 
                 <!--begin: Consulta Adara -->
-                <div class="menu-item">
+                <div class="menu-item {{ auth()->user()->role === 'admin' ? '' : 'd-none' }}">
                     <a class="menu-link {{ request()->is('consulta*') ? 'active' : '' }}" href="/consulta">
                         <span class="menu-icon">
                             <i class="ki-outline ki-search-list fs-2"></i>
@@ -90,14 +90,14 @@
                 <!--end: CRM Naboo -->
 
                 <!-- Dashboard -->
-                <div class="menu-item">
+                <div class="menu-item {{ auth()->user()->role === 'admin' ? '' : 'd-none' }}">
                     <a class="menu-link {{ request()->is('dashboards*') ? 'active' : '' }}" href="/dashboards">
                         <span class="menu-icon"><i class="ki-outline ki-chart-line fs-2"></i></span>
                         <span class="menu-title">{{ __('messages.dashboards') }}</span>
                     </a>
                 </div>
 
-                <div class="menu-item">
+                <div class="menu-item {{ auth()->user()->role === 'admin' ? '' : 'd-none' }}">
                     <a class="menu-link {{ request()->is('search*') ? 'active' : '' }}" href="/search">
                         <span class="menu-icon">
                             <i class="ki-outline ki-magnifier fs-2"></i>
@@ -119,7 +119,7 @@
                 <!--end: Financiamiento -->
 
                 <!--begin: Bitácora -->
-                <div class="menu-item">
+                <div class="menu-item {{ auth()->user()->role === 'admin' ? '' : 'd-none' }}">
                     <a class="menu-link {{ request()->is('bitacora*') ? 'active' : '' }}" href="/bitacora">
                         <span class="menu-icon">
                             <i class="ki-outline ki-notepad fs-2"></i>
@@ -130,7 +130,7 @@
                 <!--end: Bitácora -->
 
                 <!--begin: Migrar información -->
-                <div class="menu-item">
+                <div class="menu-item {{ auth()->user()->role === 'admin' ? '' : 'd-none' }}">
                     <a class="menu-link {{ request()->is('migracion*') ? 'active' : '' }}" href="/migracion">
                         <span class="menu-icon">
                             <i class="ki-outline ki-send fs-2"></i>
@@ -141,7 +141,7 @@
                 <!--end: Migrar información -->
 
                 <!--begin: Configuraciones -->
-                <div class="menu-item menu-accordion {{ request()->is('users*', 'connections*', 'access*') ? 'show' : '' }}"
+                <div class="menu-item menu-accordion {{ auth()->user()->role === 'admin' ? '' : 'd-none' }} {{ request()->is('users*', 'connections*', 'access*') ? 'show' : '' }}"
                     data-kt-menu-trigger="click">
                     <span class="menu-link">
                         <span class="menu-icon">

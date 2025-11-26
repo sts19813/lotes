@@ -20,7 +20,7 @@ use App\Http\Controllers\MigracionController;
 use App\Http\Controllers\View\ProjectViewController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\Admin\UsersController;
 
 Route::view('/', 'login');
 
@@ -152,6 +152,8 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::post('/perfil/foto', [ProfileController::class, 'updatePhoto'])->name('profile.update.photo');
         Route::post('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
 
+        Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+        Route::post('/users/update-role/{id}', [UsersController::class, 'updateRole'])->name('users.updateRole');
     });
 
 // =========================

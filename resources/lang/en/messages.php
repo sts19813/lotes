@@ -2,10 +2,10 @@
 
 return [
     // Menu
-    'desarrollos' => 'Developments / Projects',
-    'consulta_adara' => 'Adara Query',
+    'desarrollos' => 'Developments',
+    'consulta_adara' => 'Query',
     'reportes' => 'Reports',
-    'catalogo_naboo' => 'Naboo Catalog',
+    'catalogo_naboo' => 'Catalog',
     'proyectos' => 'Projects',
     'fases' => 'Phases',
     'etapas' => 'Stages',
@@ -14,7 +14,7 @@ return [
     'busqueda_masiva' => 'Mass Search',
     'financiamiento' => 'Financing Models',
     'bitacora' => 'Log',
-    'migrar_info' => 'Migrate Info (Adara → Naboo)',
+    'migrar_info' => 'Migrate Info a Naboo',
     'configuraciones' => 'Settings',
     'usuarios' => 'Users',
     'conexiones' => 'API Connections',
