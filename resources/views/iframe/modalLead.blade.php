@@ -1,48 +1,74 @@
-	<!-- Modal Formulario de Descarga -->
-	<div class="modal fade" id="downloadFormModal" tabindex="-1" aria-labelledby="downloadFormModalLabel"
-		aria-hidden="true">
-		<div class="modal-dialog modal-md modal-dialog-centered">
-			<div class="modal-content"
-				style="border-radius: 15px; overflow: hidden; color:white; background: {{ $lot->modal_color ?? '#927A94' }}; ">
-				<div class="p-4 text-center">
-					<h5 class="fw-bold mt-4 mb-4">TUS DATOS</h5>
-					<p>Favor de dejar tus datos para descargar la cotización y nosotros te contactaremos lo más pronto,
-						gracias.</p>
-					<div class="linea-discontinua mb-3"></div>
-					<h6 class="sub-title">DESCARGA TU COTIZACIÓN</h6>
+<!-- Modal Formulario de Contacto -->
+<div class="modal fade" id="downloadFormModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content contact-modal">
 
-					<form id="downloadForm" action="{{ route('leads.store') }}" method="POST" class="mt-3">
-						@csrf
-						<div class="mb-3">
-							<input type="text" class="form-control" name="name" id="leadName" placeholder="Nombre Completo"
-								required>
-						</div>
-						<div class="mb-3">
-							<input type="text" class="form-control" name="phone" id="leadPhone" placeholder="Celular"
-								required>
-						</div>
-						<div class="mb-3">
-							<input type="email" class="form-control" name="email" id="leadEmail" placeholder="Correo"
-								required>
-						</div>
-						<div class="mb-3">
-							<input type="text" class="form-control" name="city" id="leadCity" placeholder="Ciudad" required>
-						</div>
+            <!-- Cerrar (cruz) -->
+            <button type="button" class="btn-close close-x" data-bs-dismiss="modal" aria-label="Close"></button>
 
-						<!-- HIDDEN FIELDS -->
-						<input type="hidden" name="phase_id" value="{{ $lot->phase_id }}">
-						<input type="hidden" name="project_id" value="{{ $lot->project_id }}">
-						<input type="hidden" name="stage_id" value="{{ $lot->stage_id }}">
-						<input type="hidden" name="lot_number" id="lotNumberHidden" value="">
+            <div class="p-4 text-center">
 
-						<button type="submit" id="submitBtn" class="btn btn-light w-100"
-							style="border-radius: 25px; color:black;">
-							<span class="btn-text">ENVIAR Y DESCARGAR</span>
-							<span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
-								aria-hidden="true"></span>
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+                <h3 class="fw-bold mb-2">Contáctanos</h3>
+                <p class="modal-subtext mb-4">
+                    Siempre atentos a tus necesidades, contáctanos y nuestros ejecutivos especializados 
+                    te ayudarán a concretar tu evento en este grandioso escenario.
+                </p>
+
+                <form id="downloadForm" action="{{ route('leads.store') }}" method="POST">
+                    @csrf
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <input type="text" class="modal-input" name="name" placeholder="Nombre" required>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <input type="text" class="modal-input" name="company" placeholder="Empresa">
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <input type="email" class="modal-input" name="email" placeholder="Email" required>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <input type="text" class="modal-input" name="phone" placeholder="Teléfono" required>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <select class="modal-input" name="event_type" required>
+                                <option value="" selected disabled>Tipo de Evento</option>
+                                <option>Boda</option>
+                                <option>Conferencia</option>
+                                <option>Congreso</option>
+                                <option>Exposición</option>
+                                <option>Reunión Empresarial</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <input type="date" class="modal-input" name="estimated_date" placeholder="Fecha Estimada">
+                        </div>
+
+                        <div class="col-12">
+                            <textarea class="modal-input" name="message" placeholder="Mensaje" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- hidden fields -->
+                    <input type="hidden" name="phase_id" value="{{ $lot->phase_id }}">
+                    <input type="hidden" name="project_id" value="{{ $lot->project_id }}">
+                    <input type="hidden" name="stage_id" value="{{ $lot->stage_id }}">
+                    <input type="hidden" name="lot_number" id="lotNumberHidden">
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="submit-button">
+                            Enviar
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

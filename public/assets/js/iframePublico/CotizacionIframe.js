@@ -1,118 +1,65 @@
 $(document).ready(function () {
 
     // ============================================================
-    //  MODAL DE LEADS (se abre al descargar la cotización)
+    //  ABRIR MODAL AL DAR CLIC EN "QUIERO ORGANIZAR MI EVENTO"
     // ============================================================
 
-    const btn = document.getElementById('btnDescargarCotizacion');
-    if (btn) {
-        btn.addEventListener('click', function () {
-            // Cerrar modal de lote (si está abierto)
-            let polygonModal = bootstrap.Modal.getInstance(document.getElementById('polygonModal'));
-            if (polygonModal) polygonModal.hide();
+    const btnSolicitar = document.getElementById('btnSolicitarEvento');
+    if (btnSolicitar) {
+        btnSolicitar.addEventListener('click', function () {
 
-            // Mostrar modal de formulario de descarga
-            let downloadFormModal = new bootstrap.Modal(document.getElementById('downloadFormModal'));
-            downloadFormModal.show();
+            // Mostrar modal de formulario
+            let modal = new bootstrap.Modal(document.getElementById('downloadFormModal'));
+            modal.show();
+
+            // Guardamos el ID del salón actual en el campo hidden
+            if (window.currentLot) {
+                document.getElementById('lotNumberHidden').value = window.currentLot.id;
+            }
         });
     }
 
     // ============================================================
-    //  FORMULARIO DE DESCARGA DE COTIZACIÓN
+    //  FORMULARIO: ENVÍO DEL LEAD
     // ============================================================
 
     const form = document.getElementById('downloadForm');
-    if (!form) return; // Si no existe el formulario, no ejecutar nada más
+    if (!form) return;
 
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        // Obtener información del lote seleccionado
-        const lote = window.currentLoteInfo;
-        if (!lote) {
-            alert("Error: no se seleccionó un lote");
-            return;
-        }
+        // Serializar datos
+        let formData = new FormData(form);
 
-        // Referencias al botón y elementos del loader
-        const submitBtn = document.getElementById("submitBtn");
-        const btnText = submitBtn.querySelector(".btn-text");
-        const spinner = submitBtn.querySelector(".spinner-border");
-
-        // Mostrar loader y deshabilitar botón
-        submitBtn.disabled = true;
-        spinner.classList.remove("d-none");
-        btnText.textContent = "Enviando...";
-
-        // Obtener el plan actualmente seleccionado
-        const planSeleccionado = window.currentPlan || {
-            financing_months: window.currentLot.financing_months || 60,
-            porcentaje_enganche: 30,
-            descuento_porcentaje: 0,
-            financiamiento_interes: 0
-        };
-
-        const params = new URLSearchParams({
-            name: lote.name,
-            area: lote.area,
-            price_square_meter: lote.price_square_meter,
-            down_payment_percent: planSeleccionado.porcentaje_enganche || 30,
-            financing_months: planSeleccionado.financing_months || planSeleccionado.months || planSeleccionado.financiamiento_meses || 60,
-            descuento_porcentaje: planSeleccionado.descuento_porcentaje || 0,
-            financiamiento_interes: planSeleccionado.financiamiento_interes || 0,
-            annual_appreciation: lote.annual_appreciation || 0.15,
-            chepina: lote.chepina,
-            lead_name: document.querySelector("#leadName").value,
-            lead_phone: document.querySelector("#leadPhone").value,
-            lead_email: document.querySelector("#leadEmail").value,
-            city: document.querySelector("#leadCity").value,
-            desarrollo_id: window.currentLot.id,
-            desarrollo_name: window.currentLot.name,
-            phase_id: window.currentLot.phase_id,
-            stage_id: window.currentLot.stage_id,
-            project_id: window.currentLot.project_id,
-            source_type: window.currentLot.source_type
-        });
-
-        const url = `/reports/generate?${params.toString()}`;
-
-        // ============================================================
-        //  Generar y descargar el PDF
-        // ============================================================
-
-        fetch(url)
+        // Enviar al backend vía fetch
+        fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: formData
+        })
             .then(res => {
-                if (!res.ok) throw new Error("Error al generar PDF");
-                return res.blob();
+                if (!res.ok) throw new Error("Error al enviar el formulario");
+                return res.json();
             })
-            .then(blob => {
-                // Crear enlace temporal para descargar el PDF
-                const blobUrl = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = blobUrl;
-                a.download = `cotizacion_${lote.name}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                URL.revokeObjectURL(blobUrl);
+            .then(data => {
 
-                // Cerrar modal después de iniciar la descarga
-                const downloadFormModalEl = document.getElementById("downloadFormModal");
-                const downloadFormModal = bootstrap.Modal.getInstance(downloadFormModalEl);
-                if (downloadFormModal) downloadFormModal.hide();
+                // Cerrar modal
+                let modal = bootstrap.Modal.getInstance(document.getElementById('downloadFormModal'));
+                if (modal) modal.hide();
 
                 // Limpiar formulario
                 form.reset();
+
+                // Mostrar mensaje
+                alert("¡Gracias! Un ejecutivo se pondrá en contacto contigo.");
             })
             .catch(err => {
                 console.error(err);
-                alert("Ocurrió un error al generar la cotización.");
-            })
-            .finally(() => {
-                // Restaurar estado del botón
-                submitBtn.disabled = false;
-                spinner.classList.add("d-none");
-                btnText.textContent = "ENVIAR Y DESCARGAR";
+                alert("Ocurrió un error al enviar la información.");
             });
+
     });
 });

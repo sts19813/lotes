@@ -2,29 +2,30 @@
 
 @section('title', 'Naboo')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<link href="https://db.onlinewebfonts.com/c/88f10bf18a36407ef36bf30bc25a3618?family=SuisseIntl-Regular"
+    rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styleCic.css">
 @section('content')
 
     <!-- HEADER -->
     <nav class="navbar navbar-dark bg-dark px-4 py-3">
-        <span class="navbar-brand mb-0 h1">Centro Internacional de Congresos de Yucatán</span>
+        <img src="/Imagotipo Horizontal.svg" alt="" width="225">
+        <span class="navbar-brand mb-0 h1">Organiza tu evento</span>
     </nav>
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid">
         <div class="row">
 
             <!-- ============================= -->
             <!-- IZQUIERDA: PLANO -->
             <!-- ============================= -->
-            <div class="col-lg-7">
+            <div class="col-lg-7 panel-left">
                 <div class="floor-plan">
                     <div style="position: relative; display: inline-block;">
 
                         {{-- PNG base --}}
                         @if (!empty($lot->png_image))
-                            <img src="{{ asset('/' . $lot->png_image) }}" 
-                                 alt="Plano PNG" 
-                                 style="width:100%; height:auto;">
+                            <img src="{{ asset('/' . $lot->png_image) }}" alt="Plano PNG" style="width:100%; height:auto;">
                         @endif
 
                         {{-- SVG encima --}}
@@ -51,16 +52,58 @@
             <!-- ============================= -->
             <!-- DERECHA -->
             <!-- ============================= -->
-            <div class="col-lg-5 px-4">
+            <div class="col-lg-5 right-panel">
 
                 <!-- Tabs -->
-                <div class="tabs d-flex gap-3 mb-4">
-                    <button class="btn btn-outline-dark rounded-pill px-4">Planta Alta</button>
-                    <button class="btn btn-dark rounded-pill px-4 active">Planta Baja</button>
-                    <button class="btn btn-outline-dark rounded-pill px-4">Mezzanine</button>
+                <div class="tabs d-flex gap-5 mb-4">
+                    <img src="/Modo_de_aislamiento.svg" alt="">
+
+                    <a href="/cic/1"
+                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'active' : '' }}">
+                        Planta Alta
+                    </a>
+
+                    <a href="/cic/2"
+                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'active' : '' }}">
+                        Planta Baja
+                    </a>
+
+                    <a href="/cic/3"
+                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'active' : '' }}">
+                        Mezzanine
+                    </a>
                 </div>
 
                 <hr>
+
+                <!-- SOLO EN MÓVIL -->
+                <div class="d-md-none mt-3">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-custom-mobile">Personaliza tu espacio.</span>
+
+                        <div class="custom-select-wrapper">
+                            <select id="select-lot-merge" class="custom-select-mobile">
+                                @foreach ($lots as $item)
+                                    <option value="{{ $item['id'] ?? $item->id }}"
+                                        data-area="{{ $item['area'] ?? $item->area }}"
+                                        data-front="{{ $item['front'] ?? $item->front }}"
+                                        data-depth="{{ $item['depth'] ?? $item->depth }}"
+                                        data-auditorio="{{ $item['auditorium'] ?? $item->auditorium }}"
+                                        data-banquete="{{ $item['banquet'] ?? $item->banquet }}"
+                                        data-coctel="{{ $item['cocktail'] ?? $item->cocktail }}"
+                                        data-escuela="{{ $item['school'] ?? $item->school }}"
+                                        data-herradura="{{ $item['horseshoe'] ?? $item->horseshoe }}"
+                                        data-mesarusa="{{ $item['russian_table'] ?? $item->russian_table }}">
+                                        {{ $item['name'] ?? $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
 
                 <!-- Información general -->
                 <p class="mb-1">
@@ -89,9 +132,7 @@
 
                 @if (!empty($lot->tour_link))
                     <div class="mt-3">
-                        <a href="{{ $lot->tour_link }}" 
-                           target="_blank" 
-                           class="btn btn-outline-dark rounded-pill px-4">
+                        <a href="{{ $lot->tour_link }}" target="_blank" class="btn btn-outline-dark rounded-pill px-4">
                             Ver Recorrido Virtual
                         </a>
                     </div>
@@ -103,13 +144,22 @@
                 </p>
 
                 <!-- Botones -->
-                <div class="d-flex gap-3 mt-2">
-                    <button class="btn btn-light border rounded-pill px-4">Oficina 12</button>
-                    <button class="btn btn-light border rounded-pill px-4">Oficina 13</button>
+                <div class="d-flex flex-wrap gap-3 mt-2">
+                    @foreach ($lots as $item)
+                        <button class="btn btn-light border rounded-pill px-4 btn-lot-merge"
+                            data-id="{{ $item['id'] ?? $item->id }}" data-area="{{ $item['area'] ?? $item->area }}"
+                            data-front="{{ $item['front'] ?? $item->front }}" data-depth="{{ $item['depth'] ?? $item->depth }}"
+                            data-auditorio="{{ $item['auditorium'] ?? $item->auditorium }}"
+                            data-banquete="{{ $item['banquet'] ?? $item->banquet }}"
+                            data-coctel="{{ $item['cocktail'] ?? $item->cocktail }}"
+                            data-escuela="{{ $item['school'] ?? $item->school }}"
+                            data-herradura="{{ $item['horseshoe'] ?? $item->horseshoe }}"
+                            data-mesarusa="{{ $item['russian_table'] ?? $item->russian_table }}">
+                            {{ $item['name'] ?? $item->name }}
+                        </button>
+                    @endforeach
                 </div>
-
             </div>
-
         </div>
     </div>
 
@@ -117,42 +167,75 @@
     <!-- ============================= -->
     <!-- BARRA DE MÉTRICAS -->
     <!-- ============================= -->
-    <div class="metrics-bar mt-5">
+    <div class="metrics-bar mt-5 fixed-metrics d-flex align-items-center">
         <div class="container text-center">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <p>Nuestros ejecutivos especializados te ayudarán a concretar tu evento.</p>
+            <div class="row text-center align-items-center">
+
+                <!-- ======================== -->
+                <!-- TÍTULO (siempre igual)   -->
+                <!-- ======================== -->
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <span>Nuestros ejecutivos especializados te ayudarán a concretar tu evento.</span>
                 </div>
 
-                <!-- Área -->
-                <div class="col-md-2">
+                <!-- ===================================================== -->
+                <!-- MÓVIL: 4 valores en una fila (visible solo en móvil) -->
+                <!-- ===================================================== -->
+                <div class="col-12 d-flex d-md-none justify-content-between mb-3">
+
+                    <div class="text-center flex-fill">
+                        <p id="metric-area" class="metric-number">---</p>
+                        <p class="small">Área</p>
+                    </div>
+
+                    <div class="text-center flex-fill">
+                        <p id="metric-auditorium" class="metric-number">---</p>
+                        <p class="small">Auditorio</p>
+                    </div>
+
+                    <div class="text-center flex-fill">
+                        <p id="metric-banquet" class="metric-number">---</p>
+                        <p class="small">Banquete</p>
+                    </div>
+
+                    <div class="text-center flex-fill">
+                        <p id="metric-school" class="metric-number">---</p>
+                        <p class="small">Escuela</p>
+                    </div>
+
+                </div>
+
+                <!-- ==================================================================== -->
+                <!-- ESCRITORIO: 4 valores en columnas como antes (visible solo en ≥md) -->
+                <!-- ==================================================================== -->
+                <div class="col-md-2 d-none d-md-block">
                     <p id="metric-area" class="metric-number">---</p>
                     <p>Área total para evento</p>
                 </div>
 
-                <!-- Auditorio -->
-                <div class="col-md-1">
+                <div class="col-md-1 d-none d-md-block">
                     <p id="metric-auditorium" class="metric-number">---</p>
                     <p>Auditorio</p>
                 </div>
 
-                <!-- Banquete -->
-                <div class="col-md-1">
+                <div class="col-md-1 d-none d-md-block">
                     <p id="metric-banquet" class="metric-number">---</p>
                     <p>Banquete</p>
                 </div>
 
-                <!-- Escuela -->
-                <div class="col-md-1">
+                <div class="col-md-1 d-none d-md-block">
                     <p id="metric-school" class="metric-number">---</p>
                     <p>Escuela</p>
                 </div>
 
-                <div class="col-md-3">
-                    <button class="btn btn-dark rounded-pill mt-4 px-5 py-2">
+                <!-- BOTÓN -->
+                <div class="col-12 col-md-3 text-center mt-3 mt-md-0">
+                    <button id="btnSolicitarEvento" class="btn btn-dark rounded-pill px-5 py-2">
                         Quiero organizar mi evento
                     </button>
+
                 </div>
+
             </div>
         </div>
     </div>
@@ -164,28 +247,28 @@
 @endsection
 
 @push('scripts')
-<script>
-    let selector = @json($lot->modal_selector ?? 'svg g *');
+    <script>
+        let selector = @json($lot->modal_selector ?? 'svg g *');
 
-    window.Laravel = {
-        csrfToken: "{{ csrf_token() }}",
-        routes: {
-            lotsFetch: "{{ route('lots.fetch') }}",
-            lotesStore: "{{ route('lotes.store') }}"
-        }
-    };
+        window.Laravel = {
+            csrfToken: "{{ csrf_token() }}",
+            routes: {
+                lotsFetch: "{{ route('lots.fetch') }}",
+                lotesStore: "{{ route('lotes.store') }}"
+            }
+        };
 
-    window.currentLoteFinanciamientos = @json($financiamientos);
-    window.preloadedLots = @json($lots);
-    window.currentLot = @json($lot);
-    window.projects = @json($projects);
-    window.dbLotes = @json($dbLotes);
+        window.currentLoteFinanciamientos = @json($financiamientos);
+        window.preloadedLots = @json($lots);
+        window.currentLot = @json($lot);
+        window.projects = @json($projects);
+        window.dbLotes = @json($dbLotes);
 
-    window.idDesarrollo = {{ $lot->id }};
-    let redireccion = true;
-</script>
+        window.idDesarrollo = {{ $lot->id }};
+        let redireccion = true;
+    </script>
 
-<script src="/assets/js/iframePublico/Mainiframe.js"></script>
-<script src="/assets/js/iframePublico/ModalIframe.js"></script>
-<script src="/assets/js/iframePublico/CotizacionIframe.js"></script>
+    <script src="/assets/js/iframePublico/Mainiframe.js"></script>
+    <script src="/assets/js/iframePublico/ModalIframe.js"></script>
+    <script src="/assets/js/iframePublico/CotizacionIframe.js"></script>
 @endpush

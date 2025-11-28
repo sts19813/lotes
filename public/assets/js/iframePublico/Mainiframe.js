@@ -95,7 +95,7 @@ $(document).ready(function () {
 
             // --- Crear tooltip (estatus + número de lote + área) ---
             const statusText = statusMap[matchedLot.status] || matchedLot.status;
-            const tooltipContent = `Unidad: ${matchedLot.name} - ${statusText}<br>Área: ${matchedLot.area} m²`;
+            const tooltipContent = `${matchedLot.name}<br>Área: ${matchedLot.area} m²`;
 
             svgElement.setAttribute("data-bs-toggle", "tooltip");
             svgElement.setAttribute("data-bs-html", "true");

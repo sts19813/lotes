@@ -1,0 +1,194 @@
+.tabs button.active {
+    background: #000;
+    color: #fff;
+}
+
+.tabs {
+    padding-top: 20px !important;
+}
+
+.floor-plan {
+    background: #fff;
+    height: 650px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metrics-bar {
+    border-top: 1px solid #ccc;
+    padding: 10px 0;
+    background: #fafafa;
+}
+
+.metric-number {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 0px !important;
+}
+
+.right-panel strong {
+    font-family: "SuisseIntl-Regular" !important;
+}
+
+.right-panel p {
+    font-family: "SuisseIntl-Regular" !important;
+    font-weight: 400;
+}
+
+.right-panel {
+    padding-left: 50px !important;
+}
+
+.navbar {
+    min-height: 70px !important;
+    background-color: #000000 !important;
+}
+
+.fixed-metrics {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 999;
+    padding: 15px 0;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.vertical-align {
+    align-items: center;
+    margin: auto;
+}
+
+.panel-left {
+    padding-left: 0 !important;
+    background-color: white !important;
+}
+
+
+/* Fondo blanco y bordes suaves */
+.contact-modal {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px 10px 35px;
+    position: relative;
+}
+
+/* Botón de cerrar (X) */
+.close-x {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+}
+
+/* Texto descriptivo */
+.modal-subtext {
+    font-size: 14px;
+    color: #5a5a5a;
+}
+
+/* Estilo cápsula para inputs */
+.modal-input {
+    width: 100%;
+    background: #f1f1f1;
+    border: none;
+    padding: 14px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+}
+
+.modal-input:focus {
+    outline: none;
+    background: #e8e8e8;
+}
+
+/* Botón principal */
+.submit-button {
+    background: black;
+    color: white;
+    padding: 12px 40px;
+    border-radius: 25px;
+    border: none;
+    font-size: 16px;
+    width: 220px;
+}
+
+.submit-button:hover {
+    opacity: 0.85;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .floor-plan {
+
+        height: 250px;
+    }
+
+    .right-panel {
+        padding-left: 10px !important;
+        padding-bottom: 200px !important;
+    }
+
+    .btn-lot-merge {
+        display: none !important;
+    }
+
+    .metric-number {
+        font-size: 20px;
+    }
+
+    .text-custom-mobile {
+        font-size: 20px;
+        font-family: "SuisseIntl-Regular" !important;
+        font-weight: 600;
+    }
+
+    /* Wrapper que posiciona la flecha */
+    /* Wrapper que posiciona la flecha */
+    .custom-select-wrapper {
+        position: relative;
+        max-width: 60%;
+        padding-left: 35px;
+        min-width: 120px;
+    }
+
+    /* Estilo del select */
+    .custom-select-mobile {
+        border: none;
+        background: transparent;
+        padding-right: 22px;
+        font-size: 20px;
+        font-family: "SuisseIntl-Regular" !important;
+        font-weight: 600;
+        appearance: none;
+        -webkit-appearance: none;
+
+        width: 100%;
+
+        /* Ajuste de textos largos */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Flecha ▼ personalizada */
+    .custom-select-wrapper::after {
+        content: "▼";
+        font-size: 12px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Focus limpio */
+    .custom-select-mobile:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+}

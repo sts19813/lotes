@@ -1,15 +1,5 @@
 /**
  * ================================================================
- * MÓDULO DE MODAL DE LOTES
- * ---------------------------------------------------------------
- * Contiene toda la lógica para construir y actualizar el modal 
- * dentro del iframe con los precios del lote y los diferentes 
- * modelos de financiamiento disponibles.
- * ================================================================
- */
-
-/**
- * ================================================================
  * FUNCIÓN PRINCIPAL: llenarModal(lote)
  * ---------------------------------------------------------------
  * Llena el modal con la información del lote seleccionado, calcula
@@ -17,6 +7,36 @@
  * de financiamiento disponibles.
  * ================================================================
  */
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".btn-lot-merge").forEach(btn => {
+        btn.style.display = "none";
+    });
+
+    const select = document.getElementById("select-lot-merge");
+
+    if (select) {
+        select.addEventListener("change", function () {
+            const option = this.options[this.selectedIndex];
+            if (!option || !option.dataset.area) return;
+
+            const lote = {
+                id: option.value,
+                area: option.dataset.area,
+                front: option.dataset.front,
+                depth: option.dataset.depth,
+                auditorium: option.dataset.auditorio,
+                banquet: option.dataset.banquete,
+                school: option.dataset.escuela,
+                horseshoe: option.dataset.herradura,
+                russian_table: option.dataset.mesarusa
+            };
+
+            window.actualizarVista(lote);
+        });
+    }
+});
+
 function fmt(value) {
     if (value === null || value === undefined || value === "") return '---';
     // si es numérico en string, formatea
@@ -43,10 +63,16 @@ function setText(id, value) {
  *
  * Coloca esta función en window para que pueda llamarse desde otros scripts.
  */
-window.actualizarVista = function(lot) {
+function extraerNumero(name) {
+    if (!name) return null;
+    const match = name.match(/\d+/);
+    return match ? match[0] : null;
+}
+
+window.actualizarVista = function (lot) {
     if (!lot) return;
 
-    // PANEL DERECHO
+    // === panel derecho ===
     setText("punto-colgado", lot.hanging_point);
     setText("resistencia-piso", lot.floor_resistance);
 
@@ -62,13 +88,28 @@ window.actualizarVista = function(lot) {
     setText("herradura", lot.horseshoe);
     setText("mesa-rusa", lot.russian_table);
 
-    // METRICS BAR (ids únicos)
     setText("metric-area", lot.area);
     setText("metric-auditorium", lot.auditorium);
     setText("metric-banquet", lot.banquet);
     setText("metric-school", lot.school);
 
-    // Tour link: agrega/elimina botón según exista
+    // === mostrar/ocultar botones segun numero ===
+    const numero = extraerNumero(lot.name);
+
+    if (numero) {
+        document.querySelectorAll(".btn-lot-merge").forEach(btn => {
+            const nombreBtn = btn.innerText.trim();
+            const numeroBtn = extraerNumero(nombreBtn);
+
+            if (numeroBtn == numero) {
+                btn.style.display = "inline-block";
+            } else {
+                btn.style.display = "none";
+            }
+        });
+    }
+
+    // === tour link ===
     const tourContainerId = 'btn-tour-virtual';
     const existing = document.getElementById(tourContainerId);
     if (lot.tour_link) {
@@ -77,14 +118,12 @@ window.actualizarVista = function(lot) {
                             Ver Recorrido Virtual
                         </a>
                       </div>`;
-        // preferimos colocarlo debajo de la sección principal (col-lg-5)
+
         const parent = document.querySelector('.col-lg-5');
         if (parent) {
             if (existing) {
                 existing.outerHTML = html;
             } else {
-                // insertar antes del texto de "¿Necesitas más espacio?" (o al final del padre)
-                // acá lo añadimos al final del parent
                 parent.insertAdjacentHTML('beforeend', html);
             }
         }
@@ -97,7 +136,7 @@ window.actualizarVista = function(lot) {
  * Función que se llamará cuando selecciones un lote (expuesta globalmente)
  * Llama a actualizarVista y puede abrir modal si quieres.
  */
-window.llenarModal = function(lote) {
+window.llenarModal = function (lote) {
     if (!lote) return;
     window.currentLoteInfo = lote;
     window.actualizarVista(lote);
@@ -106,14 +145,25 @@ window.llenarModal = function(lote) {
     // $('#modalLotInfo').modal('show'); // descomenta si tienes bootstrap modal
 };
 
-/**
- * Ejemplo: si quieres probar manualmente en consola:
- * window.llenarModal(window.preloadedLots[0])
- *
- * Asegúrate de que tu evento de selección de SVG llame a:
- * window.llenarModal(loteObject)
- *
- * Si tu sistema identifica lotes por id, puedes buscarlo en preloadedLots:
- * const lot = window.preloadedLots.find(l => l.id == SOME_ID);
- * window.llenarModal(lot);
- */
+const buttons = document.querySelectorAll(".btn-lot-merge");
+buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        // Crear objeto lote desde los data-attr
+        const lote = {
+            id: btn.dataset.id,
+            area: btn.dataset.area,
+            front: btn.dataset.front,
+            depth: btn.dataset.depth,
+            auditorium: btn.dataset.auditorio,
+            banquet: btn.dataset.banquete,
+            school: btn.dataset.escuela,
+            horseshoe: btn.dataset.herradura,
+            russian_table: btn.dataset.mesarusa
+        };
+
+        // Actualizar toda la vista usando tu función
+        window.actualizarVista(lote);
+    });
+});
+
