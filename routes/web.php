@@ -22,7 +22,14 @@ use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\ProfileController;
 
 
-Route::view('/', 'login');
+Route::get('/cic/{lot}', [DesarrollosController::class, 'clic'])
+    ->name('iframe.cic');
+
+// Ruta por defecto
+Route::redirect('/', '/cic/1');
+Route::get('/login', function () {
+    return redirect('/cic/1');
+})->name('login');
 
 // =========================
 // Autenticación con Google

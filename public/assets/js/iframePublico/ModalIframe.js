@@ -89,10 +89,16 @@ window.actualizarVista = function (lot) {
     setText("mesa-rusa", lot.russian_table);
 
     setText("metric-area", lot.area);
-    setText("metric-auditorium", lot.auditorium);
-    setText("metric-banquet", lot.banquet);
-    setText("metric-school", lot.school);
+    setText("metric-area-mobile", lot.area);
 
+    setText("metric-auditorium", lot.auditorium);
+    setText("metric-auditorium-mobile", lot.auditorium);
+
+    setText("metric-banquet", lot.banquet);
+    setText("metric-banquet-mobile", lot.banquet);
+
+    setText("metric-school", lot.school);
+    setText("metric-school-mobile", lot.school);
     // === mostrar/ocultar botones segun numero ===
     const numero = extraerNumero(lot.name);
 

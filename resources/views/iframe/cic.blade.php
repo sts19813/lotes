@@ -8,10 +8,22 @@
 @section('content')
 
     <!-- HEADER -->
-    <nav class="navbar navbar-dark bg-dark px-4 py-3">
-        <img src="/Imagotipo Horizontal.svg" alt="" width="225">
-        <span class="navbar-brand mb-0 h1">Organiza tu evento</span>
+    <nav class="navbar navbar-dark bg-dark px-4 py-3 d-flex justify-content-between align-items-center">
+
+        {{-- LOGO IZQUIERDA --}}
+        <img src="/Imagotipo Horizontal.svg" alt="" class="logo-navbar">
+
+        {{-- BOTÓN A LA DERECHA --}}
+        <a href="https://cicyucatan.com/" class="btn text-white d-flex align-items-center gap-2">
+            <!-- Texto solo en pantallas grandes -->
+            <span class="d-none d-md-inline">Regresar</span>
+
+            <!-- Ícono solo en pantallas pequeñas -->
+            <span class="d-inline d-md-none" style="font-size: 24px;">‹</span>
+        </a>
+
     </nav>
+
 
     <div class="container-fluid">
         <div class="row">
@@ -184,22 +196,22 @@
                 <div class="col-12 d-flex d-md-none justify-content-between mb-3">
 
                     <div class="text-center flex-fill">
-                        <p id="metric-area" class="metric-number">---</p>
+                        <p id="metric-area-mobile" class="metric-number">---</p>
                         <p class="small">Área</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-auditorium" class="metric-number">---</p>
+                        <p id="metric-auditorium-mobile" class="metric-number">---</p>
                         <p class="small">Auditorio</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-banquet" class="metric-number">---</p>
+                        <p id="metric-banquet-mobile" class="metric-number">---</p>
                         <p class="small">Banquete</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-school" class="metric-number">---</p>
+                        <p id="metric-school-mobile" class="metric-number">---</p>
                         <p class="small">Escuela</p>
                     </div>
 
@@ -243,6 +255,7 @@
 
     @include("iframe.modals.$templateModal")
     @include('iframe.modalLead')
+    
 
 @endsection
 
