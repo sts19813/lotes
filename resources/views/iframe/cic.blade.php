@@ -64,7 +64,7 @@
             <!-- ============================= -->
             <!-- DERECHA -->
             <!-- ============================= -->
-            <div class="col-lg-5 right-panel"  style="padding-bottom: 180px;">
+            <div class="col-lg-5 right-panel" style="padding-bottom: 180px;">
 
                 <!-- Tabs -->
                 <div class="tabs d-flex gap-5 mb-4">
@@ -91,14 +91,18 @@
                 <!-- SOLO EN MÓVIL -->
                 <div class="d-md-none mt-3">
 
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold text-custom-mobile">Personaliza tu espacio.</span>
+                    <div class="mb-2">
 
-                        <div class="custom-select-wrapper">
-                            <select id="select-lot-merge" class="custom-select-mobile">
+                        <!-- Título 100% ancho -->
+                        <span class="fw-bold text-custom-mobile d-block w-100 mb-2">
+                            Personaliza tu espacio.
+                        </span>
+
+                        <!-- Select 100% ancho con borde -->
+                        <div class="custom-select-wrapper-mobile w-100">
+                            <select id="select-lot-merge" class="custom-select-mobile w-100">
                                 @foreach ($lots as $item)
-                                    <option value="{{ $item['id'] ?? $item->id }}"
-                                        data-id="{{ $item['id'] ?? $item->id }}"
+                                    <option value="{{ $item['id'] ?? $item->id }}" data-id="{{ $item['id'] ?? $item->id }}"
                                         data-area="{{ $item['area'] ?? $item->area }}"
                                         data-front="{{ $item['front'] ?? $item->front }}"
                                         data-depth="{{ $item['depth'] ?? $item->depth }}"
@@ -107,17 +111,20 @@
                                         data-coctel="{{ $item['cocktail'] ?? $item->cocktail }}"
                                         data-escuela="{{ $item['school'] ?? $item->school }}"
                                         data-herradura="{{ $item['horseshoe'] ?? $item->horseshoe }}"
+                                        data-chepina="{{ $item['chepina'] ?? $item->chepina }}"
                                         data-mesarusa="{{ $item['russian_table'] ?? $item->russian_table }}">
                                         {{ $item['name'] ?? $item->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+
                     </div>
 
-                </div>               
-                
-                <div class="fw-bold text-custom-desktop">Personaliza tu espacio.
+
+                </div>
+
+                <div class="fw-bold text-custom-desktop d-none d-lg-block">Personaliza tu espacio.
                     <br><span class="salon-seleccionado"></span>
                 </div>
                 <br>
@@ -155,7 +162,7 @@
                     </div>
                 @endif
 
-                <p class="mt-3">
+                <p class="mt-3 d-none d-lg-block">
                     <strong>¿Necesitas más espacio?</strong><br>
                     Selecciona otro salón para ampliar tu espacio.
                 </p>
@@ -258,7 +265,7 @@
 
     @include("iframe.modals.$templateModal")
     @include('iframe.modalLead')
-    
+
 
 @endsection
 

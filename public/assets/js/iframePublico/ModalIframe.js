@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const lote = {
                 id: option.value,
+                name: option.innerText.trim(),  
                 area: option.dataset.area,
                 front: option.dataset.front,
                 depth: option.dataset.depth,
@@ -42,8 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 banquet: option.dataset.banquete,
                 school: option.dataset.escuela,
                 horseshoe: option.dataset.herradura,
-                russian_table: option.dataset.mesarusa
+                russian_table: option.dataset.mesarusa,
+                chepina: option.dataset.chepina  
             };
+
+            // ================================
+            // MISMA LÓGICA DE COLOR QUE LOS BOTONES
+            // ================================
+            limpiarColoresSVG();
+            colorearSVGPorChepina(lote.chepina);
 
             // Actualizar info del lado derecho
             window.actualizarVista(lote);
