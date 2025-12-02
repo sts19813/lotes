@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fmt(value) {
-    if (value === null || value === undefined || value === "") return '---';
+    if (value === null || value === undefined || value === "") return 'N/A';
     // si es numérico en string, formatea
     const n = Number(String(value).replace(/,/g, ''));
     if (!isNaN(n)) {
@@ -89,12 +89,19 @@ function fmt(value) {
 /**
  * SetText seguro: no truena si el elemento no existe.
  */
-function setText(id, value) {
+function setText(id, value, unit = "") {
     const el = document.getElementById(id);
     if (!el) return;
-    el.textContent = fmt(value);
-}
 
+    const formatted = fmt(value);
+
+    // Si es N/A → NO PONE unidad
+    if (formatted === "N/A") {
+        el.textContent = "N/A";
+    } else {
+        el.textContent = unit ? `${formatted} ${unit}` : formatted;
+    }
+}
 /**
  * Actualiza TODOS los elementos de la vista cuando se selecciona un lote.
  * Actualiza: panel derecho (ids simples) y métricas (ids metric-*)

@@ -132,27 +132,27 @@
                 <!-- Información general -->
                 <p class="mb-1">
                     <strong>Capacidad de carga en puntos de colgante fijos:</strong>
-                    <span id="punto-colgado">{{ $lot->hanging_point ?? '---' }}</span>
+                    <span id="punto-colgado">{{ $lot->hanging_point ?? 'N/A' }}</span>
                 </p>
 
                 <p>
                     <strong>Resistencia de piso:</strong>
-                    <span id="resistencia-piso">{{ $lot->floor_resistance ?? '---' }}</span>
+                    <span id="resistencia-piso">{{ $lot->floor_resistance ?? 'N/A' }}</span>
                 </p>
 
                 <h6 class="mt-4"><strong>Dimensiones</strong></h6>
-                <p class="mb-1">Área: <span id="area">{{ $lot->area ?? '---' }}</span> m²</p>
-                <p class="mb-1">Frente: <span id="frente">{{ $lot->front ?? '---' }}</span> m</p>
-                <p class="mb-1">Fondo: <span id="fondo">{{ $lot->depth ?? '---' }}</span> m</p>
-                <p>Altura: <span id="altura">{{ $lot->height ?? '---' }}</span> m</p>
+                <p class="mb-1">Área: <span id="area">{{ $lot->area ?? 'N/A' }}</span> m²</p>
+                <p class="mb-1">Frente: <span id="frente">{{ $lot->front ?? 'N/A' }}</span> m</p>
+                <p class="mb-1">Fondo: <span id="fondo">{{ $lot->depth ?? 'N/A' }}</span> m</p>
+                <p>Altura: <span id="altura">{{ $lot->height ?? 'N/A' }}</span> m</p>
 
                 <h6><strong>Capacidades</strong></h6>
-                <p class="mb-1">Auditorio: <span id="auditorio">{{ $lot->auditorium ?? '---' }}</span></p>
-                <p class="mb-1">Banquete: <span id="banquete">{{ $lot->banquet ?? '---' }}</span></p>
-                <p class="mb-1">Coctel: <span id="coctel">{{ $lot->cocktail ?? '---' }}</span></p>
-                <p class="mb-1">Escuela: <span id="escuela">{{ $lot->school ?? '---' }}</span></p>
-                <p class="mb-1">Herradura: <span id="herradura">{{ $lot->horseshoe ?? '---' }}</span></p>
-                <p class="mb-1">Mesa Rusa: <span id="mesa-rusa">{{ $lot->russian_table ?? '---' }}</span></p>
+                <p class="mb-1">Auditorio: <span id="auditorio">{{ $lot->auditorium ?? 'N/A' }}</span></p>
+                <p class="mb-1">Banquete: <span id="banquete">{{ $lot->banquet ?? 'N/A' }}</span></p>
+                <p class="mb-1">Coctel: <span id="coctel">{{ $lot->cocktail ?? 'N/A' }}</span></p>
+                <p class="mb-1">Escuela: <span id="escuela">{{ $lot->school ?? 'N/A' }}</span></p>
+                <p class="mb-1">Herradura: <span id="herradura">{{ $lot->horseshoe ?? 'N/A' }}</span></p>
+                <p class="mb-1">Mesa Rusa: <span id="mesa-rusa">{{ $lot->russian_table ?? 'N/A' }}</span></p>
 
                 @if (!empty($lot->tour_link))
                     <div class="mt-3">
@@ -209,22 +209,22 @@
                 <div class="col-12 d-flex d-md-none justify-content-between mb-3">
 
                     <div class="text-center flex-fill">
-                        <p id="metric-area-mobile" class="metric-number">---</p>
+                        <p id="metric-area-mobile" class="metric-number">N/A</p>
                         <p class="small">Área</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-auditorium-mobile" class="metric-number">---</p>
+                        <p id="metric-auditorium-mobile" class="metric-number">N/A</p>
                         <p class="small">Auditorio</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-banquet-mobile" class="metric-number">---</p>
+                        <p id="metric-banquet-mobile" class="metric-number">N/A</p>
                         <p class="small">Banquete</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-school-mobile" class="metric-number">---</p>
+                        <p id="metric-school-mobile" class="metric-number">N/A</p>
                         <p class="small">Escuela</p>
                     </div>
                 </div>
@@ -233,22 +233,22 @@
                 <!-- ESCRITORIO: 4 valores en columnas como antes (visible solo en ≥md) -->
                 <!-- ==================================================================== -->
                 <div class="col-md-2 d-none d-md-block">
-                    <p id="metric-area" class="metric-number">---</p>
+                    <p id="metric-area" class="metric-number">N/A</p>
                     <p>Área total para evento</p>
                 </div>
 
                 <div class="col-md-1 d-none d-md-block">
-                    <p id="metric-auditorium" class="metric-number">---</p>
+                    <p id="metric-auditorium" class="metric-number">N/A</p>
                     <p>Auditorio</p>
                 </div>
 
                 <div class="col-md-1 d-none d-md-block">
-                    <p id="metric-banquet" class="metric-number">---</p>
+                    <p id="metric-banquet" class="metric-number">N/A</p>
                     <p>Banquete</p>
                 </div>
 
                 <div class="col-md-1 d-none d-md-block">
-                    <p id="metric-school" class="metric-number">---</p>
+                    <p id="metric-school" class="metric-number">N/A</p>
                     <p>Escuela</p>
                 </div>
 
