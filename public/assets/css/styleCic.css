@@ -1,5 +1,5 @@
-.tabs button.active {
-    background: #000;
+.tabs .actives {
+    background: #000 !important;
     color: #fff;
 }
 
@@ -34,11 +34,24 @@
 .right-panel p {
     font-family: "SuisseIntl-Regular" !important;
     font-weight: 400;
+    font-size: 16px !important;
+}
+
+.panel-left {
+    position: sticky;
+    top: 0;
+    height: 88vh;
+    overflow: hidden;
+    background: #fff;
 }
 
 .right-panel {
+    height: 88vh;
+    overflow-y: auto;
+    padding-right: 20px;
     padding-left: 50px !important;
 }
+
 
 .navbar {
     min-height: 70px !important;
@@ -63,9 +76,31 @@
 
 .panel-left {
     padding-left: 0 !important;
-    background-color: white !important;
+    background: #fff !important;
+    min-height: 88vh !important;
+    height: 88%; 
+    padding: 0;
 }
 
+/* ESCRITORIO */
+@media (min-width: 768px) {
+    .panel-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* MÓVIL: quitar centrado */
+@media (max-width: 767px) {
+    .panel-left {
+        display: block;
+        align-items: initial;
+        justify-content: initial;
+        min-height: auto !important;
+        height: auto !important;
+    }
+}
 
 /* Fondo blanco y bordes suaves */
 .contact-modal {
@@ -73,6 +108,12 @@
     border-radius: 20px;
     padding: 20px 10px 35px;
     position: relative;
+}
+
+.btn-lot-merge.active-lot {
+    border: 2px solid #000 !important;
+    background: #f8f8f8;
+    color: #000;
 }
 
 /* Botón de cerrar (X) */
@@ -121,11 +162,47 @@
     opacity: 0.85;
 }
 
+.text-custom-desktop{
+    font-size: 20px;
+    font-family: "SuisseIntl-Regular" !important;
+}
+
+/* Hover: gris fuerte */
+.lote-svg:hover *,
+.lote-svg:hover {
+    fill:rgba(100, 100, 100, .4) !important;
+}
+
+/* Activo: gris muy oscuro */
+.lote-svg.active *,
+.lote-svg.active {
+   fill:rgba(100, 100, 100, .6) !important;
+}
+
+.svg-selected {
+     fill:rgba(100, 100, 100, .6) !important;
+}
+
+.btn-lot-merge{
+    background-color: white !important;
+}
+
+.text-footer{
+    padding-left: 150px !important;
+     text-align: left;
+     font-weight: 600;
+}
 
 @media only screen and (max-width: 600px) {
     .floor-plan {
 
         height: 250px;
+    }
+
+    .text-footer{
+        padding-left: 0px !important;
+        text-align: center !important;
+        font-weight: 600;
     }
 
     .right-panel {

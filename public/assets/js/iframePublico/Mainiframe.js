@@ -36,6 +36,8 @@ $(document).ready(function () {
                 }
             }
 
+              limpiarColoresSVG();
+
             // --- Obtener información del lote ---
             info = JSON.parse(document.getElementById(elementId).getAttribute("data-lote-info"));
 
@@ -75,20 +77,22 @@ $(document).ready(function () {
             const svgElement = document.querySelector(`#${selector}`);
             if (!svgElement) return;
 
+            svgElement.classList.add("lote-svg");
+            limpiarColoresSVG();
             // --- Color según estatus ---
             let fillColor;
             switch (matchedLot.status) {
                 case 'for_sale': fillColor = 'rgba(52, 199, 89, 0.7)'; break;
                 case 'sold': fillColor = 'rgba(200, 0, 0, 0.6)'; break;
                 case 'reserved': fillColor = 'rgba(255, 200, 0, 0.6)'; break;
-                default: fillColor = 'rgba(100, 100, 100, .9)';
+                default: fillColor = 'rgba(100, 100, 100, .0)';
             }
 
             // --- Aplicar color ---
             svgElement.querySelectorAll('*').forEach(el => {
-                el.style.setProperty('fill', fillColor, 'important');
+                el.style.setProperty('fill', fillColor, '');
             });
-            svgElement.style.setProperty('fill', fillColor, 'important');
+            svgElement.style.setProperty('fill', fillColor, '');
 
             // --- Guardar información en dataset ---
             svgElement.dataset.loteInfo = JSON.stringify(matchedLot);
@@ -143,11 +147,11 @@ $(document).ready(function () {
 
                 svgElement.querySelectorAll('*').forEach(el => {
                     el.removeAttribute('fill');
-                    el.style.setProperty('fill', finalColor, 'important');
+                    el.style.setProperty('fill', finalColor, '');
                 });
 
                 svgElement.removeAttribute('fill');
-                svgElement.style.setProperty('fill', finalColor, 'important');
+                svgElement.style.setProperty('fill', finalColor, '');
             };
 
             // --- Pintar color base ---
@@ -172,4 +176,25 @@ $(document).ready(function () {
             });
         });
     }
+
+    // Variable para guardar el último seleccionado
+            let selectedSVG = null;
+
+            document.querySelectorAll('.lote-svg').forEach(el => {
+
+                el.addEventListener('click', function (e) {
+                    e.stopPropagation();
+
+                    
+
+                    // ❌ quitar active al previo
+                    if (selectedSVG) {
+                        selectedSVG.classList.remove('active');
+                    }
+
+                    // ✔ activar el seleccionado
+                    this.classList.add('active');
+                    selectedSVG = this;
+                });
+            });
 });

@@ -1,6 +1,6 @@
 @extends('layouts.iframe')
 
-@section('title', 'Naboo')
+@section('title', 'Centro Internacional de Congresos de Yucatán')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('content')

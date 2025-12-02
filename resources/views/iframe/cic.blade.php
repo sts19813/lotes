@@ -1,6 +1,6 @@
 @extends('layouts.cic')
 
-@section('title', 'Naboo')
+@section('title', 'Centro Internacional de Congresos de Yucatán')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <link href="https://db.onlinewebfonts.com/c/88f10bf18a36407ef36bf30bc25a3618?family=SuisseIntl-Regular"
     rel="stylesheet">
@@ -64,24 +64,24 @@
             <!-- ============================= -->
             <!-- DERECHA -->
             <!-- ============================= -->
-            <div class="col-lg-5 right-panel">
+            <div class="col-lg-5 right-panel"  style="padding-bottom: 180px;">
 
                 <!-- Tabs -->
                 <div class="tabs d-flex gap-5 mb-4">
                     <img src="/Modo_de_aislamiento.svg" alt="">
 
                     <a href="/cic/1"
-                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'active' : '' }}">
+                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'actives' : '' }}">
                         Planta Alta
                     </a>
 
                     <a href="/cic/2"
-                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'active' : '' }}">
+                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'actives' : '' }}">
                         Planta Baja
                     </a>
 
                     <a href="/cic/3"
-                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'active' : '' }}">
+                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'actives' : '' }}">
                         Mezzanine
                     </a>
                 </div>
@@ -98,6 +98,7 @@
                             <select id="select-lot-merge" class="custom-select-mobile">
                                 @foreach ($lots as $item)
                                     <option value="{{ $item['id'] ?? $item->id }}"
+                                        data-id="{{ $item['id'] ?? $item->id }}"
                                         data-area="{{ $item['area'] ?? $item->area }}"
                                         data-front="{{ $item['front'] ?? $item->front }}"
                                         data-depth="{{ $item['depth'] ?? $item->depth }}"
@@ -114,8 +115,12 @@
                         </div>
                     </div>
 
+                </div>               
+                
+                <div class="fw-bold text-custom-desktop">Personaliza tu espacio.
+                    <br><span class="salon-seleccionado"></span>
                 </div>
-
+                <br>
 
                 <!-- Información general -->
                 <p class="mb-1">
@@ -151,7 +156,7 @@
                 @endif
 
                 <p class="mt-3">
-                    ¿Necesitas más espacio?<br>
+                    <strong>¿Necesitas más espacio?</strong><br>
                     Selecciona otro salón para ampliar tu espacio.
                 </p>
 
@@ -166,6 +171,7 @@
                             data-coctel="{{ $item['cocktail'] ?? $item->cocktail }}"
                             data-escuela="{{ $item['school'] ?? $item->school }}"
                             data-herradura="{{ $item['horseshoe'] ?? $item->horseshoe }}"
+                            data-chepina="{{ $item['chepina'] ?? $item->chepina }}"
                             data-mesarusa="{{ $item['russian_table'] ?? $item->russian_table }}">
                             {{ $item['name'] ?? $item->name }}
                         </button>
@@ -186,7 +192,7 @@
                 <!-- ======================== -->
                 <!-- TÍTULO (siempre igual)   -->
                 <!-- ======================== -->
-                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                <div class="col-12 col-md-3 mb-3 mb-md-0 text-footer">
                     <span>Nuestros ejecutivos especializados te ayudarán a concretar tu evento.</span>
                 </div>
 
@@ -214,7 +220,6 @@
                         <p id="metric-school-mobile" class="metric-number">---</p>
                         <p class="small">Escuela</p>
                     </div>
-
                 </div>
 
                 <!-- ==================================================================== -->
@@ -245,9 +250,7 @@
                     <button id="btnSolicitarEvento" class="btn btn-dark rounded-pill px-5 py-2">
                         Quiero organizar mi evento
                     </button>
-
                 </div>
-
             </div>
         </div>
     </div>

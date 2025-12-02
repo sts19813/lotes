@@ -13,6 +13,19 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.style.display = "none";
     });
 
+    const lotButtons = document.querySelectorAll(".btn-lot-merge");
+
+    lotButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+
+            // Quitar active de todos
+            lotButtons.forEach(b => b.classList.remove("active-lot"));
+
+            // Activar el seleccionado
+            this.classList.add("active-lot");
+        });
+    });
+
     const select = document.getElementById("select-lot-merge");
 
     if (select) {
@@ -32,7 +45,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 russian_table: option.dataset.mesarusa
             };
 
+            // Actualizar info del lado derecho
             window.actualizarVista(lote);
+
+            const all = document.querySelectorAll(".lote-svg");
+            let svgElement = null;
+
+            all.forEach(el => {
+                try {
+                    const data = JSON.parse(el.dataset.loteInfo);
+                    if (data.id == lote.id) {
+                        svgElement = el;
+                    }
+                } catch (e) {}
+            });
+
+            if (svgElement) {
+                svgElement.dispatchEvent(new Event("click", { bubbles: true }));
+            }
         });
     }
 });
@@ -63,11 +93,12 @@ function setText(id, value) {
  *
  * Coloca esta función en window para que pueda llamarse desde otros scripts.
  */
-function extraerNumero(name) {
-    if (!name) return null;
-    const match = name.match(/\d+/);
-    return match ? match[0] : null;
+function extraerNumeros(name) {
+    if (!name) return [];
+    const matches = name.match(/\d+/g);
+    return matches ? matches : [];
 }
+
 
 window.actualizarVista = function (lot) {
     if (!lot) return;
@@ -99,20 +130,30 @@ window.actualizarVista = function (lot) {
 
     setText("metric-school", lot.school);
     setText("metric-school-mobile", lot.school);
+
+    const salonSpan = document.querySelector(".salon-seleccionado");
+    if (salonSpan) {
+        salonSpan.textContent = lot.name ?  `${lot.name}` : "";
+    }
     // === mostrar/ocultar botones segun numero ===
-    const numero = extraerNumero(lot.name);
+    const numerosSeleccionados = extraerNumeros(lot.name);
+    const numero = numerosSeleccionados.length ? numerosSeleccionados[0] : null;
 
     if (numero) {
         document.querySelectorAll(".btn-lot-merge").forEach(btn => {
             const nombreBtn = btn.innerText.trim();
-            const numeroBtn = extraerNumero(nombreBtn);
+            const numerosBtn = extraerNumeros(nombreBtn); // ej. ["21","22"]
 
-            if (numeroBtn == numero) {
+            // si el array contiene el numero seleccionado lo mostramos
+            if (numerosBtn.includes(numero)) {
                 btn.style.display = "inline-block";
             } else {
                 btn.style.display = "none";
             }
         });
+    } else {
+        // si no hay número en lote, oculta todos o decide comportamiento
+        document.querySelectorAll(".btn-lot-merge").forEach(btn => btn.style.display = "none");
     }
 
     // === tour link ===
@@ -155,9 +196,9 @@ const buttons = document.querySelectorAll(".btn-lot-merge");
 buttons.forEach(btn => {
     btn.addEventListener("click", () => {
 
-        // Crear objeto lote desde los data-attr
         const lote = {
             id: btn.dataset.id,
+            name: btn.innerText.trim(),
             area: btn.dataset.area,
             front: btn.dataset.front,
             depth: btn.dataset.depth,
@@ -167,9 +208,72 @@ buttons.forEach(btn => {
             horseshoe: btn.dataset.herradura,
             russian_table: btn.dataset.mesarusa
         };
+ // ================================
+        //  NUEVO: RESALTAR EN EL SVG
+        // ================================
+        const chepina = btn.dataset.chepina;
 
-        // Actualizar toda la vista usando tu función
+        limpiarColoresSVG();           // quitar colores previos
+        colorearSVGPorChepina(chepina); // aplicar nuevos
+        
         window.actualizarVista(lote);
+
+        const svgElement = document.querySelector(
+            `.lote-svg[data-lote-info*='"id":"${lote.id}"']`
+        );
+
+        if (svgElement) {
+            svgElement.dispatchEvent(new Event("click", { bubbles: true }));
+        }
     });
 });
 
+// Limpia todos los elementos pintados anteriormente
+function limpiarColoresSVG() {
+
+    // 1. Limpiar clases .active en el DOM normal
+    document.querySelectorAll(".active").forEach(el => {
+        el.classList.remove("active");
+    });
+
+    // 2. Buscar SVGs inline
+    document.querySelectorAll("svg .active").forEach(el => {
+        el.classList.remove("active");
+    });
+
+    // 3. Buscar dentro de <object> (si tu SVG está cargado externamente)
+    document.querySelectorAll("object").forEach(obj => {
+        try {
+            const svgDoc = obj.contentDocument;
+            if (svgDoc) {
+                svgDoc.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
+            }
+        } catch(e){}
+    });
+
+    // 4. Buscar dentro de <iframe> (si aplica)
+    document.querySelectorAll("iframe").forEach(frame => {
+        try {
+            const svgDoc = frame.contentDocument;
+            if (svgDoc) {
+                svgDoc.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
+            }
+        } catch(e){}
+    });
+}
+
+
+// Colorea elementos del SVG según ids de data-chepina
+function colorearSVGPorChepina(cadena) {
+    
+    if (!cadena) return;
+
+    const ids = cadena.split(",").map(e => e.trim());
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.add("active");
+        }
+    });
+}
