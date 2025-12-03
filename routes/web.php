@@ -14,7 +14,7 @@ use App\Http\Controllers\View\PhaseViewController;
 use App\Http\Controllers\View\StageViewController;
 use App\Http\Controllers\View\LotViewController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\View\ProjectViewController;
 Route::view('/', 'login');
 
@@ -48,6 +48,24 @@ Route::get('/google-auth/callback', function () {
 Route::get('/unauthorized', function () {
     return view('unauthorized'); // <-- aquí apunta tu blade
 })->name('unauthorized');
+
+
+
+Route::get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+Route::get('/pago/success', [PaymentController::class, 'success']);
+Route::get('/pago/cancel', [PaymentController::class, 'cancel']);
+
+Route::get('/pago', [PaymentController::class, 'formulario']);
+Route::post('/pago/procesar', [PaymentController::class, 'procesarPago'])->name('procesar.pago');
+
+
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'get'])->name('cart.get');
+Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
+
+// Checkout: crea sesión stripe (ejemplo con Checkout Sessions)
+Route::post('/cart/checkout', [App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
 
 // =========================
 // Rutas del panel admin
