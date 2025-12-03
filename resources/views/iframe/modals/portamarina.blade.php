@@ -54,7 +54,7 @@
                                                 value="{{ $plan->financiamiento_meses }}" 
                                                 data-financing='@json($plan)'
                                                 {{ $loop->first ? 'selected' : '' }}>
-                                                {{ $plan->financiamiento_meses }} meses
+                                                {{ $plan->nombre }} 
                                             </option>
                                         @endforeach
                                     @else
@@ -330,7 +330,7 @@
     }
 
     .color-Primario{
-        font-size: 16px !important;
+        font-size: 15px !important;
         font-family: "RFlex", sans-serif !important;
         color: {{ $lot->color_primario ?? '#8C470F' }} !important;
     }

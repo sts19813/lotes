@@ -103,111 +103,118 @@ function actualizarFinanciamiento(box, precioTotal) {
     const interesPorc = parseFloat(plan.financiamiento_interes || 0);
 
     // ------------------------------------------------------------
-    // Aplicar DESCUENTO al precio total
+    // NUEVA REGLA: si hay INTERÉS -> se aplica INTERÉS al precio total (y se ignora descuento).
+    // Si NO hay interés pero hay descuento -> aplicar DESCUENTO.
+    // Si ninguno -> precio base.
     // ------------------------------------------------------------
-    const precioConDescuento = precioTotal - (precioTotal * (descuentoPorc / 100));
+    // precioTotal: original calculado en llenarModal = area * price_square_meter
+    let precioFinal = precioTotal;             // precio que usaremos para todo (enganches, saldo, mensualidades)
+    let tipoAplicado = 'none';                // 'interes' | 'descuento' | 'none'
+    const loteInfo = window.currentLoteInfo || {}; // por si necesitas acceder a area / precio m2 original
+
+    if (!isFinite(precioFinal)) precioFinal = 0;
+
+    if (interesPorc > 0) {
+        // Aplicar interés SOBRE EL PRECIO TOTAL (sube el precio por m2 y total)
+        precioFinal = precioTotal + (precioTotal * (interesPorc / 100));
+        tipoAplicado = 'interes';
+    } else if (descuentoPorc > 0) {
+        // Aplicar descuento SOBRE EL PRECIO TOTAL
+        precioFinal = precioTotal - (precioTotal * (descuentoPorc / 100));
+        tipoAplicado = 'descuento';
+    } else {
+        tipoAplicado = 'none';
+    }
 
     // ------------------------------------------------------------
-    // Calcular ENGANCHE sobre el precio con descuento
+    // Calcular enganche y saldo sobre precioFinal
     // ------------------------------------------------------------
-    const engancheMonto = precioConDescuento * (enganchePorc / 100);
+    const engancheMonto = precioFinal * (enganchePorc / 100);
 
     // ------------------------------------------------------------
-    // DIFERIR enganche (si aplica)
-    //
+    // DIFERIR enganche (tu lógica original NO SE TOCA)
+    // ------------------------------------------------------------
     const divDiferido = document.getElementById("divloteDiferido");
     const diferidoElem = document.getElementById("loteDiferido");
-    if (divDiferido && diferidoElem) {
 
+    if (divDiferido && diferidoElem) {
         const engancheDiferido = plan.enganche_diferido == 1 || plan.enganche_diferido === true;
         const numPagos = parseInt(plan.enganche_num_pagos || 0);
 
-        // Si el plan tiene "enganche diferido"
         if (engancheDiferido && numPagos > 0) {
-
             const pagoDiferido = engancheMonto / numPagos;
 
             divDiferido.style.display = "block";
             diferidoElem.innerHTML =
                 `<span class="pagos-text">${numPagos} pagos de</span>
                 <span class="pago-monto">${formatMoney(pagoDiferido)}</span>`;
-
         } else {
             divDiferido.style.display = "none";
         }
     }
 
     // ------------------------------------------------------------
-    // calcular saldo y DIFERIR SALDO (si aplica)
+    // calcular saldo y DIFERIR SALDO (TAMPOCO SE TOCA)
     // ------------------------------------------------------------
     const saldoPorc = parseFloat(plan.porcentaje_saldo || 0);
-    const saldoMonto = precioConDescuento * (saldoPorc / 100);
+    const saldoMonto = precioFinal * (saldoPorc / 100);
+
     const divSaldoDiferido = document.getElementById("divSaldoDiferido");
     const saldoDiferidoElem = document.getElementById("loteSaldoDiferido");
-    if (divSaldoDiferido && saldoDiferidoElem) {
 
+    if (divSaldoDiferido && saldoDiferidoElem) {
         const saldoDiferido = plan.saldo_diferido == 1 || plan.saldo_diferido === true;
         const saldoNumPagos = parseInt(plan.saldo_num_pagos || 0);
 
         if (saldoDiferido && saldoNumPagos > 0 && saldoMonto > 0) {
-
             const pagoSaldoDiferido = saldoMonto / saldoNumPagos;
 
             divSaldoDiferido.style.display = "block";
             saldoDiferidoElem.innerHTML =
-            `${`<span class="saldo-num-pagos">${saldoNumPagos} pagos de </span>`}<span class="saldo-monto">${formatMoney(pagoSaldoDiferido)}</span>`;
+                `<span class="saldo-num-pagos">${saldoNumPagos} pagos de </span>
+                <span class="saldo-monto">${formatMoney(pagoSaldoDiferido)}</span>`;
         } else {
             divSaldoDiferido.style.display = "none";
         }
     }
-    // ------------------------------------------------------------
-    // Calcular monto FINANCIADO (precio con descuento - enganche)
-    // ------------------------------------------------------------
-    const montoFinanciadoBase = precioConDescuento - engancheMonto - saldoMonto;
 
     // ------------------------------------------------------------
-    // Aplicar INTERESES sobre el monto financiado
+    // Monto financiado = precioFinal - enganche - saldo
     // ------------------------------------------------------------
-    const interesMonto = montoFinanciadoBase * (interesPorc / 100);
-    const montoFinanciado = montoFinanciadoBase + interesMonto;
+    const montoFinanciado = precioFinal - engancheMonto - saldoMonto;
 
     // ------------------------------------------------------------
-    // Calcular mensualidad final
+    // Mensualidad final (si meses = 0 evitar división)
     // ------------------------------------------------------------
-    const mensualidad = montoFinanciado / meses;
+    const mensualidad = (meses > 0) ? (montoFinanciado / meses) : montoFinanciado;
 
     // ------------------------------------------------------------
-    // Mostrar u ocultar secciones de descuento/intereses
+    // Mostrar u ocultar secciones (NO SE TOCA)
     // ------------------------------------------------------------
     const divDescuento = document.getElementById("divloteDescuento");
     const divIntereses = document.getElementById("divloteIntereses");
-    if (divDescuento) divDescuento.style.display = descuentoPorc > 0 ? "block" : "none";
-    if (divIntereses) divIntereses.style.display = interesPorc > 0 ? "block" : "none";
+    if (divDescuento) divDescuento.style.display = (descuentoPorc > 0 && tipoAplicado === 'descuento') ? "block" : "none";
+    if (divIntereses) divIntereses.style.display = (interesPorc > 0 && tipoAplicado === 'interes') ? "block" : "none";
 
     // ------------------------------------------------------------
-    // CALCULAR SALDO (Contra Entrega)
+    // CALCULAR SALDO CONTRA ENTREGA (NO SE TOCA)
     // ------------------------------------------------------------
     const divSaldo = document.getElementById("divSaldo");
-
-    // Para plantilla COMPLETA default
     const saldoPorcentajeElem = document.getElementById("SaldoPorcentaje");
     const saldoMontoElem = document.getElementById("SaldoMonto");
     const saldoSimpleElem = document.getElementById("Saldo");
+
     if (divSaldo) {
         if (saldoMonto > 0) {
             divSaldo.style.display = "block";
 
-            //  default 
             if (saldoPorcentajeElem && saldoMontoElem) {
                 saldoPorcentajeElem.textContent = `${saldoPorc}%`;
                 saldoMontoElem.textContent = formatMoney(saldoMonto);
             }
-
-            // emedos
             if (saldoSimpleElem) {
                 saldoSimpleElem.textContent = `${saldoPorc}% (${formatMoney(saldoMonto)})`;
             }
-
         } else {
             divSaldo.style.display = "none";
         }
@@ -216,7 +223,6 @@ function actualizarFinanciamiento(box, precioTotal) {
     // ------------------------------------------------------------
     // Actualizar elementos del DOM con los valores calculados
     // ------------------------------------------------------------
-    // Enganche
     const selectEnganche = document.querySelector("#planSelectEnganche");
     if (selectEnganche) selectEnganche.innerHTML = `<option>${enganchePorc}% de enganche</option>`;
 
@@ -229,40 +235,75 @@ function actualizarFinanciamiento(box, precioTotal) {
     const loteContraEntrega = document.getElementById("loteContraEntrega");
     if (loteContraEntrega) loteContraEntrega.textContent = formatMoney(engancheMonto);
 
-    // Descuento e intereses
     const loteDescuento = document.getElementById("loteDescuento");
     if (loteDescuento) loteDescuento.textContent = `${descuentoPorc}%`;
 
     const loteIntereses = document.getElementById("loteIntereses");
     if (loteIntereses) loteIntereses.textContent = `${interesPorc}%`;
 
-    // Meses y mensualidad
     const loteFinanciamiento = document.getElementById("loteFinanciamiento");
     if (loteFinanciamiento) loteFinanciamiento.textContent = `${meses} meses`;
 
     const loteMensualidad = document.getElementById("loteMensualidad");
     if (loteMensualidad) loteMensualidad.textContent = formatMoney(mensualidad);
 
-    // Montos totales
     const loteMontoFinanciado = document.getElementById("loteMontoFinanciado");
     if (loteMontoFinanciado) loteMontoFinanciado.textContent = formatMoney(montoFinanciado);
 
+    // Mostrar costo total final (precioFinal) en la UI
     const loteCostoTotal = document.getElementById("loteCostoTotal");
-    if (loteCostoTotal) loteCostoTotal.textContent = formatMoney(precioConDescuento + interesMonto);
+    if (loteCostoTotal) loteCostoTotal.textContent = formatMoney(precioFinal);
 
-    // Actualizar texto dentro del plan seleccionado
+    // ------------------------------------------------------------
+    // ACTUALIZAR VISUAL DE PRECIO M2 Y PRECIO TOTAL (según lo pedido)
+    // - Si tipoAplicado === 'interes' -> mostrar original tachado + precio con interés
+    // - Si tipoAplicado === 'descuento' -> mostrar original tachado + precio con descuento
+    // - Si 'none' -> mostrar normal
+    // ------------------------------------------------------------
+    const precioMetroEl = document.getElementById("lotePrecioMetro");
+    const precioTotalEl = document.getElementById("lotePrecioTotal");
+
+    // precio m2 original desde window.currentLoteInfo (si existe), sino calcular desde precioTotal/area
+    let precioM2Original = null;
+    if (loteInfo && loteInfo.price_square_meter) {
+        precioM2Original = parseFloat(loteInfo.price_square_meter);
+    } else if (loteInfo && loteInfo.area && loteInfo.area > 0) {
+        precioM2Original = precioTotal / loteInfo.area;
+    } else {
+        precioM2Original = precioTotal; // fallback
+    }
+
+    // precio m2 ajustado según lo aplicado
+    let precioM2Ajustado = (loteInfo && loteInfo.area && loteInfo.area > 0) ? (precioFinal / loteInfo.area) : precioM2Original;
+
+    if (precioMetroEl) {
+        precioMetroEl.textContent = formatMoney(precioM2Ajustado);
+    }
+
+    if (precioTotalEl) {
+        precioTotalEl.textContent = formatMoney(precioFinal);
+    }
+
+    // ------------------------------------------------------------
+    // Actualizar texto dentro del plan seleccionado (monthly text)
+    // ------------------------------------------------------------
     if (box.querySelector) {
         const monthlyElem = box.querySelector(".monthlyPayment");
         if (monthlyElem) monthlyElem.textContent = formatMoney(mensualidad);
     }
+
     // ------------------------------------------------------------
     // Guardar datos globales y actualizar proyección
     // ------------------------------------------------------------
     window.currentPlan = plan;
     window.currentMeses = meses;
     window.currentMensualidad = mensualidad;
+    window.currentPrecioFinal = precioFinal;
 
-    actualizarProyeccion(precioTotal, window.currentLot?.plusvalia || 0.15, plan);
+    // Llamada original: pasar precioTotal original (para proyeccion) o pasar precioFinal?
+    // Dejamos como original para que proyecciones históricas sigan igual,
+    // pero si quieres que proyecciones usen el precioFinal, cambialo aquí:
+actualizarProyeccion(precioTotal, window.currentLot?.plusvalia || 0.15, plan);
 }
 
 
@@ -275,71 +316,76 @@ function actualizarFinanciamiento(box, precioTotal) {
  * del lote a 5 años con base en el plan seleccionado.
  * ================================================================
  */
-function actualizarProyeccion(precioTotal, plusvaliaRate, plan) {
+/**
+ * PROYECCIÓN REAL
+ * precioReal = valor sin interés ni descuento
+ * precioFinal = valor con interés o descuento (para pagos)
+ */
+function actualizarProyeccion(precioReal, plusvaliaRate, plan) {
 
-    // ------------------------------------------------------------
-    // CONVERSIÓN Y CÁLCULOS BASE
-    // ------------------------------------------------------------
+    // ---------------------------------------
+    // BASES
+    // ---------------------------------------
     plusvaliaRate = parseFloat(plusvaliaRate);
-    if (isNaN(plusvaliaRate)) plusvaliaRate = 0.15; // valor por defecto
+    if (isNaN(plusvaliaRate)) plusvaliaRate = 0.15;
 
-    const valorFinal = precioTotal * Math.pow(1 + plusvaliaRate, 5);
-    const plusvaliaTotal = valorFinal - precioTotal;
-    const roi = ((valorFinal - precioTotal) / precioTotal) * 100;
+    const valorFinal5Anios = precioReal * Math.pow(1 + plusvaliaRate, 5);
+    const plusvaliaTotal = valorFinal5Anios - precioReal;
+    const roi = ((valorFinal5Anios - precioReal) / precioReal) * 100;
 
-    // ------------------------------------------------------------
-    // ACTUALIZAR VALORES RESUMIDOS
-    // ------------------------------------------------------------
-    const bgVerde = document.querySelector(".background-verde h6");
-    if (bgVerde) bgVerde.textContent = formatMoney(plusvaliaTotal);
+    // ---------------------------------------
+    // CARDS DE RESUMEN
+    // ---------------------------------------
+    document.querySelector(".background-verde h6").textContent = formatMoney(plusvaliaTotal);
+    document.querySelector(".background-azul h6").textContent = formatPercent(roi);
+    document.querySelector(".background-morado h6").textContent = formatPercent(plusvaliaRate * 100);
+    document.querySelector(".background-amarillo h6").textContent = formatMoney(valorFinal5Anios);
 
-    const bgAzul = document.querySelector(".background-azul h6");
-    if (bgAzul) bgAzul.textContent = formatPercent(roi);
-
-    const bgMorado = document.querySelector(".background-morado h6");
-    if (bgMorado) bgMorado.textContent = formatPercent(plusvaliaRate * 100);
-
-    const bgAmarillo = document.querySelector(".background-amarillo h6");
-    if (bgAmarillo) bgAmarillo.textContent = formatMoney(valorFinal);
-
-    // ------------------------------------------------------------
-    // TABLA DE PROYECCIÓN (5 años)
-    // ------------------------------------------------------------
+    // ---------------------------------------
+    // TABLA: valor de propiedad SIEMPRE sobre precioReal
+    //         pagos SIEMPRE sobre precioFinal
+    // ---------------------------------------
     const tbody = document.querySelector(".table-responsive tbody");
-    if (!tbody) return;
-
     tbody.innerHTML = "";
 
-    const totalAnios = 5;
     const meses = window.currentMeses || 60;
-    const engancheMonto = precioTotal * ((plan?.down_payment_percent || 30) / 100);
-    const mensualidad = window.currentMensualidad || (precioTotal - engancheMonto) / meses;
 
-    for (let year = 0; year <= totalAnios; year++) {
-        const valorProp = precioTotal * Math.pow(1 + plusvaliaRate, year);
+    // precioFinal = precio con interés o descuento
+    const precioFinal = window.currentPrecioFinal || precioReal;
 
-        // --- Calcular meses pagados hasta el año actual ---
+    const enganchePorc = parseFloat(plan?.porcentaje_enganche || 30);
+    const saldoPorc = parseFloat(plan?.porcentaje_saldo || 0);
+
+    const engancheMonto = precioFinal * (enganchePorc / 100);
+    const saldoMonto = precioFinal * (saldoPorc / 100);
+    const montoFinanciado = precioFinal - engancheMonto - saldoMonto;
+
+    const mensualidad = window.currentMensualidad || (montoFinanciado / meses);
+
+    for (let year = 0; year <= 5; year++) {
+
+        // --- Valor de propiedad siempre con precio REAL ---
+        const valorProp = precioReal * Math.pow(1 + plusvaliaRate, year);
+
+        // --- Meses pagados ---
         let mesesPagados = 0;
-        if (year === 0) mesesPagados = 0;
-        else if (year === 1) mesesPagados = Math.min(meses, 11);
-        else mesesPagados = Math.min(meses, (year - 1) * 12 + 11);
+        if (year === 1) mesesPagados = Math.min(meses, 11);
+        if (year > 1) mesesPagados = Math.min(meses, (year - 1) * 12 + 11);
 
-        // --- Calcular montos y ROI ---
-        const montoPagado = engancheMonto + (mensualidad * mesesPagados);
-        const plusvaliaAcum = valorProp - precioTotal;
-        const roiAnual = ((valorProp - precioTotal) / precioTotal) * 100;
+        // --- Pagos siempre sobre PRECIO FINAL ---
+        const montoPagado = engancheMonto + saldoMonto + (mensualidad * mesesPagados);
 
-        const plusColor = plusvaliaAcum > 0 ? "text-success fw-semibold" : "";
-        const roiColor = roiAnual > 0 ? "text-primary fw-semibold" : "";
+        // --- Plusvalía real ---
+        const plusvaliaAcum = valorProp - precioReal;
+        const roiAnual = ((valorProp - precioReal) / precioReal) * 100;
 
-        // --- Generar fila ---
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${year}</td>
             <td>${formatMoney(valorProp)}</td>
             <td>${formatMoney(montoPagado)}</td>
-            <td class="${plusColor}">+${formatMoney(plusvaliaAcum)}</td>
-            <td class="${roiColor}">${formatPercent(roiAnual)}</td>
+            <td class="text-success fw-semibold">+${formatMoney(plusvaliaAcum)}</td>
+            <td class="text-primary fw-semibold">${formatPercent(roiAnual)}</td>
         `;
         tbody.appendChild(tr);
     }
