@@ -100,12 +100,9 @@
                 <div class="d-md-none mt-3">
                     <div class="mb-2">
                         <!-- Título 100% ancho -->
-                        <span class="fw-bold text-custom-mobile d-block w-100 mb-2">
-                            Personaliza tu espacio.
-                        </span>
-
                         <p class="text-normal-standart d-md-none mb-3" id="instrucciones-mobile">
-                            <strong>Selecciona un salón y consulta todas las configuraciones disponibles.</strong><br>
+                            <strong class="text-custom-desktop">Selecciona un salón y consulta todas las configuraciones
+                                disponibles.</strong><br>
                             Visualiza de inmediato el área total, capacidades y configuraciones disponibles para cada
                             salón.<br><br>
                             Elige un salón desde el mapa o la lista para ver sus características y combinaciones posibles.
@@ -135,13 +132,22 @@
                     </div>
                 </div>
 
-                <div class="fw-bold text-custom-desktop d-none d-lg-block">Personaliza tu espacio.
-                    <br><span class="salon-seleccionado"></span>
+                <div class="text-custom-desktop d-none container-info"> <strong>Personaliza tu espacio.</strong>
+                    <br>
+                    <p class="text-normal-standart mb-4 ">
+                        <strong>Los salones están diseñados con un sistema modular que permite:</strong>
+                    </p>
+                    <ul class="text-normal-standart mb-4">
+                        <li>Integrar pasillos de acceso para mejorar la circulación y el servicio.</li>
+                        <li>Unir medios salones para formar un salón completo.</li>
+                        <li>Sumar salones completos para incrementar la capacidad total del espacio.</li>
+                    </ul>
+                    <strong> <span class="salon-seleccionado"></span></strong>
                 </div>
                 <br>
 
                 <p class="text-normal-standart d-none d-lg-block mb-4" id="instrucciones-desktop">
-                    <strong>Selecciona un salón y consulta todas las configuraciones disponibles.</strong><br>
+                    <strong class="text-custom-desktop"> Selecciona un salón y consulta todas las configuraciones disponibles.</strong><br>
                     Nuestra herramienta te permite visualizar de forma inmediata el área total, la capacidad máxima
                     y las posibles configuraciones de cada salón, considerando sus dimensiones, divisiones y
                     combinaciones.<br><br>

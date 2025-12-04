@@ -212,11 +212,14 @@ window.actualizarVista = function (lot) {
 function ocultarInstrucciones() {
     const d = document.getElementById("instrucciones-desktop");
     const m = document.getElementById("instrucciones-mobile");
-    const c = document.querySelector(".container-info");
+    const cList = document.querySelectorAll(".container-info");
 
     if (d) d.style.setProperty("display", "none", "important");
     if (m) m.style.setProperty("display", "none", "important");
-    if (c) c.classList.remove("d-none");
+
+    cList.forEach(c => {
+        c.classList.remove("d-none");
+    });
 }
 
 
