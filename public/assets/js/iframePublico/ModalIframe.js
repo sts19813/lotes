@@ -9,11 +9,16 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".btn-lot-merge").forEach(btn => {
-        btn.style.display = "none";
-    });
 
     const lotButtons = document.querySelectorAll(".btn-lot-merge");
+    lotButtons.forEach(btn => {
+        const name = btn.innerText.trim();
+        if (name.includes("Medio")) {
+            btn.style.display = "none";
+        } else {
+            btn.style.display = "inline-block"; // visible por default
+        }
+    });
 
     lotButtons.forEach(btn => {
         btn.addEventListener("click", function () {
@@ -30,6 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (select) {
         select.addEventListener("change", function () {
+
+            ocultarInstrucciones();
+
             const option = this.options[this.selectedIndex];
             if (!option || !option.dataset.area) return;
 
@@ -134,8 +142,8 @@ window.actualizarVista = function (lot) {
     setText("herradura", lot.horseshoe);
     setText("mesa-rusa", lot.russian_table);
 
-    setText("metric-area", lot.area);
-    setText("metric-area-mobile", lot.area);
+    setText("metric-area", lot.area, "m²");
+    setText("metric-area-mobile", lot.area, "m²");
 
     setText("metric-auditorium", lot.auditorium);
     setText("metric-auditorium-mobile", lot.auditorium);
@@ -157,8 +165,14 @@ window.actualizarVista = function (lot) {
     if (numero) {
         document.querySelectorAll(".btn-lot-merge").forEach(btn => {
             const nombreBtn = btn.innerText.trim();
-            const numerosBtn = extraerNumeros(nombreBtn); // ej. ["21","22"]
+             // ej. ["21","22"]
 
+            if (nombreBtn.includes("Medio")) {
+                btn.style.display = "none";
+                return;
+            }
+
+            const numerosBtn = extraerNumeros(nombreBtn);
             // si el array contiene el numero seleccionado lo mostramos
             if (numerosBtn.includes(numero)) {
                 btn.style.display = "inline-block";
@@ -194,12 +208,26 @@ window.actualizarVista = function (lot) {
     }
 };
 
+
+function ocultarInstrucciones() {
+    const d = document.getElementById("instrucciones-desktop");
+    const m = document.getElementById("instrucciones-mobile");
+    const c = document.querySelector(".container-info");
+
+    if (d) d.style.setProperty("display", "none", "important");
+    if (m) m.style.setProperty("display", "none", "important");
+    if (c) c.classList.remove("d-none");
+}
+
+
 /**
  * Función que se llamará cuando selecciones un lote (expuesta globalmente)
  * Llama a actualizarVista y puede abrir modal si quieres.
  */
 window.llenarModal = function (lote) {
     if (!lote) return;
+
+     ocultarInstrucciones();
     window.currentLoteInfo = lote;
     window.actualizarVista(lote);
 
@@ -210,6 +238,8 @@ window.llenarModal = function (lote) {
 const buttons = document.querySelectorAll(".btn-lot-merge");
 buttons.forEach(btn => {
     btn.addEventListener("click", () => {
+
+        ocultarInstrucciones();
 
         const lote = {
             id: btn.dataset.id,

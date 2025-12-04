@@ -35,15 +35,7 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <select class="modal-input" name="event_type" required>
-                                <option value="" selected disabled>Tipo de Evento</option>
-                                <option>Boda</option>
-                                <option>Conferencia</option>
-                                <option>Congreso</option>
-                                <option>Exposición</option>
-                                <option>Reunión Empresarial</option>
-                                <option>Otro</option>
-                            </select>
+                            <input type="text" class="modal-input" name="event_type" placeholder="Tipo de Evento" >
                         </div>
 
                         <div class="col-12 col-md-6">

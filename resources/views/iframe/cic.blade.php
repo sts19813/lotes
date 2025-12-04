@@ -31,7 +31,7 @@
             <!-- ============================= -->
             <!-- IZQUIERDA: PLANO -->
             <!-- ============================= -->
-            <div class="col-lg-7 panel-left">
+            <div class="col-lg-8 panel-left">
                 <div class="floor-plan">
                     <div style="position: relative; display: inline-block;">
 
@@ -56,32 +56,40 @@
                                 </div>
                             @endif
                         @endif
-
                     </div>
+                </div>
+                <div class="salon-info-fixed d-none d-lg-block">
+                    <strong>Clasificación técnica de los salones</strong>
+                    <ul class="mt-2">
+                        <li>Medio Salón Superior (B)</li>
+                        <li>Medio Salón Inferior (A)</li>
+                        <li>Salón Completo (A + B)</li>
+                        <li>Salón Completo + Pasillo (área adicional de circulación)</li>
+                    </ul>
                 </div>
             </div>
 
             <!-- ============================= -->
             <!-- DERECHA -->
             <!-- ============================= -->
-            <div class="col-lg-5 right-panel" style="padding-bottom: 180px;">
+            <div class="col-lg-4 right-panel" style="padding-bottom: 180px;">
 
                 <!-- Tabs -->
                 <div class="tabs d-flex gap-5 mb-4">
                     <img src="/Modo_de_aislamiento.svg" alt="">
 
                     <a href="/cic/1"
-                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'actives' : '' }}">
+                        class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'actives' : '' }}">
                         Planta Alta
                     </a>
 
                     <a href="/cic/2"
-                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'actives' : '' }}">
+                        class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'actives' : '' }}">
                         Planta Baja
                     </a>
 
                     <a href="/cic/3"
-                        class="btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'actives' : '' }}">
+                        class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'actives' : '' }}">
                         Mezzanine
                     </a>
                 </div>
@@ -90,13 +98,18 @@
 
                 <!-- SOLO EN MÓVIL -->
                 <div class="d-md-none mt-3">
-
                     <div class="mb-2">
-
                         <!-- Título 100% ancho -->
                         <span class="fw-bold text-custom-mobile d-block w-100 mb-2">
                             Personaliza tu espacio.
                         </span>
+
+                        <p class="text-normal-standart d-md-none mb-3" id="instrucciones-mobile">
+                            <strong>Selecciona un salón y consulta todas las configuraciones disponibles.</strong><br>
+                            Visualiza de inmediato el área total, capacidades y configuraciones disponibles para cada
+                            salón.<br><br>
+                            Elige un salón desde el mapa o la lista para ver sus características y combinaciones posibles.
+                        </p>
 
                         <!-- Select 100% ancho con borde -->
                         <div class="custom-select-wrapper-mobile w-100">
@@ -120,8 +133,6 @@
                         </div>
 
                     </div>
-
-
                 </div>
 
                 <div class="fw-bold text-custom-desktop d-none d-lg-block">Personaliza tu espacio.
@@ -129,46 +140,66 @@
                 </div>
                 <br>
 
-                <!-- Información general -->
-                <p class="mb-1">
-                    <strong>Capacidad de carga en puntos de colgante fijos:</strong>
-                    <span id="punto-colgado">{{ $lot->hanging_point ?? 'N/A' }}</span>
+                <p class="text-normal-standart d-none d-lg-block mb-4" id="instrucciones-desktop">
+                    <strong>Selecciona un salón y consulta todas las configuraciones disponibles.</strong><br>
+                    Nuestra herramienta te permite visualizar de forma inmediata el área total, la capacidad máxima
+                    y las posibles configuraciones de cada salón, considerando sus dimensiones, divisiones y
+                    combinaciones.<br><br>
+                    Para comenzar, selecciona un salón desde el mapa o la lista. La herramienta mostrará automáticamente
+                    las configuraciones permitidas según la combinación y disposición del espacio.
                 </p>
 
-                <p>
-                    <strong>Resistencia de piso:</strong>
-                    <span id="resistencia-piso">{{ $lot->floor_resistance ?? 'N/A' }}</span>
-                </p>
+                <div class="container-info d-none">
 
-                <h6 class="mt-4"><strong>Dimensiones</strong></h6>
-                <p class="mb-1">Área: <span id="area">{{ $lot->area ?? 'N/A' }}</span> m²</p>
-                <p class="mb-1">Frente: <span id="frente">{{ $lot->front ?? 'N/A' }}</span> m</p>
-                <p class="mb-1">Fondo: <span id="fondo">{{ $lot->depth ?? 'N/A' }}</span> m</p>
-                <p>Altura: <span id="altura">{{ $lot->height ?? 'N/A' }}</span> m</p>
+                    <!-- Información general -->
+                    <p class="mb-1 text-normal-standart ">
+                        <strong>Capacidad de carga en puntos de colgante fijos:</strong>
+                        <span id="punto-colgado">{{ $lot->hanging_point ?? '0' }}</span>
+                    </p>
 
-                <h6><strong>Capacidades</strong></h6>
-                <p class="mb-1">Auditorio: <span id="auditorio">{{ $lot->auditorium ?? 'N/A' }}</span></p>
-                <p class="mb-1">Banquete: <span id="banquete">{{ $lot->banquet ?? 'N/A' }}</span></p>
-                <p class="mb-1">Coctel: <span id="coctel">{{ $lot->cocktail ?? 'N/A' }}</span></p>
-                <p class="mb-1">Escuela: <span id="escuela">{{ $lot->school ?? 'N/A' }}</span></p>
-                <p class="mb-1">Herradura: <span id="herradura">{{ $lot->horseshoe ?? 'N/A' }}</span></p>
-                <p class="mb-1">Mesa Rusa: <span id="mesa-rusa">{{ $lot->russian_table ?? 'N/A' }}</span></p>
+                    <p class="text-normal-standart ">
+                        <strong>Resistencia de piso:</strong>
+                        <span id="resistencia-piso">{{ $lot->floor_resistance ?? '0' }}</span>
+                    </p>
 
-                @if (!empty($lot->tour_link))
-                    <div class="mt-3">
-                        <a href="{{ $lot->tour_link }}" target="_blank" class="btn btn-outline-dark rounded-pill px-4">
-                            Ver Recorrido Virtual
-                        </a>
-                    </div>
-                @endif
+                    <h6 class="mt-4 text-normal-standart "><strong>Dimensiones</strong></h6>
+                    <p class="mb-1 text-normal-standart ">Área: <span id="area">{{ $lot->area ?? '0' }}</span> m²</p>
+                    <p class="mb-1 text-normal-standart ">Frente: <span id="frente">{{ $lot->front ?? '0' }}</span> m</p>
+                    <p class="mb-1 text-normal-standart ">Fondo: <span id="fondo">{{ $lot->depth ?? '0' }}</span> m</p>
+                    <p class="text-normal-standart ">Altura: <span id="altura">{{ $lot->height ?? '0' }}</span> m</p>
+                    <br>
+                    <h6 class="text-normal-standart "><strong>Capacidades</strong></h6>
+                    <p class="mb-1 text-normal-standart ">Auditorio: <span
+                            id="auditorio">{{ $lot->auditorium ?? '0' }}</span>
+                    </p>
+                    <p class="mb-1 text-normal-standart ">Banquete: <span id="banquete">{{ $lot->banquet ?? '0' }}</span>
+                    </p>
+                    <p class="mb-1 text-normal-standart ">Coctel: <span id="coctel">{{ $lot->cocktail ?? '0' }}</span></p>
+                    <p class="mb-1 text-normal-standart ">Escuela: <span id="escuela">{{ $lot->school ?? '0' }}</span></p>
+                    <p class="mb-1 text-normal-standart ">Herradura: <span
+                            id="herradura">{{ $lot->horseshoe ?? '0' }}</span>
+                    </p>
+                    <p class="mb-1 text-normal-standart ">Mesa Rusa: <span
+                            id="mesa-rusa">{{ $lot->russian_table ?? '0' }}</span></p>
 
-                <p class="mt-3 d-none d-lg-block">
-                    <strong>¿Necesitas más espacio?</strong><br>
-                    Selecciona otro salón para ampliar tu espacio.
-                </p>
+                    @if (!empty($lot->tour_link))
+                        <div class="mt-3">
+                            <a href="{{ $lot->tour_link }}" target="_blank" class="btn btn-outline-dark rounded-pill px-4">
+                                Ver Recorrido Virtual
+                            </a>
+                        </div>
+                    @endif
 
-                <!-- Botones -->
-                <div class="d-flex flex-wrap gap-3 mt-2">
+                    <p class="mt-3 d-none d-lg-block text-normal-standart">
+                        <strong>¿Necesitas más espacio?</strong><br>
+                        Selecciona otro salón para ampliar tu espacio.
+                    </p>
+
+                </div>
+
+
+
+                <div class="btn-grid-2 mt-2 text-normal-standart">
                     @foreach ($lots as $item)
                         <button class="btn btn-light border rounded-pill px-4 btn-lot-merge"
                             data-id="{{ $item['id'] ?? $item->id }}" data-area="{{ $item['area'] ?? $item->area }}"
@@ -184,6 +215,7 @@
                         </button>
                     @endforeach
                 </div>
+
             </div>
         </div>
     </div>
@@ -199,7 +231,7 @@
                 <!-- ======================== -->
                 <!-- TÍTULO (siempre igual)   -->
                 <!-- ======================== -->
-                <div class="col-12 col-md-3 mb-3 mb-md-0 text-footer">
+                <div class="col-12 col-md-3 mb-3 mb-md-0 text-footer text-normal-standart">
                     <span>Nuestros ejecutivos especializados te ayudarán a concretar tu evento.</span>
                 </div>
 
@@ -209,22 +241,22 @@
                 <div class="col-12 d-flex d-md-none justify-content-between mb-3">
 
                     <div class="text-center flex-fill">
-                        <p id="metric-area-mobile" class="metric-number">N/A</p>
+                        <p id="metric-area-mobile" class="metric-number">0</p>
                         <p class="small">Área</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-auditorium-mobile" class="metric-number">N/A</p>
+                        <p id="metric-auditorium-mobile" class="metric-number">0</p>
                         <p class="small">Auditorio</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-banquet-mobile" class="metric-number">N/A</p>
+                        <p id="metric-banquet-mobile" class="metric-number">0</p>
                         <p class="small">Banquete</p>
                     </div>
 
                     <div class="text-center flex-fill">
-                        <p id="metric-school-mobile" class="metric-number">N/A</p>
+                        <p id="metric-school-mobile" class="metric-number">0</p>
                         <p class="small">Escuela</p>
                     </div>
                 </div>
@@ -233,28 +265,28 @@
                 <!-- ESCRITORIO: 4 valores en columnas como antes (visible solo en ≥md) -->
                 <!-- ==================================================================== -->
                 <div class="col-md-2 d-none d-md-block">
-                    <p id="metric-area" class="metric-number">N/A</p>
+                    <p id="metric-area" class="metric-number">0 m²</p>
                     <p>Área total para evento</p>
                 </div>
 
                 <div class="col-md-1 d-none d-md-block">
-                    <p id="metric-auditorium" class="metric-number">N/A</p>
+                    <p id="metric-auditorium" class="metric-number">0</p>
                     <p>Auditorio</p>
                 </div>
 
                 <div class="col-md-1 d-none d-md-block">
-                    <p id="metric-banquet" class="metric-number">N/A</p>
+                    <p id="metric-banquet" class="metric-number">0</p>
                     <p>Banquete</p>
                 </div>
 
                 <div class="col-md-1 d-none d-md-block">
-                    <p id="metric-school" class="metric-number">N/A</p>
+                    <p id="metric-school" class="metric-number">0</p>
                     <p>Escuela</p>
                 </div>
 
                 <!-- BOTÓN -->
                 <div class="col-12 col-md-3 text-center mt-3 mt-md-0">
-                    <button id="btnSolicitarEvento" class="btn btn-dark rounded-pill px-5 py-2">
+                    <button id="btnSolicitarEvento" class="btn btn-dark rounded-pill px-5 text-normal-standart">
                         Quiero organizar mi evento
                     </button>
                 </div>
@@ -294,4 +326,5 @@
     <script src="/assets/js/iframePublico/Mainiframe.js"></script>
     <script src="/assets/js/iframePublico/ModalIframe.js"></script>
     <script src="/assets/js/iframePublico/CotizacionIframe.js"></script>
+
 @endpush

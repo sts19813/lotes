@@ -36,7 +36,7 @@ $(document).ready(function () {
                 }
             }
 
-              limpiarColoresSVG();
+            limpiarColoresSVG();
 
             // --- Obtener información del lote ---
             info = JSON.parse(document.getElementById(elementId).getAttribute("data-lote-info"));
@@ -105,7 +105,9 @@ $(document).ready(function () {
             svgElement.setAttribute("data-bs-html", "true");
             svgElement.setAttribute("data-bs-title", tooltipContent);
 
-            new bootstrap.Tooltip(svgElement);
+            new bootstrap.Tooltip(svgElement, {
+                trigger: 'hover'
+            });
 
             // --- Desactivar click si está vendido o bloqueado ---
             if (matchedLot.status === "sold" || matchedLot.status === "locked_sale") {
@@ -178,23 +180,19 @@ $(document).ready(function () {
     }
 
     // Variable para guardar el último seleccionado
-            let selectedSVG = null;
+    let selectedSVG = null;
 
-            document.querySelectorAll('.lote-svg').forEach(el => {
+    document.querySelectorAll('.lote-svg').forEach(el => {
 
-                el.addEventListener('click', function (e) {
-                    e.stopPropagation();
+        el.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (selectedSVG) {
+                selectedSVG.classList.remove('active');
+            }
 
-                    
-
-                    // ❌ quitar active al previo
-                    if (selectedSVG) {
-                        selectedSVG.classList.remove('active');
-                    }
-
-                    // ✔ activar el seleccionado
-                    this.classList.add('active');
-                    selectedSVG = this;
-                });
-            });
+            // ✔ activar el seleccionado
+            this.classList.add('active');
+            selectedSVG = this;
+        });
+    });
 });
