@@ -10,6 +10,13 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    const modalInstrucciones = new bootstrap.Modal(document.getElementById('modalInstrucciones'));
+    modalInstrucciones.show();
+
+    document.getElementById("btnEntendido").addEventListener("click", function () {
+        modalInstrucciones.hide();
+    });
+
     const lotButtons = document.querySelectorAll(".btn-lot-merge");
     lotButtons.forEach(btn => {
         const name = btn.innerText.trim();
@@ -242,6 +249,7 @@ const buttons = document.querySelectorAll(".btn-lot-merge");
 buttons.forEach(btn => {
     btn.addEventListener("click", () => {
 
+        mostrarSelectMobile();
         ocultarInstrucciones();
 
         const lote = {
@@ -324,4 +332,9 @@ function colorearSVGPorChepina(cadena) {
             el.classList.add("active");
         }
     });
+}
+
+function mostrarSelectMobile() {
+    const box = document.querySelector(".custom-select-wrapper-mobile");
+    if (box) box.classList.remove("d-none");
 }

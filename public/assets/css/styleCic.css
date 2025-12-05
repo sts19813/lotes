@@ -1,4 +1,7 @@
-.tabs .actives  {
+/* ============================
+   ESTILOS GENERALES
+============================ */
+.tabs .actives {
     background: #000 !important;
     color: #fff;
 }
@@ -17,17 +20,19 @@
 
 .metrics-bar {
     border-top: 1px solid #ccc;
-    padding: 10px 0;
+    padding: 15px 0 !important;
     background: #fafafa;
 }
 
 .metric-number {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
+    line-height: 30px !important;
 }
 
-.right-panel strong {
+.right-panel strong,
+.salon-info-fixed strong {
     font-family: "SuisseIntl-Regular" !important;
 }
 
@@ -37,64 +42,62 @@
     font-size: 14px !important;
 }
 
-.text-normal-standart{
+.text-normal-standart {
     font-size: 14px !important;
     font-family: "SuisseIntl-Regular" !important;
 }
+
 .btn-grid-2 {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 botones por fila */
-    gap: 12px; /* espacio entre botones */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
 }
 
 p {
-    margin-bottom: 0rem !important;
+    margin-bottom: 0 !important;
 }
 
-.right-panel .btn, .metrics-bar .btn {
-    padding: 13px 30px !important;
-}
-.salon-info-fixed {
-    position: absolute;
-    bottom: 60px;
-    left: 15px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    max-width: 400px;
-    z-index: 999;
+.right-panel .btn,
+.metrics-bar .btn {
+    padding: 13px 20px !important;
 }
 
-.salon-info-fixed strong {
-    font-family: "SuisseIntl-Regular" !important;
-}
-
-.salon-info-fixed ul {
-    margin: 8px 0 0 18px;
-    padding: 0;
-}
+/* ============================
+   PANEL IZQUIERDO / DERECHO
+============================ */
 
 .panel-left {
-    position: sticky;
-    top: 0;
-    height: 88vh;
+    position: relative;
+    background: #fff !important;
+    height: 88vh !important;
     overflow: hidden;
-    background: #fff;
-    z-index: 100 !important;
+    padding: 0 !important;
 }
 
 .right-panel {
     height: 88vh;
     overflow-y: auto;
-    padding-right: 20px;
-    padding-left: 50px !important;
+    padding: 0 20px 0 50px !important;
+}
+
+/* ============================
+   NAVBAR
+============================ */
+
+.navbar,
+.navbar-dark {
+    background-color: #000 !important;
+    min-height: 80px !important;
+}
+.logo-navbar{
+    width: 260px;
+    margin-left: 26px;
 }
 
 
-.navbar {
-    min-height: 70px !important;
-    background-color: #000000 !important;
-}
+/* ============================
+   MÉTRICAS FIJAS
+============================ */
 
 .fixed-metrics {
     position: fixed;
@@ -107,54 +110,35 @@ p {
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.vertical-align {
-    align-items: center;
-    margin: auto;
+/* ============================
+   INFORMACIÓN FIJA SALÓN
+============================ */
+
+.salon-info-fixed {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    z-index: 999999;
+    padding: 10px 15px;
+    border-radius: 8px;
 }
 
-.panel-left {
-    padding-left: 0 !important;
-    background: #fff !important;
-    min-height: 88vh !important;
-    height: 88%; 
+.salon-info-fixed ul {
+    margin: 8px 0 0 18px;
     padding: 0;
 }
 
-/* ESCRITORIO */
-@media (min-width: 768px) {
-    .panel-left {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-}
+/* ============================
+   MODAL CONTACTO
+============================ */
 
-/* MÓVIL: quitar centrado */
-@media (max-width: 767px) {
-    .panel-left {
-        display: block;
-        align-items: initial;
-        justify-content: initial;
-        min-height: auto !important;
-        height: auto !important;
-    }
-}
-
-/* Fondo blanco y bordes suaves */
 .contact-modal {
-    background: #ffffff;
+    background: #fff;
     border-radius: 20px;
     padding: 20px 10px 35px;
     position: relative;
 }
 
-.btn-lot-merge.active-lot {
-    border: 2px solid #000 !important;
-    background: #f8f8f8;
-    color: #000;
-}
-
-/* Botón de cerrar (X) */
 .close-x {
     position: absolute;
     top: 15px;
@@ -164,13 +148,11 @@ p {
     font-size: 20px;
 }
 
-/* Texto descriptivo */
 .modal-subtext {
     font-size: 14px;
     color: #5a5a5a;
 }
 
-/* Estilo cápsula para inputs */
 .modal-input {
     width: 100%;
     background: #f1f1f1;
@@ -179,113 +161,225 @@ p {
     border-radius: 20px;
     font-size: 15px;
 }
-
 .modal-input:focus {
     outline: none;
     background: #e8e8e8;
 }
 
-/* Botón principal */
 .submit-button {
-    background: black;
-    color: white;
+    background: #000;
+    color: #fff;
     padding: 12px 40px;
     border-radius: 25px;
     border: none;
     font-size: 16px;
     width: 220px;
 }
-
 .submit-button:hover {
     opacity: 0.85;
 }
 
-.text-custom-desktop{
-    font-size: 20px;
-    font-family: "SuisseIntl-Regular" !important;
+/* ============================
+   SVG LOTES
+============================ */
+
+.lote-svg:hover,
+.lote-svg:hover * {
+    fill: rgba(100, 100, 100, 0.4) !important;
 }
 
-/* Hover: gris fuerte */
-.lote-svg:hover *,
-.lote-svg:hover {
-    fill:rgba(100, 100, 100, .4) !important;
-}
-
-/* Activo: gris muy oscuro */
-.lote-svg.active *,
-.lote-svg.active {
-   fill:rgba(100, 100, 100, .6) !important;
+.lote-svg.active,
+.lote-svg.active * {
+    fill: rgba(100, 100, 100, 0.6) !important;
 }
 
 .svg-selected {
-     fill:rgba(100, 100, 100, .6) !important;
+    fill: rgba(100, 100, 100, 0.6) !important;
 }
 
-.btn-lot-merge{
-    background-color: white !important;
+.btn-lot-merge {
+    background-color: #fff !important;
+}
+.btn-lot-merge.active-lot {
+    border: 2px solid #000 !important;
+    background: #f8f8f8;
+    color: #000;
 }
 
-.text-footer{
-    padding-left: 140px !important;
+/* ============================
+   FOOTER
+============================ */
+
+.text-footer {
+    padding-left: 78px !important;
     text-align: left;
     font-weight: 600;
 }
 
-@media only screen and (max-width: 600px) {
-    .floor-plan {
+/* ============================
+   ----------- RESPONSIVE -----------
+============================ */
 
+/* ====== ESCRITORIO ====== */
+@media (min-width: 768px) {
+    .panel-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* ====== SOLO MÓVIL ====== */
+@media (max-width: 768px) {
+
+    .navbar,
+    .navbar-dark {
+        min-height: 72px !important;
+    }
+    .floor-plan {
         height: 250px;
     }
 
-    .right-panel .btn, .metrics-bar .btn {
-        padding: 7px 17px !important;
+    .panel-left{
+        height: 300px !important;
+    }
+    .capacidades-text{
+        text-align: center;
     }
 
-    .text-footer{
-        padding-left: 0px !important;
-        text-align: center !important;
-        font-weight: 600;
+    .info-movil-only {
+        display: block !important;
+        text-align: center;
+        font-size: 15px;
+    }
+    .info-movil-only h6 {
+        font-weight: bold;
+        margin-top: 20px;
+        font-size: 18px;
+    }
+
+    /* ----- Estructura contenedor-info en móvil ----- */
+    .container-info {
+        display: block !important;
+        font-size: 15px;
+        padding: 20px 10px;
+    }
+
+    .container-info p,
+    .container-info h6 {
+        margin: 0;
+    }
+
+    .container-info p span {
+        margin-left: auto;
+    }
+    .container-info p span::after {
+        content: attr(data-unit);
+        margin-left: 4px;
+    }
+
+    /* Primera fila: Capacidad / Resistencia */
+    .container-info > p:nth-child(1),
+    .container-info > p:nth-child(2) {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        align-items: flex-end;
+    }
+
+    /* Sustituir textos largos por prototipo */
+    .container-info > p:nth-child(1) strong,
+    .container-info > p:nth-child(2) strong {
+        visibility: hidden;
+        position: relative;
+    }
+    .container-info > p:nth-child(1) strong::after {
+        content: 'Capacidad de carga';
+        visibility: visible;
+        position: absolute;
+        left: 0;
+    }
+    .container-info > p:nth-child(2) strong::after {
+        content: 'Resistencia de piso';
+        visibility: visible;
+        position: absolute;
+        left: 0;
+    }
+
+    /* Título dimensiones */
+    .container-info h6:nth-of-type(1) {
+        text-align: center;
+        font-size: 18px;
+        margin: 15px 0;
+    }
+
+    /* Filas con divisor */
+    .container-info p:nth-child(4),
+    .container-info p:nth-child(5),
+    .container-info p:nth-child(6),
+    .container-info p:nth-child(7),
+    .container-info p:nth-child(n+9):nth-child(-n+14) {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #00000021;
+    }
+
+    /* Último texto centrado */
+    .container-info p:last-child {
+        text-align: center;
+        border: none;
+        margin-top: 40px !important;
     }
 
     .right-panel {
+        height: auto !important;
+        overflow-y: visible !important;
         padding-left: 10px !important;
         padding-bottom: 200px !important;
     }
 
+    .right-panel .btn,
+    .metrics-bar .btn {
+        padding: 12px 13px !important;
+        margin: auto;
+    }
+
     .btn-lot-merge {
-        display: none !important;
+        width: 100% !important;
+    }
+
+    #select-lot-merge{
+        border: 0px !important;
+        border-radius: 25px !important;
     }
 
     .metric-number {
         font-size: 20px;
     }
 
-    .text-custom-mobile {
-        font-size: 20px;
-        font-family: "SuisseIntl-Regular" !important;
-        font-weight: 600;
+    .text-footer {
+        padding-left: 0 !important;
+        text-align: center !important;
     }
 
-    /* Select con borde y padding */
+    /* Select custom */
     .custom-select-wrapper-mobile {
         position: relative;
         width: 100% !important;
     }
-
     .custom-select-mobile {
-        width: 100% !important;
+        width: 100%;
         padding: 12px;
         border: 1.5px solid #ccc !important;
         border-radius: 8px;
-        background: white !important;
+        background: #fff !important;
         appearance: none;
         -webkit-appearance: none;
         font-size: 18px;
         font-family: "SuisseIntl-Regular" !important;
         font-weight: 600;
     }
-
-    /* Flecha ▼ */
     .custom-select-wrapper-mobile::after {
         content: "▼";
         position: absolute;
@@ -296,11 +390,8 @@ p {
         color: #444;
         pointer-events: none;
     }
-
-    /* Focus limpio */
     .custom-select-mobile:focus {
         outline: none;
         box-shadow: none;
     }
-
 }
