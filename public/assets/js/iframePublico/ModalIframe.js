@@ -9,12 +9,16 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+    if (window.location.pathname === "/cic/1") {
+        modalInstrucciones = new bootstrap.Modal(document.getElementById('modalInstrucciones'));
+        modalInstrucciones.show();
+    }
 
-    const modalInstrucciones = new bootstrap.Modal(document.getElementById('modalInstrucciones'));
-    modalInstrucciones.show();
-
+    // Ocultar modal con el botón "Entendido"
     document.getElementById("btnEntendido").addEventListener("click", function () {
-        modalInstrucciones.hide();
+        if (modalInstrucciones) {
+            modalInstrucciones.hide();
+        }
     });
 
     const lotButtons = document.querySelectorAll(".btn-lot-merge");
