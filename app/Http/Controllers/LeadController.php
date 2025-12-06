@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lead;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NuevaSolicitudMail;
 
 class LeadController extends Controller
 {
-       public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name'       => 'required|string|max:255',
@@ -21,6 +23,14 @@ class LeadController extends Controller
         ]);
 
         $lead = Lead::create($request->all());
+
+        // Lista de correos destino
+        $destinatarios = [
+            "hi@davidsabido.com",
+            "info@cicyucatan.com"
+        ];
+
+        Mail::to($destinatarios)->send(new NuevaSolicitudMail($lead));
 
         // Aquí podrías generar el PDF o redirigir
         return response()->json([
