@@ -81,6 +81,18 @@ class LotController extends Controller
             'file' => 'required|mimes:xlsx'
         ]);
 
+        /**
+         * ============================================================
+         * Mapeo de estatus Español → Inglés (para guardar)
+         * ============================================================
+         */
+        $statusReverseMap = [
+            "Disponible" => "for_sale",
+            "Vendido"    => "sold",
+            "Apartado"   => "reserved",
+            "Bloqueado"  => "locked_sale"
+        ];
+
         $file = $request->file('file')->getPathname();
         $spreadsheet = IOFactory::load($file);
         $sheet = $spreadsheet->getActiveSheet();
@@ -89,25 +101,69 @@ class LotController extends Controller
         $errors = [];
         $successCount = 0;
 
-        // Se comienzan a leer datos desde la fila 3 (índice 2)
-        foreach (array_slice($rows, 2) as $index => $row) {
-            $rowNumber = $index + 3; // Para indicar el número de Excel
+        /**
+         * ============================================================
+         * 1) OBTENER IDS BASE (PROYECTO, FASE, ETAPA)
+         * ============================================================
+         */
+        $baseProjectId = null;
+        $basePhaseId   = null;
+        $baseStageId   = null;
 
-            if (empty($row[3])) continue; // Si nombre vacío, se ignora
+        foreach (array_slice($rows, 3) as $row) {
+            if (!empty($row[4])) { // "name"
+                $baseProjectId = $row[1];
+                $basePhaseId   = $row[2];
+                $baseStageId   = $row[3];
+                break;
+            }
+        }
 
-            $validator = Validator::make([
-                'project_id' => $row[0],
-                'phase_id'   => $row[1],
-                'stage_id'   => $row[2],
-                'name'       => $row[3],
-                'depth'      => $row[4],
-                'front'      => $row[5],
-                'area'       => $row[6],
-                'price_square_meter' => $row[7],
-                'total_price' => $row[8],
-                'status'      => $row[9],
-                'chepina'     => $row[10],
-            ], [
+        if (!$baseProjectId || !$basePhaseId || !$baseStageId) {
+            return response()->json([
+                'success' => 0,
+                'errors' => ["No se encontraron IDs base en la plantilla."]
+            ], 400);
+        }
+
+        /**
+         * ============================================================
+         * 2) PROCESAR TODAS LAS FILAS DEL EXCEL
+         * ============================================================
+         */
+        foreach (array_slice($rows, 3) as $index => $row) {
+
+            $excelRow = $index + 4;
+
+            if (empty($row[4])) continue; // nombre vacío → ignorar
+
+            $id          = $row[0];
+            $project_id  = $row[1] ?: $baseProjectId;
+            $phase_id    = $row[2] ?: $basePhaseId;
+            $stage_id    = $row[3] ?: $baseStageId;
+
+            /**
+             * Convertir ESTATUS de español → clave interna
+             */
+            $statusSpanish = trim($row[10]);
+            $statusInternal = $statusReverseMap[$statusSpanish] ?? 'for_sale';
+
+            $data = [
+                'project_id' => $project_id,
+                'phase_id'   => $phase_id,
+                'stage_id'   => $stage_id,
+                'name'       => $row[4],
+                'depth'      => $row[5],
+                'front'      => $row[6],
+                'area'       => $row[7],
+                'price_square_meter' => $row[8],
+                'total_price' => $row[9],
+                'status'     => $statusInternal, // ← Mapeo correcto
+                'chepina'    => $row[11],
+            ];
+
+            // Validación
+            $validator = Validator::make($data, [
                 'project_id' => 'required|exists:projects,id',
                 'phase_id'   => 'required|exists:phases,id',
                 'stage_id'   => 'required|exists:stages,id',
@@ -120,24 +176,30 @@ class LotController extends Controller
             ]);
 
             if ($validator->fails()) {
-                $errorMessages = implode(" | ", $validator->errors()->all());
-                $errors[] = "Fila $rowNumber: $errorMessages";
+                $errors[] = "Fila $excelRow: " . implode(" | ", $validator->errors()->all());
                 continue;
             }
 
-            Lot::create([
-                'project_id' => $row[0],
-                'phase_id' => $row[1],
-                'stage_id' => $row[2],
-                'name' => $row[3],
-                'depth' => $row[4],
-                'front' => $row[5],
-                'area' => $row[6],
-                'price_square_meter' => $row[7],
-                'total_price' => $row[8],
-                'status' => $row[9],
-                'chepina' => $row[10],
-            ]);
+            /**
+             * ============================================================
+             * 3) ¿ACTUALIZAR O CREAR?
+             * ============================================================
+             */
+            if ($id) {
+                // Actualizar existente
+                $lot = Lot::find($id);
+
+                if ($lot) {
+                    $lot->update($data);
+                } else {
+                    $errors[] = "Fila $excelRow: No existe el lote con ID $id";
+                    continue;
+                }
+
+            } else {
+                // Crear nuevo usando los IDs base correctos
+                Lot::create($data);
+            }
 
             $successCount++;
         }
