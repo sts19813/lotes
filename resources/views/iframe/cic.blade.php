@@ -9,7 +9,7 @@
 @section('content')
 
     <!-- HEADER -->
-    <nav class="navbar navbar-dark bg-dark px-4 py-3 d-flex justify-content-between align-items-center">
+    <nav class="navbar navbar-dark px-4 py-3 d-flex justify-content-between align-items-center">
 
         {{-- LOGO IZQUIERDA --}}
         <img src="/Imagotipo Horizontal.svg" alt="" class="logo-navbar">
