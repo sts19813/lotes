@@ -241,12 +241,20 @@ function actualizarFinanciamiento(box, precioTotal) {
     const loteIntereses = document.getElementById("loteIntereses");
     if (loteIntereses) loteIntereses.textContent = `${interesPorc}%`;
 
-    const loteFinanciamiento = document.getElementById("loteFinanciamiento");
-    if (loteFinanciamiento) loteFinanciamiento.textContent = `${meses} meses`;
+    if (mensualidad <= 0) {
+        if (loteFinanciamiento) loteFinanciamiento.textContent = `${meses} meses`;
+        if (loteMensualidad) loteMensualidad.textContent = "";
+        document.querySelector(".MensualesText").style.display = "none";
+    } else {
+        if (loteFinanciamiento) loteFinanciamiento.textContent = `${meses} meses`;
+        if (loteMensualidad) loteMensualidad.textContent = formatMoney(mensualidad);
 
-    const loteMensualidad = document.getElementById("loteMensualidad");
-    if (loteMensualidad) loteMensualidad.textContent = formatMoney(mensualidad);
+        const mensualesText = document.querySelector(".MensualesText");
 
+        if (mensualesText) {
+            mensualesText.style.display = "flex";
+        }
+    }
     const loteMontoFinanciado = document.getElementById("loteMontoFinanciado");
     if (loteMontoFinanciado) loteMontoFinanciado.textContent = formatMoney(montoFinanciado);
 

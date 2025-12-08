@@ -101,7 +101,7 @@
                         </div>
 
                        <!-- Financiamiento -->
-                       <div class="row mb-3">
+                       <div class="row mb-3 MensualesText">
                             <div class="col-8">
                                 <label class="form-label text-white">Financiamiento</label>
                                 <div class="form-control form-control-plaintext text-white fw-bold p-2 justify-content-between align-items-center text-white">
