@@ -24,8 +24,17 @@ function llenarModal(lote) {
     //  IMAGEN DEL LOTE
     // ------------------------------------------------------------
     const chepinaImg = document.getElementById("chepinaIMG");
-    if (chepinaImg) chepinaImg.src = lote.chepina || "/assets/img/CHEPINA.svg";
+    if (chepinaImg) {
+        let rutaChepina = lote.chepina || "/assets/img/CHEPINA.svg";
+        debugger
 
+        // Si el lote es de Naboo, agregar prefijo a la ruta
+        if (window.currentLot.source_type === "naboo") {
+            rutaChepina = "/chepinas/" + lote.chepina;
+        }
+
+        chepinaImg.src = rutaChepina;
+    }
     // ------------------------------------------------------------
     //  DATOS BÁSICOS DEL LOTE
     // ------------------------------------------------------------

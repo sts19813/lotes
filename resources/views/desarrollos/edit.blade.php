@@ -269,6 +269,27 @@
                     </div>
                 </div>
 
+                <!-- CARD: Adicionales -->
+                <div class="card mt-5 shadow-sm">
+                    <div class="card-header">
+                        <h4 class="card-title fw-bold">{{ __('messages.additionals_title') }}</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row g-4">
+
+                          <div class="col-md-3">
+                                <label class="form-label fw-bold">Migrado</label>
+                                <select name="is_migrated" class="form-select">
+                                    <option value="0" {{ !$lot->is_migrated ? 'selected' : '' }}>No</option>
+                                    <option value="1" {{ $lot->is_migrated ? 'selected' : '' }}>Sí</option>
+                                </select>
+                          </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="text-end mt-5">
                     <button type="submit" class="btn btn-primary">
                         {{ __('messages.update_development') }}

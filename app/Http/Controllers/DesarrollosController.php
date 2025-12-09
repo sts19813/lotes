@@ -8,7 +8,8 @@ use App\Models\Lot;
 use Illuminate\Http\Request;
 use App\Services\AdaraService;
 use App\Services\FileUploadService;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class DesarrollosController extends Controller
 {
@@ -200,6 +201,7 @@ class DesarrollosController extends Controller
             $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
         } elseif ($sourceType === 'naboo') {
             $lots = Lot::where('stage_id', $lot->stage_id)->get();
+
             $dbLotes = Lote::where([
                 'desarrollo_id' => $lot->id,
                 'project_id' => $lot->project_id,
@@ -207,6 +209,7 @@ class DesarrollosController extends Controller
                 'stage_id' => $lot->stage_id
             ])->get();
         }
+
 
          //  Obtener financiamientos relacionados (solo activos)
         $financiamientos = $lot->financiamientos()->activos()->get();
@@ -240,6 +243,7 @@ class DesarrollosController extends Controller
     /**
      * Actualizar desarrollo existente en la basse de datos
      */
+    
     public function update(Request $request, $id)
     {
         $desarrollo = Desarrollos::findOrFail($id);
@@ -263,13 +267,17 @@ class DesarrollosController extends Controller
             'redirect_previous' => 'nullable|string|max:255',
             'plusvalia' => 'nullable|numeric|min:0|max:100',
             'iframe_template_modal'=> 'nullable|string|max:255',
+            'is_migrated' => 'nullable|boolean',
         ]);
 
         $data = $request->only([
             'name','description','total_lots','project_id','phase_id','stage_id',
             'modal_color','modal_selector','color_primario','color_acento',
-            'financing_months','redirect_return','redirect_next','redirect_previous','plusvalia','source_type','iframe_template_modal'
+            'financing_months','redirect_return','redirect_next','redirect_previous',
+            'plusvalia','source_type','iframe_template_modal','is_migrated'
         ]);
+
+        $data['is_migrated'] = $request->boolean('is_migrated');
 
         // Manejo de archivos
         if ($request->hasFile('svg_image')) {
@@ -279,9 +287,50 @@ class DesarrollosController extends Controller
             $data['png_image'] = $this->fileUploadService->upload($request->file('png_image'), 'lots');
         }
 
-        $desarrollo->update($data);
+         DB::beginTransaction();
 
-        return redirect()->route('admin.index')->with('success', 'Desarrollo actualizado correctamente.');
+        try {
+            // 1) Guardar cambios del desarrollo (IMPORTANTE)
+            $desarrollo->update($data);
+
+            // 2) Si marcó migrado, actualizar lotes antiguos para apuntar a los nuevos IDs
+            if ($data['is_migrated']) {
+
+                $nProject = $data['project_id'];
+                $nPhase = $data['phase_id'];
+                $nStage = $data['stage_id'];
+
+                // Validar que vengan IDs nuevos
+                if (!$nProject || !$nPhase || !$nStage) {
+                    Log::warning("Intento de migración sin IDs completos (project/phase/stage) para desarrollo {$desarrollo->id}");
+                    // opcional: lanzar excepción para abortar
+                    throw new \Exception('Faltan project_id / phase_id / stage_id para completar la migración de lotes.');
+                }
+
+                // Obtener lotes antiguos por desarrollo
+                $lotesViejos = Lote::where('desarrollo_id', $desarrollo->id)->get();
+
+                // Actualizar en bloque (si prefieres row-by-row para triggers, usa loop)
+                foreach ($lotesViejos as $lote) {
+                    // Si tu tabla Lote tiene fillable con project_id/phase_id/stage_id puedes:
+                    $lote->update([
+                        'project_id' => $nProject,
+                        'phase_id'   => $nPhase,
+                        'stage_id'   => $nStage,
+                    ]);
+                }
+
+                Log::info("Migración de lotes completa para desarrollo {$desarrollo->id}. Lotes actualizados: {$lotesViejos->count()}");
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.index')->with('success', 'Desarrollo y lotes actualizados correctamente.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error("Error actualizando desarrollo {$desarrollo->id}: " . $e->getMessage());
+            return redirect()->back()->withInput()->withErrors(['error' => 'Error al actualizar: ' . $e->getMessage()]);
+        }
     }
 
     /**

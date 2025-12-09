@@ -29,6 +29,8 @@ class Desarrollos extends Model
         'svg_image',
         'png_image',
         'iframe_template_modal',
+        'is_migrated',
+
     ];
 
     /**

@@ -154,6 +154,16 @@ Route::middleware(['auth', AdminMiddleware::class])
 
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::post('/users/update-role/{id}', [UsersController::class, 'updateRole'])->name('users.updateRole');
+
+        Route::post('/importar', [MigracionController::class, 'importar'])->name('migracion.importar');
+        Route::get('/progreso', [MigracionController::class, 'progreso'])->name('migracion.progreso');
+
+        Route::post('/migracion/chepinas', [MigracionController::class, 'descargarChepinas'])
+            ->name('migracion.descargarChepinas');
+
+        Route::get('/migracion/chepinas/progreso', [MigracionController::class, 'progresoChepinas'])
+            ->name('migracion.progresoChepinas');
+
     });
 
 // =========================

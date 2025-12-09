@@ -72,6 +72,7 @@ return [
     'modal_selector_Plantilla' => 'Template',
     'selector_tooltip' => 'This field is filled automatically when uploading the SVG file.',
     'redirects_title' => 'Redirects',
+    'additionals_title' => 'Additionals',
     'redirect_return_label' => 'Return URL',
     'redirect_next_label' => 'Next URL',
     'redirect_previous_label' => 'Previous URL',

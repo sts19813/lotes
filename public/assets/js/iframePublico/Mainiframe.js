@@ -78,10 +78,18 @@ $(document).ready(function () {
             let matchedLot;
 
             // --- Búsqueda según origen del lote ---
+            // --- ADARA ---
             if (window.currentLot.source_type === 'adara') {
                 matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id);
-            } else if (window.currentLot.source_type === 'naboo') {
+
+            }
+            // --- NABOO ---
+            else if (window.currentLot.source_type === 'naboo') {
+
                 matchedLot = window.preloadedLots.find(l => l.id == dbLote.lote_id);
+                if (!matchedLot) {
+                    matchedLot = window.preloadedLots.find(l => l.id_lote == dbLote.lote_id); //intentar buscar en los migrados
+                }
             }
             if (!matchedLot) return;
 
