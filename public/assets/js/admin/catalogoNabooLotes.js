@@ -68,22 +68,22 @@ $(document).ready(function () {
                 data: 'chepina',
                 render: function (data, type, row) {
                     if (data) {
-                        // Si tiene imagen
                         return `
-                        <img src="/chepinas/${data}" 
-                             alt="Imagen" 
-                             class="img-thumbnail chepina-img" 
-                             style="width:60px; height:60px; object-fit:cover; cursor:pointer;">
-                        <input type="file" class="d-none chepina-input" data-id="${row.id}">
-                    `;
+                            <img 
+                                data-src="/chepinas/${data}"
+                                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" 
+                                alt="Imagen" 
+                                class="img-thumbnail chepina-img lazy-chepina" 
+                                style="width:60px; height:60px; object-fit:cover; cursor:pointer;">
+                            <input type="file" class="d-none chepina-input" data-id="${row.id}">
+                        `;
                     } else {
-                        // Si NO tiene imagen → icono upload
                         return `
-                        <button class="btn btn-sm btn-outline-primary upload-chepina" data-id="${row.id}">
-                            <i class="fas fa-upload"></i> Subir
-                        </button>
-                        <input type="file" class="d-none chepina-input" data-id="${row.id}">
-                    `;
+                            <button class="btn btn-sm btn-outline-primary upload-chepina" data-id="${row.id}">
+                                <i class="fas fa-upload"></i> Subir
+                            </button>
+                            <input type="file" class="d-none chepina-input" data-id="${row.id}">
+                        `;
                     }
                 },
                 defaultContent: '-'
@@ -180,6 +180,34 @@ $(document).ready(function () {
         const query = new URLSearchParams(params).toString();
         table.ajax.url(`/api/lots?${query}`).load();
     });
+
+
+    // ============================================================
+    // LAZY LOAD de imágenes de Chepina visibles
+    // ============================================================
+
+    function lazyLoadChepinas() {
+
+        const images = document.querySelectorAll('img.lazy-chepina');
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const realSrc = img.getAttribute('data-src');
+
+                    if (realSrc) {
+                        img.src = realSrc;
+                        img.removeAttribute('data-src');
+                    }
+
+                    obs.unobserve(img);
+                }
+            });
+        }, { rootMargin: "100px" }); // carga anticipada suave
+
+        images.forEach(img => observer.observe(img));
+}
 
     // ========================================================================
     //  FORMULARIO MODAL (crear nuevo lote)
@@ -401,6 +429,10 @@ $(document).ready(function () {
                 Swal.fire('Error', 'No se pudo procesar el archivo', 'error');
             }
         });
+    });
+
+    $('#lotsTable').on('draw.dt', function () {
+        lazyLoadChepinas();
     });
 
     //listener para la edicion de lote individual
