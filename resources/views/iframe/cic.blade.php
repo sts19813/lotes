@@ -5,22 +5,169 @@
 <link href="https://db.onlinewebfonts.com/c/88f10bf18a36407ef36bf30bc25a3618?family=SuisseIntl-Regular"
     rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/styleCic.css">
+<style>
+    /* Asegura que el <li> es el contenedor del submenu */
+    /* El li es el contenedor del submenu */
+    .nav-item.has-submenu {
+        position: relative !important;
+        display: inline-block;
+    }
+
+    /* El enlace no debe crear espacio debajo */
+    .nav-item.has-submenu>a {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* Submenú alineado automáticamente debajo del enlace */
+    .nav-item.has-submenu .submenu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 220px;
+        display: none;
+        z-index: 2050;
+        padding: 26px 0;
+        margin-top: 0;
+        /* IMPORTANTE: no separar del enlace */
+    }
+
+    /* Mostrar al hacer hover en el <li> o en el submenu */
+    .nav-item.has-submenu:hover .submenu,
+    .nav-item.has-submenu .submenu:hover {
+        display: block;
+    }
+
+    .navbar-nav.flex-row>.nav-item {
+        margin-right: 22px;
+    }
+
+    .navbar-nav.flex-row>.nav-item:last-child {
+        margin-right: 0;
+    }
+
+    .nav-item,
+    .btn-evento {
+        font-family: 'Acumin Pro', sans-serif !important;
+        font-size: 14px !important;
+        letter-spacing: -0.5px;
+    }
+
+    .btn-evento {
+        background-color: white !important;
+        color: #000 !important;
+        padding: 6px 20px !important;
+        font-weight: 400 !important;
+    }
+
+    .language-selector {
+        margin-right: 20px !important;
+    }
+</style>
 
 @section('content')
 
     <!-- HEADER -->
-    <nav class="navbar navbar-dark px-4 py-3 d-flex justify-content-between align-items-center">
+    <nav class="navbar  d-flex justify-content-between align-items-center">
 
         {{-- LOGO IZQUIERDA --}}
-        <img src="/Imagotipo Horizontal.svg" alt="" class="logo-navbar">
-
-        {{-- BOTÓN A LA DERECHA --}}
-        <a href="https://cicyucatan.com/" class="btn text-white d-flex align-items-center gap-2">
-            <span class="d-none d-md-inline">Regresar</span>
-            <span class="d-inline d-md-none" style="font-size: 24px;">
-                <img src="/home.svg" alt="">
-            </span>
+        <a href="/" class="navbar-brand">
+            <img src="/Imagotipo Horizontal.svg" alt="CIC Logo" class="logo-navbar">
         </a>
+
+        {{-- MENÚ DERECHA --}}
+        <div class="d-flex align-items-center">
+
+            {{-- LINKS PRINCIPALES --}}
+            <ul class="navbar-nav flex-row align-items-center gap-5 d-none d-md-flex">
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="https://cicyucatan.com/nosotros">Sobre el CIC</a>
+                </li>
+
+                <!-- Dropdown Recinto -->
+                <li class="nav-item position-static recinto-parent has-submenu">
+                    <a class="nav-link text-white" href="#">Recinto</a>
+
+                    <div class="submenu bg-dark rounded shadow">
+                        <a class="d-block px-3 py-2 text-white text-decoration-none"
+                            href="https://cicyucatan.com/espacios-y-auditorios">
+                            Espacios y salones
+                        </a>
+                        <a class="d-block px-3 py-2 text-white text-decoration-none" href="/venue/planos-especificaciones">
+                            Planos y especificaciones
+                        </a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="https://cicyucatan.com/yucatan">Yucatán</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="https://cicyucatan.com/contacto">Contacto</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/contacto" class="btn btn-evento rounded-pill fw-semibold">
+                        Organizar Evento
+                    </a>
+                </li>
+
+                <li class="nav-item language-selector">
+                    <select class="form-select form-select-sm bg-transparent text-white border-light" style="width: auto; border: black; font-size: 14px;">
+                        <option value="es" selected>Español</option>
+                        <option value="en">English</option>
+                    </select>
+                </li>
+
+            </ul>
+
+            {{-- MENÚ MÓVIL --}}
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+        </div>
+
+        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="mobileMenu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Menú</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <ul class="navbar-nav gap-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/nosotros">About the CIC</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/venue">Venue</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/yucatan">Yucatán</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/contacto">Contact</a>
+                    </li>
+
+                </ul>
+
+                <a href="/contacto" class="btn btn-light rounded-pill w-100 mt-4">Organize Event</a>
+
+                <hr class="border-gray-500">
+
+                <select class="form-select bg-transparent text-white border-light">
+                    <option value="es" selected>Español</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+        </div>
 
     </nav>
 
@@ -56,13 +203,18 @@
                 </div>
 
                 <div class="salon-info-fixed d-none d-lg-block">
-                    <strong>Clasificación técnica de los salones</strong>
-                    <ul class="mt-2">
-                        <li>Medio Salón Superior (B)</li>
-                        <li>Medio Salón Inferior (A)</li>
-                        <li>Salón Completo (A + B)</li>
-                        <li>Salón Completo + Pasillo (área adicional de circulación)</li>
-                    </ul>
+
+                    <button class="btn btn-white-bottom" data-bs-toggle="modal" data-bs-target="#modalClasificacionTecnica">
+                        Ver clasificación técnica
+                    </button>
+
+                    <button class="btn btn-white-bottom" data-bs-toggle="modal" data-bs-target="#modalFAQ">
+                        Preguntas frecuentes
+                    </button>
+
+                    <button class="btn btn-white-bottom" data-bs-toggle="modal" data-bs-target="#modalInstruccionesbtn">
+                        Ver instrucciones
+                    </button>
                 </div>
             </div>
 
@@ -87,7 +239,7 @@
 
                     <a href="/cic/3"
                         class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'actives' : '' }}">
-                        Mezzanine
+                        Oficinas
                     </a>
                 </div>
 
@@ -279,24 +431,30 @@
     @include('iframe.modalLead')
 
     <!-- Modal instrucciones -->
+    <!-- Modal instrucciones -->
     <div class="modal fade" id="modalInstrucciones" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-4" style="border-radius: 20px; padding: 30px !important;">
+            <div class="modal-content modal-instrucciones">
 
-                <h5 class="mb-3 text-custom-desktop"><strong>Instrucciones</strong></h5>
+                <!-- Botón de cierre (X blanca) -->
+                <button type="button" class="btn-close btn-close-white custom-close" data-bs-dismiss="modal"></button>
 
-                <p class="text-normal-standart">
-                    Nuestra herramienta te permite visualizar de forma inmediata el área total,
-                    la capacidad máxima y las posibles configuraciones de cada salón.
+                <h4 class="text-center fw-bold mb-3 text-white">Instrucciones:</h4>
+
+                <p class="text-center text-white text-normal-standart">
+                    Esta herramienta te permitirá visualizar las áreas, salones<br>
+                    y posibles configuraciones.
                 </p>
 
-                <p class="text-normal-standart mt-3">
-                    Para comenzar, selecciona un salón desde el mapa o la lista.
-                    La herramienta mostrará automáticamente las configuraciones permitidas según la combinación.
+                <p class="text-center text-white text-normal-standart mt-3">
+                    Paso 1. Elige la planta o área de oficina en el configurador.<br>
+                    Paso 2. Elige el salón u oficina de preferencia en el mapa.<br>
+                    Paso 3. Selecciona cualquiera de las combinaciones<br>
+                    del configurador.
                 </p>
 
                 <div class="text-center mt-4">
-                    <button id="btnEntendido" class="btn btn-dark rounded-pill px-4">
+                    <button id="btnEntendido" class="btn btn-light rounded-pill px-4 fw-semibold text-dark">
                         Entendido
                     </button>
                 </div>
@@ -304,6 +462,187 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Clasificación Técnica -->
+    <div class="modal fade" id="modalClasificacionTecnica" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-instrucciones">
+
+                <!-- Botón X blanca grande -->
+                <button type="button" class="btn-close btn-close-white custom-close" data-bs-dismiss="modal"></button>
+
+                <h4 class="text-center fw-bold mb-3 text-white">Clasificación técnica<br>de los salones:</h4>
+
+                <p class="text-center text-white text-normal-standart">
+
+                    Medio Salón Superior (B)<br>
+                    Medio Salón Inferior (A)<br>
+                    Salón Completo (A + B)<br>
+                    Salón Completo + Pasillo (Salón Completo<br>
+                    + área adicional de circulación)
+
+                </p>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-light rounded-pill px-4 fw-semibold text-dark" data-bs-dismiss="modal">
+                        Entendido
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalInstruccionesbtn" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-instrucciones">
+
+                <!-- Botón X blanca grande -->
+                <button type="button" class="btn-close btn-close-white custom-close" data-bs-dismiss="modal"></button>
+
+
+                <h4 class="text-center fw-bold mb-3 text-white">Pasos para personalizar tu espacio.</h4>
+
+                <p class="text-center text-white text-normal-standart mt-3">
+                    Paso 1. Elige la planta o área de oficina en el configurador.<br>
+                    Paso 2. Elige el salón u oficina de preferencia en el mapa.<br>
+                    Paso 3. Selecciona cualquiera de las combinaciones<br>
+                    del configurador.
+                </p>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-light rounded-pill px-4 fw-semibold text-dark" data-bs-dismiss="modal">
+                        Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Preguntas Frecuentes -->
+    <div class="modal fade" id="modalFAQ" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-instrucciones">
+
+                <!-- X blanca grande -->
+                <button type="button" class="btn-close btn-close-white custom-close" data-bs-dismiss="modal"></button>
+
+                <h4 class="text-center fw-bold mb-4 text-white">Preguntas Frecuentes</h4>
+
+                <!-- Acordeón FAQ -->
+                <div class="accordion" id="faqAccordion">
+
+                    <!-- FAQ 1 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq1">
+                                ¿Qué es el configurador de salones?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Es una herramienta digital que te permite previsualizar las diferentes
+                                combinaciones de espacios para tu evento dentro del Centro Internacional
+                                de Congresos de Yucatán, de forma sencilla e interactiva.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq2">
+                                ¿Qué es un salón para un evento?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Es un espacio diseñado para reuniones, congresos, exposiciones, conferencias
+                                y eventos sociales, adaptable a distintos montajes y capacidades según las
+                                necesidades de cada evento.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq3">
+                                ¿Cuál es la función de las oficinas dentro del Centro Internacional de Congresos?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Son espacios privados de apoyo al evento que se pueden rentar adicionalmente.
+                                Se utilizan como área de trabajo del comité organizador, sala de juntas,
+                                oficina de producción, sala de prensa o espacio de coordinación para staff.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq4">
+                                ¿Qué es una combinación de salones?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Es la integración de uno o más salones en un solo espacio funcional,
+                                ajustando capacidad y distribución según asistentes, montaje
+                                y necesidades del evento.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq5">
+                                ¿Cómo puedo cotizar el salón?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Tras elegir la combinación deseada y completar el formulario,
+                                el equipo de atención al cliente te contactará para enviarte
+                                una cotización personalizada.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq6">
+                                ¿Cuentan con estacionamiento?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Sí, el Centro Internacional de Congresos de Yucatán cuenta
+                                con estacionamiento subterráneo para la comodidad de los asistentes.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 @endsection
 

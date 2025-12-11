@@ -1,3 +1,139 @@
+/* ACUMIN PRO — THIN */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-ThinItalic.otf') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — EXTRA LIGHT */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-ExtraLight.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-ExtraLightItalic.otf') format('opentype');
+    font-weight: 200;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — LIGHT */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-LightItalic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — REGULAR */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Italic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — MEDIUM */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-MediumItalic.otf') format('opentype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — SEMIBOLD */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-SemiBoldItalic.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — BOLD */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-BoldItalic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — BLACK */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-Black.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-BlackItalic.otf') format('opentype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+/* ACUMIN PRO — ULTRA BLACK */
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-UltraBlack.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Acumin Pro';
+    src: url('/fonts/AcuminPro-UltraBlackItalic.otf') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+
 /* ============================
    ESTILOS GENERALES
 ============================ */
@@ -88,12 +224,14 @@ p {
 .navbar-dark {
     background-color: #000 !important;
     min-height: 80px !important;
-}
-.logo-navbar{
-    width: 260px;
-    margin-left: 26px;
+    padding:  12px 40px !important;
+
 }
 
+.logo-navbar
+{
+    width: 260px !important;
+}
 
 /* ============================
    MÉTRICAS FIJAS
@@ -127,6 +265,108 @@ p {
     margin: 8px 0 0 18px;
     padding: 0;
 }
+
+
+/* Fondo negro y texto blanco */
+.modal-instrucciones {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-radius: 20px;
+    padding: 30px !important;
+    position: relative;
+}
+
+
+.custom-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;   /* área clickeable más grande */
+    height: 28px;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+.custom-close.btn-close {
+    background-size: 22px 22px; /* controla el tamaño visual */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+}
+/* Botón blanco con letras negras (ya va por defecto con btn-light) */
+#btnEntendido {
+    background-color: #fff;
+    color: #000;
+    font-weight: 600;
+}
+
+.btn-white-bottom{
+    background-color: #fff !important;
+    color: #000 !important;
+    font-weight:600 !important;
+    font-size: 11px !important;
+    margin-top: 12px !important;
+    border-radius: 50px !important;
+    border: 1px solid #000 !important;
+}
+
+/* Caja del FAQ */
+.faq-item {
+    background: transparent;
+    border: none;
+    margin-bottom: 12px;
+}
+
+/* Botón "Pregunta" */
+.faq-btn {
+    background: #ffffff;
+    color: #000;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-weight: 500;
+    box-shadow: none;
+    border: 1px solid #ccc;
+}
+
+.faq-btn:not(.collapsed) {
+    background: #ffffff;
+    color: #000;
+    box-shadow: none;
+}
+
+/* Eliminar flecha default de Bootstrap y usar + */
+.faq-btn::after {
+    content: "+";
+    font-weight: bold;
+    font-size: 20px;
+    transform: none !important;
+    background-image: none !important;
+}
+
+/* Cambiar + a - cuando está abierto */
+.faq-btn:not(.collapsed)::after {
+    content: "-";
+}
+
+.accordion-button, .accordion-body {
+    background-color: black !important;
+    color: white !important;
+    border: none !important;
+}
+
+.accordion-item {
+    border : 0px solid black !important;
+}
+
+/* Cuerpo del FAQ */
+.faq-body {
+    background: transparent;
+    color: black;
+    padding: 12px 2px 2px 4px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
 
 /* ============================
    MODAL CONTACTO
