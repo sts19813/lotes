@@ -318,6 +318,7 @@ function limpiarColoresSVG() {
             if (svgDoc) {
                 svgDoc.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
             }
+            
         } catch(e){}
     });
 }

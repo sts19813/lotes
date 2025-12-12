@@ -5,174 +5,40 @@
 <link href="https://db.onlinewebfonts.com/c/88f10bf18a36407ef36bf30bc25a3618?family=SuisseIntl-Regular"
     rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/styleCic.css">
-<style>
-    /* Asegura que el <li> es el contenedor del submenu */
-    /* El li es el contenedor del submenu */
-    .nav-item.has-submenu {
-        position: relative !important;
-        display: inline-block;
-    }
-
-    /* El enlace no debe crear espacio debajo */
-    .nav-item.has-submenu>a {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    /* Submenú alineado automáticamente debajo del enlace */
-    .nav-item.has-submenu .submenu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        min-width: 220px;
-        display: none;
-        z-index: 2050;
-        padding: 26px 0;
-        margin-top: 0;
-        /* IMPORTANTE: no separar del enlace */
-    }
-
-    /* Mostrar al hacer hover en el <li> o en el submenu */
-    .nav-item.has-submenu:hover .submenu,
-    .nav-item.has-submenu .submenu:hover {
-        display: block;
-    }
-
-    .navbar-nav.flex-row>.nav-item {
-        margin-right: 22px;
-    }
-
-    .navbar-nav.flex-row>.nav-item:last-child {
-        margin-right: 0;
-    }
-
-    .nav-item,
-    .btn-evento {
-        font-family: 'Acumin Pro', sans-serif !important;
-        font-size: 14px !important;
-        letter-spacing: -0.5px;
-    }
-
-    .btn-evento {
-        background-color: white !important;
-        color: #000 !important;
-        padding: 6px 20px !important;
-        font-weight: 400 !important;
-    }
-
-    .language-selector {
-        margin-right: 20px !important;
-    }
-</style>
 
 @section('content')
 
-    <!-- HEADER -->
-    <nav class="navbar  d-flex justify-content-between align-items-center">
-
-        {{-- LOGO IZQUIERDA --}}
-        <a href="/" class="navbar-brand">
-            <img src="/Imagotipo Horizontal.svg" alt="CIC Logo" class="logo-navbar">
-        </a>
-
-        {{-- MENÚ DERECHA --}}
-        <div class="d-flex align-items-center">
-
-            {{-- LINKS PRINCIPALES --}}
-            <ul class="navbar-nav flex-row align-items-center gap-5 d-none d-md-flex">
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="https://cicyucatan.com/nosotros">Sobre el CIC</a>
-                </li>
-
-                <!-- Dropdown Recinto -->
-                <li class="nav-item position-static recinto-parent has-submenu">
-                    <a class="nav-link text-white" href="#">Recinto</a>
-
-                    <div class="submenu bg-dark rounded shadow">
-                        <a class="d-block px-3 py-2 text-white text-decoration-none"
-                            href="https://cicyucatan.com/espacios-y-auditorios">
-                            Espacios y salones
-                        </a>
-                        <a class="d-block px-3 py-2 text-white text-decoration-none" href="/venue/planos-especificaciones">
-                            Planos y especificaciones
-                        </a>
-                    </div>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="https://cicyucatan.com/yucatan">Yucatán</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="https://cicyucatan.com/contacto">Contacto</a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="/contacto" class="btn btn-evento rounded-pill fw-semibold">
-                        Organizar Evento
-                    </a>
-                </li>
-
-                <li class="nav-item language-selector">
-                    <select class="form-select form-select-sm bg-transparent text-white border-light" style="width: auto; border: black; font-size: 14px;">
-                        <option value="es" selected>Español</option>
-                        <option value="en">English</option>
-                    </select>
-                </li>
-
-            </ul>
-
-            {{-- MENÚ MÓVIL --}}
-            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-        </div>
-
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="mobileMenu">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title">Menú</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-            </div>
-
-            <div class="offcanvas-body">
-                <ul class="navbar-nav gap-3">
-
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/nosotros">About the CIC</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/venue">Venue</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/yucatan">Yucatán</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/contacto">Contact</a>
-                    </li>
-
-                </ul>
-
-                <a href="/contacto" class="btn btn-light rounded-pill w-100 mt-4">Organize Event</a>
-
-                <hr class="border-gray-500">
-
-                <select class="form-select bg-transparent text-white border-light">
-                    <option value="es" selected>Español</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-        </div>
-
-    </nav>
-
     <div class="container-fluid">
         <div class="row">
+            <div class="col-lg-4 d-md-none" >
+                    <p class="text-normal-standart mb-4">
+                        <strong class="text-custom-desktop" style="font-size: 18px !important;">
+                            <br>
+                        Paso 1. <br>
+                        Elige tu planta o área de oficina
+                        </strong>
+                    </p>
+
+                    <!-- Tabs Móvil -->
+                    <div class="tabs d-flex gap-5 mb-4 tabs-mobile">
+
+                        <a href="/cic/1"
+                        class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'actives' : '' }}">
+                            Planta Alta
+                        </a>
+
+                        <a href="/cic/2"
+                        class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'actives' : '' }}">
+                            Planta Baja
+                        </a>
+
+                        <a href="/cic/3"
+                        class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'actives' : '' }}">
+                            Oficinas
+                        </a>
+                    </div>
+                </div>
+
 
             <!-- IZQUIERDA: PLANO -->
             <div class="col-lg-8 panel-left">
@@ -222,9 +88,9 @@
             <div class="col-lg-4 right-panel" style="padding-bottom: 180px !important;">
 
                 <!-- Tabs -->
-                <div class="tabs d-flex gap-5 mb-4">
-                    <a href="/" style="margin-top: 10px;">
-                        <img src="/Modo_de_aislamiento.svg" alt="">
+                <div class="tabs d-flex gap-5 mb-4 d-none d-lg-block">
+                    <a href="/" style="margin-top: 10px;" class="btn-outline-dark rounded-pill">
+                        <img src="/assets/return.svg" alt="" style="padding-right: 20px;">
                     </a>
 
                     <a href="/cic/1"
@@ -243,9 +109,11 @@
                     </a>
                 </div>
 
+                
+
                 <hr>
 
-                <div class="text-custom-desktop d-none container-info">
+                <div class="text-custom-desktop d-none d-none d-lg-block">
                     <strong style="font-size: 18px">Personaliza tu espacio.</strong><br>
 
                     <p class="text-normal-standart mb-4">
@@ -264,7 +132,13 @@
                 <!-- Móvil -->
                 <div class="d-md-none mt-3">
                     <div class="mb-2">
-                        <div class="custom-select-wrapper-mobile w-100 d-none">
+                        <div class="w-100 d-lg-none">
+                            <p class="text-normal-standart mb-4">
+                                <strong class="text-custom-desktop" style="font-size: 18px !important;">
+                                Paso 2. <br>
+                                Elige tu salón u oficina
+                                </strong>
+                            </p>
                             <select id="select-lot-merge" class="custom-select-mobile w-100">
                                 @foreach ($lots as $item)
                                     <option value="{{ $item['id'] ?? $item->id }}" data-id="{{ $item['id'] ?? $item->id }}"
@@ -286,16 +160,14 @@
                     </div>
                 </div>
 
-                <br>
-
-                <p class="text-normal-standart mb-4" id="instrucciones-desktop">
-                    <strong class="text-custom-desktop" style="font-size: 18px !important;">
+                <p class="text-normal-standart mb-4 d-none d-lg-block" id="instrucciones-desktop">
+                    <strong class="text-custom-desktop " style="font-size: 18px !important;">
                         Selecciona un salón y consulta todas las configuraciones disponibles.
-                    </strong><br>
+                    </strong>
                 </p>
 
                 <!-- Información general -->
-                <div class="container-info d-none">
+                <div class="container-info">
                     <p class="mb-1 text-normal-standart">
                         <strong>Capacidad de carga en puntos de colgante fijos:</strong>
                         <span id="punto-colgado">{{ $lot->hanging_point ?? '0' }}</span>
@@ -317,7 +189,12 @@
 
                     <h6 class="text-normal-standart capacidades-text"><strong>Capacidades</strong></h6>
 
-                    <p class="mb-1 text-normal-standart">Auditorio: <span
+                    @if (request()->is('cic/3'))
+                        <p class="mb-1 text-normal-standart">
+                            Hasta 20 personas 
+                        </p>
+                    @else
+                        <p class="mb-1 text-normal-standart">Auditorio: <span
                             id="auditorio">{{ $lot->auditorium ?? '0' }}</span></p>
                     <p class="mb-1 text-normal-standart">Banquete: <span id="banquete">{{ $lot->banquet ?? '0' }}</span></p>
                     <p class="mb-1 text-normal-standart">Coctel: <span id="coctel">{{ $lot->cocktail ?? '0' }}</span></p>
@@ -327,6 +204,9 @@
                     <p class="mb-1 text-normal-standart">Mesa Rusa: <span
                             id="mesa-rusa">{{ $lot->russian_table ?? '0' }}</span></p>
 
+                    @endif
+
+   
                     @if (!empty($lot->tour_link))
                         <div class="mt-3">
                             <a href="{{ $lot->tour_link }}" target="_blank" class="btn btn-outline-dark rounded-pill px-4">
@@ -335,11 +215,21 @@
                         </div>
                     @endif
 
-                    <p class="mt-3 text-normal-standart">
+                    <p class="mt-3 text-normal-standart d-none d-lg-block">
                         <strong>¿Necesitas más espacio?</strong><br>
                         Selecciona otro salón para ampliar tu espacio.
                     </p>
+                    <br>
                 </div>
+
+                    <div class="w-100 d-lg-none">
+                            <p class="text-normal-standart mb-4">
+                                <strong class="text-custom-desktop" style="font-size: 18px !important;">
+                                Paso 3. <br>
+                                Si requiere de un espacio com mayor capacidad, selecciona cualquiera de las configuraciones del cotizador.
+                                </strong>
+                            </p>
+                    </div>
 
                 <!-- Botones -->
                 <div class="btn-grid-2 mt-2 text-normal-standart">
@@ -447,9 +337,9 @@
                 </p>
 
                 <p class="text-center text-white text-normal-standart mt-3">
-                    Paso 1. Elige la planta o área de oficina en el configurador.<br>
-                    Paso 2. Elige el salón u oficina de preferencia en el mapa.<br>
-                    Paso 3. Selecciona cualquiera de las combinaciones<br>
+                    <b>Paso 1.</b> Elige la planta o área de oficina en el configurador.<br>
+                    <b>Paso 2.</b> Elige el salón u oficina de preferencia en el mapa.<br>
+                    <b>Paso 3.</b> Selecciona cualquiera de las combinaciones<br>
                     del configurador.
                 </p>
 
@@ -504,9 +394,9 @@
                 <h4 class="text-center fw-bold mb-3 text-white">Pasos para personalizar tu espacio.</h4>
 
                 <p class="text-center text-white text-normal-standart mt-3">
-                    Paso 1. Elige la planta o área de oficina en el configurador.<br>
-                    Paso 2. Elige el salón u oficina de preferencia en el mapa.<br>
-                    Paso 3. Selecciona cualquiera de las combinaciones<br>
+                    <b>Paso 1.</b> Elige la planta o área de oficina en el configurador.<br>
+                    <b>Paso 2.</b> Elige el salón u oficina de preferencia en el mapa.<br>
+                    <b>Paso 3.</b> Selecciona cualquiera de las combinaciones<br>
                     del configurador.
                 </p>
 
@@ -672,4 +562,12 @@
     <script src="/assets/js/iframePublico/ModalIframe.js"></script>
     <script src="/assets/js/iframePublico/CotizacionIframe.js"></script>
 
+<script>
+document.getElementById('languageSwitcher')?.addEventListener('change', function () {
+    window.location.href = '/lang/' + this.value;
+});
+document.getElementById('languageSwitcherMobile')?.addEventListener('change', function () {
+    window.location.href = '/lang/' + this.value;
+});
+</script>
 @endpush
