@@ -135,6 +135,132 @@
 
 
 /* ============================
+   SUISSE BP
+============================ */
+
+/* UltraLight */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-UltraLight.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-UltraLightItalic.otf') format('opentype');
+    font-weight: 200;
+    font-style: italic;
+}
+
+/* Light */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-LightItalic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* Regular */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-RegularItalic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* Medium */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-MediumItalic.otf') format('opentype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-BoldItalic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Black */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Black.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-BlackItalic.otf') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+/* Antique (Display) */
+@font-face {
+    font-family: 'Suisse BP Antique';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Antique.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP Antique';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-AntiqueItalic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* Thin */
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src: url('/fonts/Suisse BP/SuisseBPIntl-ThinItalic.otf') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+}
+
+
+
+/* ============================
    ESTILOS GENERALES
 ============================ */
 .tabs .actives {
@@ -161,23 +287,40 @@
 }
 
 .metric-number {
-    font-size: 24px;
-    font-weight: 700;
     margin-bottom: 0 !important;
-    line-height: 30px !important;
+    font-family: 'Suisse BP Antique', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 22px !important;
+    line-height: 22px !important;
 }
 
 .right-panel strong,
 .salon-info-fixed strong {
-    font-family: "SuisseIntl-Regular" !important;
+    font-family: 'Suisse BP Antique', sans-serif;
 }
 
+.Antique-font, .salon-seleccionado{
+    font-family: 'Suisse BP Antique', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 22px !important;
+    line-height: 22px !important;
+}
+
+.metrics-bar p{
+    font-family: "SuisseIntl-Regular" !important;
+    font-weight: 400;
+    font-size: 14px;
+}
 .right-panel p {
     font-family: "SuisseIntl-Regular" !important;
     font-weight: 400;
     font-size: 14px !important;
 }
-
+.right-panel .btn{
+    font-family: "SuisseIntl-Regular" !important;
+    font-weight: 400;
+    font-size: 14px !important;
+}
 .text-normal-standart {
     font-size: 14px !important;
     font-family: "SuisseIntl-Regular" !important;
@@ -317,22 +460,7 @@ p {
     margin-bottom: 12px;
 }
 
-/* Botón "Pregunta" */
-.faq-btn {
-    background: #ffffff;
-    color: #000;
-    border-radius: 10px;
-    padding: 14px 20px;
-    font-weight: 500;
-    box-shadow: none;
-    border: 1px solid #ccc;
-}
 
-.faq-btn:not(.collapsed) {
-    background: #ffffff;
-    color: #000;
-    box-shadow: none;
-}
 
 /* Eliminar flecha default de Bootstrap y usar + */
 .faq-btn::after {
@@ -341,21 +469,25 @@ p {
     font-size: 20px;
     transform: none !important;
     background-image: none !important;
+    margin-top: -12px;
 }
 
 /* Cambiar + a - cuando está abierto */
 .faq-btn:not(.collapsed)::after {
     content: "-";
+    margin-top: -12px;
 }
 
 .accordion-button, .accordion-body {
     background-color: black !important;
     color: white !important;
-    border: none !important;
+    border: 0px solid white !important;
+    
 }
 
 .accordion-item {
-    border : 0px solid black !important;
+    border : 1px solid white !important;
+    
 }
 
 /* Cuerpo del FAQ */
@@ -367,6 +499,46 @@ p {
     line-height: 1.4;
 }
 
+/* ============================
+   ICONO + / - FAQ (BLANCO)
+============================ */
+
+/* Quitar icono default de Bootstrap */
+.faq-btn::after,
+.accordion-button::after {
+    background-image: none !important;
+}
+
+/* Icono + cerrado */
+.faq-btn.collapsed::after,
+.accordion-button.collapsed::after {
+    content: "+";
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+/* Icono - abierto */
+.faq-btn:not(.collapsed)::after,
+.accordion-button:not(.collapsed)::after {
+    content: "-";
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+.faq-btn {
+    background: #000;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.faq-btn:not(.collapsed) {
+    background: #000;
+    color: #fff;
+}
 
 /* ============================
    MODAL CONTACTO
@@ -649,102 +821,4 @@ svg .active{
         outline: none;
         box-shadow: none;
     }
-}
-    /* Asegura que el <li> es el contenedor del submenu */
-    /* El li es el contenedor del submenu */
-    .nav-item.has-submenu {
-        position: relative !important;
-        display: inline-block;
-    }
-
-    /* El enlace no debe crear espacio debajo */
-    .nav-item.has-submenu>a {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    /* Submenú alineado automáticamente debajo del enlace */
-    .nav-item.has-submenu .submenu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        min-width: 220px;
-        display: none;
-        z-index: 2050;
-        padding: 26px 0;
-        margin-top: 0;
-    }
-    .submenu a {
-        white-space: nowrap;
-        color: #858585 !important;
-        padding-left: 40px !important;
-        padding-right: 80px !important; 
-        padding-top: 25px !important;
-    }
-
-    /* Mostrar al hacer hover en el <li> o en el submenu */
-    .nav-item.has-submenu:hover .submenu,
-    .nav-item.has-submenu .submenu:hover {
-        display: block;
-    }
-
-    .navbar-nav.flex-row>.nav-item {
-        margin-right: 22px;
-    }
-
-    .navbar-nav.flex-row>.nav-item:last-child {
-        margin-right: 0;
-    }
-
-    .nav-item,
-    .btn-evento {
-        font-family: 'Acumin Pro', sans-serif !important;
-        font-size: 14px !important;
-        letter-spacing: -0.5px;
-    }
-
-    .btn-evento {
-        background-color: white !important;
-        color: #000 !important;
-        padding: 6px 20px !important;
-        font-weight: 400 !important;
-    }
-
-    .language-selector {
-        margin-right: 20px !important;
-    }
-
-
-    .language-selector select {
-        width: 100px;
-        background-color: #000 !important;
-        color: #fff !important;
-        border: 0px solid #444 !important;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 14px;
-        cursor: pointer;
-        appearance: none;
-    }
-
-.language-selector select:focus {
-    box-shadow: none !important;
-    border-color: #777 !important;
-}
-
-.language-selector {
-    position: relative;
-}
-
-/* Flecha personalizada en blanco */
-.language-selector::after {
-    content: "";
-    font-size: 10px;
-    color: #fff;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
 }

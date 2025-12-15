@@ -114,7 +114,7 @@
                 <hr>
 
                 <div class="text-custom-desktop d-none d-none d-lg-block">
-                    <strong style="font-size: 18px">Personaliza tu espacio.</strong><br>
+                    <strong class="Antique-font">Personaliza tu espacio.</strong><br>
 
                     <p class="text-normal-standart mb-4">
                         <strong>Los salones están diseñados con un sistema modular que permite:</strong>
@@ -161,7 +161,7 @@
                 </div>
 
                 <p class="text-normal-standart mb-4 d-none d-lg-block" id="instrucciones-desktop">
-                    <strong class="text-custom-desktop " style="font-size: 18px !important;">
+                    <strong class="text-custom-desktop Antique-font" >
                         Selecciona un salón y consulta todas las configuraciones disponibles.
                     </strong>
                 </p>
@@ -320,7 +320,6 @@
     @include("iframe.modals.$templateModal")
     @include('iframe.modalLead')
 
-    <!-- Modal instrucciones -->
     <!-- Modal instrucciones -->
     <div class="modal fade" id="modalInstrucciones" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
