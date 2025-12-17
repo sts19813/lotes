@@ -185,6 +185,8 @@ $(document).ready(function () {
     document.querySelectorAll('.lote-svg').forEach(el => {
 
         el.addEventListener('click', function (e) {
+
+              mostrarDesktopStar();
             e.stopPropagation();
             if (selectedSVG) {
                 selectedSVG.classList.remove('active');

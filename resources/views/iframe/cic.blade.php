@@ -8,36 +8,50 @@
 
 @section('content')
 
+
+<style>
+    /* Desktop: oculto por default */
+@media (min-width: 992px) {
+    .disable-desktop-star {
+        display: none;
+    }
+
+    .disable-desktop-star.is-visible {
+        display: block !important; /* o flex / grid según tu layout */
+    }
+}
+
+</style>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-4 d-md-none" >
-                    <p class="text-normal-standart mb-4">
-                        <strong class="text-custom-desktop" style="font-size: 18px !important;">
-                            <br>
+            <div class="col-lg-4 d-md-none">
+                <p class="text-normal-standart mb-4">
+                    <strong class="text-custom-desktop" style="font-size: 18px !important;">
+                        <br>
                         Paso 1. <br>
                         Elige tu planta o área de oficina
-                        </strong>
-                    </p>
+                    </strong>
+                </p>
 
-                    <!-- Tabs Móvil -->
-                    <div class="tabs d-flex gap-5 mb-4 tabs-mobile">
+                <!-- Tabs Móvil -->
+                <div class="tabs d-flex gap-5 mb-4 tabs-mobile">
 
-                        <a href="/cic/1"
+                    <a href="/cic/1"
                         class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/1') ? 'actives' : '' }}">
-                            Planta Alta
-                        </a>
+                        Planta Alta
+                    </a>
 
-                        <a href="/cic/2"
+                    <a href="/cic/2"
                         class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/2') ? 'actives' : '' }}">
-                            Planta Baja
-                        </a>
+                        Planta Baja
+                    </a>
 
-                        <a href="/cic/3"
+                    <a href="/cic/3"
                         class="text-normal-standart btn btn-outline-dark rounded-pill px-4 {{ request()->is('cic/3') ? 'actives' : '' }}">
-                            Oficinas
-                        </a>
-                    </div>
+                        Oficinas
+                    </a>
                 </div>
+            </div>
 
 
             <!-- IZQUIERDA: PLANO -->
@@ -109,24 +123,43 @@
                     </a>
                 </div>
 
-                
+
 
                 <hr>
 
                 <div class="text-custom-desktop d-none d-none d-lg-block">
-                    <strong class="Antique-font">Personaliza tu espacio.</strong><br>
-
-                    <p class="text-normal-standart mb-4">
-                        <strong>Los salones están diseñados con un sistema modular que permite:</strong>
-                    </p>
-
-                    <ul class="text-normal-standart mb-4">
-                        <li>Integrar pasillos de acceso para mejorar la circulación y el servicio.</li>
-                        <li>Unir medios salones para formar un salón completo.</li>
-                        <li>Sumar salones completos para incrementar la capacidad total del espacio.</li>
-                    </ul>
 
                     <strong><span class="salon-seleccionado d-none d-lg-block"></span></strong>
+
+                    <p class="text-normal-standart mb-4 d-none d-lg-block" id="instrucciones-desktop">
+                        <strong class="text-custom-desktop Antique-font">
+                            Selecciona un salón y consulta todas las configuraciones disponibles.
+                        </strong>
+                    </p>
+
+                    <p class="mt-3 text-normal-standart d-none disable-desktop-star">
+                        <strong>¿Necesitas más espacio?</strong><br>
+                        Selecciona otro salón para ampliar tu espacio.
+                    </p>
+
+                      <!-- Botones -->
+                <div class="btn-grid-2 mt-2 text-normal-standart">
+                    @foreach ($lots as $item)
+                        <button class="btn btn-light border rounded-pill px-4 btn-lot-merge"
+                            data-id="{{ $item['id'] ?? $item->id }}" data-area="{{ $item['area'] ?? $item->area }}"
+                            data-front="{{ $item['front'] ?? $item->front }}" data-depth="{{ $item['depth'] ?? $item->depth }}"
+                            data-auditorio="{{ $item['auditorium'] ?? $item->auditorium }}"
+                            data-banquete="{{ $item['banquet'] ?? $item->banquet }}"
+                            data-coctel="{{ $item['cocktail'] ?? $item->cocktail }}"
+                            data-escuela="{{ $item['school'] ?? $item->school }}"
+                            data-herradura="{{ $item['horseshoe'] ?? $item->horseshoe }}"
+                            data-chepina="{{ $item['chepina'] ?? $item->chepina }}"
+                            data-mesarusa="{{ $item['russian_table'] ?? $item->russian_table }}">
+                            {{ $item['name'] ?? $item->name }}
+                        </button>
+                    @endforeach
+                    <br>
+                </div>
                 </div>
 
                 <!-- Móvil -->
@@ -135,8 +168,8 @@
                         <div class="w-100 d-lg-none">
                             <p class="text-normal-standart mb-4">
                                 <strong class="text-custom-desktop" style="font-size: 18px !important;">
-                                Paso 2. <br>
-                                Elige tu salón u oficina
+                                    Paso 2. <br>
+                                    Elige tu salón u oficina
                                 </strong>
                             </p>
                             <select id="select-lot-merge" class="custom-select-mobile w-100">
@@ -160,14 +193,10 @@
                     </div>
                 </div>
 
-                <p class="text-normal-standart mb-4 d-none d-lg-block" id="instrucciones-desktop">
-                    <strong class="text-custom-desktop Antique-font" >
-                        Selecciona un salón y consulta todas las configuraciones disponibles.
-                    </strong>
-                </p>
+                
 
                 <!-- Información general -->
-                <div class="container-info">
+                <div class="container-info  disable-desktop-star" >
                     <p class="mb-1 text-normal-standart">
                         <strong>Capacidad de carga en puntos de colgante fijos:</strong>
                         <span id="punto-colgado">{{ $lot->hanging_point ?? '0' }}</span>
@@ -191,22 +220,22 @@
 
                     @if (request()->is('cic/3'))
                         <p class="mb-1 text-normal-standart">
-                            Hasta 20 personas 
+                            Hasta 20 personas
                         </p>
                     @else
                         <p class="mb-1 text-normal-standart">Auditorio: <span
-                            id="auditorio">{{ $lot->auditorium ?? '0' }}</span></p>
-                    <p class="mb-1 text-normal-standart">Banquete: <span id="banquete">{{ $lot->banquet ?? '0' }}</span></p>
-                    <p class="mb-1 text-normal-standart">Coctel: <span id="coctel">{{ $lot->cocktail ?? '0' }}</span></p>
-                    <p class="mb-1 text-normal-standart">Escuela: <span id="escuela">{{ $lot->school ?? '0' }}</span></p>
-                    <p class="mb-1 text-normal-standart">Herradura: <span id="herradura">{{ $lot->horseshoe ?? '0' }}</span>
-                    </p>
-                    <p class="mb-1 text-normal-standart">Mesa Rusa: <span
-                            id="mesa-rusa">{{ $lot->russian_table ?? '0' }}</span></p>
+                                id="auditorio">{{ $lot->auditorium ?? '0' }}</span></p>
+                        <p class="mb-1 text-normal-standart">Banquete: <span id="banquete">{{ $lot->banquet ?? '0' }}</span></p>
+                        <p class="mb-1 text-normal-standart">Coctel: <span id="coctel">{{ $lot->cocktail ?? '0' }}</span></p>
+                        <p class="mb-1 text-normal-standart">Escuela: <span id="escuela">{{ $lot->school ?? '0' }}</span></p>
+                        <p class="mb-1 text-normal-standart">Herradura: <span id="herradura">{{ $lot->horseshoe ?? '0' }}</span>
+                        </p>
+                        <p class="mb-1 text-normal-standart">Mesa Rusa: <span
+                                id="mesa-rusa">{{ $lot->russian_table ?? '0' }}</span></p>
 
                     @endif
 
-   
+
                     @if (!empty($lot->tour_link))
                         <div class="mt-3">
                             <a href="{{ $lot->tour_link }}" target="_blank" class="btn btn-outline-dark rounded-pill px-4">
@@ -215,24 +244,22 @@
                         </div>
                     @endif
 
-                    <p class="mt-3 text-normal-standart d-none d-lg-block">
-                        <strong>¿Necesitas más espacio?</strong><br>
-                        Selecciona otro salón para ampliar tu espacio.
-                    </p>
+                  
                     <br>
                 </div>
 
-                    <div class="w-100 d-lg-none">
-                            <p class="text-normal-standart mb-4">
-                                <strong class="text-custom-desktop" style="font-size: 18px !important;">
-                                Paso 3. <br>
-                                Si requiere de un espacio com mayor capacidad, selecciona cualquiera de las configuraciones del cotizador.
-                                </strong>
-                            </p>
-                    </div>
+                <div class="w-100 d-lg-none">
+                    <p class="text-normal-standart mb-4">
+                        <strong class="text-custom-desktop" style="font-size: 18px !important;">
+                            Paso 3. <br>
+                            Si requiere de un espacio com mayor capacidad, selecciona cualquiera de las configuraciones del
+                            cotizador.
+                        </strong>
+                    </p>
+                </div>
 
                 <!-- Botones -->
-                <div class="btn-grid-2 mt-2 text-normal-standart">
+                <div class="btn-grid-2 mt-2 text-normal-standart d-lg-none">
                     @foreach ($lots as $item)
                         <button class="btn btn-light border rounded-pill px-4 btn-lot-merge"
                             data-id="{{ $item['id'] ?? $item->id }}" data-area="{{ $item['area'] ?? $item->area }}"
@@ -561,12 +588,12 @@
     <script src="/assets/js/iframePublico/ModalIframe.js"></script>
     <script src="/assets/js/iframePublico/CotizacionIframe.js"></script>
 
-<script>
-document.getElementById('languageSwitcher')?.addEventListener('change', function () {
-    window.location.href = '/lang/' + this.value;
-});
-document.getElementById('languageSwitcherMobile')?.addEventListener('change', function () {
-    window.location.href = '/lang/' + this.value;
-});
-</script>
+    <script>
+        document.getElementById('languageSwitcher')?.addEventListener('change', function () {
+            window.location.href = '/lang/' + this.value;
+        });
+        document.getElementById('languageSwitcherMobile')?.addEventListener('change', function () {
+            window.location.href = '/lang/' + this.value;
+        });
+    </script>
 @endpush

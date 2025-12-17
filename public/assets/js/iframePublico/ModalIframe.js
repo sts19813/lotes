@@ -47,6 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (select) {
         select.addEventListener("change", function () {
 
+            mostrarDesktopStar(); // <-- AQUI
+
+
             ocultarInstrucciones();
 
             const option = this.options[this.selectedIndex];
@@ -253,6 +256,8 @@ const buttons = document.querySelectorAll(".btn-lot-merge");
 buttons.forEach(btn => {
     btn.addEventListener("click", () => {
 
+
+        mostrarDesktopStar();
         mostrarSelectMobile();
         ocultarInstrucciones();
 
@@ -321,6 +326,14 @@ function limpiarColoresSVG() {
             
         } catch(e){}
     });
+}
+
+
+function mostrarDesktopStar() {
+    if (window.innerWidth >= 992) {
+        document.querySelectorAll('.disable-desktop-star')
+            .forEach(el => el.classList.add('is-visible'));
+    }
 }
 
 
