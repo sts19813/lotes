@@ -85,9 +85,6 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::post('/lots/{lot}/save-polygon', [DesarrollosController::class, 'savePolygonInfo'])
             ->name('lots.savePolygonInfo');
 
-        // Leads
-        Route::post('/leads', [LeadController::class, 'store'])
-            ->name('leads.store');
 
         // Lotes
         Route::post('/Savelotes', [LoteController::class, 'store'])
@@ -165,6 +162,9 @@ Route::prefix('api')->group(function () {
     Route::get('/projects/{project}/phases/{phase}/stages/{stage}/lots', [AdaraController::class, 'lots']);
 });
 
+        // Leads
+        Route::post('/leads', [LeadController::class, 'store'])
+            ->name('leads.store');
 
 // =========================
 // Reports

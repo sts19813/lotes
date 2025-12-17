@@ -158,7 +158,7 @@
                             {{ $item['name'] ?? $item->name }}
                         </button>
                     @endforeach
-                    <br>
+                  
                 </div>
                 </div>
 
@@ -197,6 +197,11 @@
 
                 <!-- Información general -->
                 <div class="container-info  disable-desktop-star" >
+                    <div class="d-none d-lg-block">
+                    <br>
+                    <br>    
+                    </div>
+                    
                     <p class="mb-1 text-normal-standart">
                         <strong>Capacidad de carga en puntos de colgante fijos:</strong>
                         <span id="punto-colgado">{{ $lot->hanging_point ?? '0' }}</span>
