@@ -497,8 +497,9 @@ p {
     background: transparent;
     color: black;
     padding: 12px 2px 2px 4px;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.4;
+    font-family: "Suisse BP" !important;
 }
 
 /* ============================
@@ -535,6 +536,8 @@ p {
     background: #000;
     color: #fff;
     border: 1px solid #444;
+    font-family: "Suisse BP" !important;
+    font-size: 14px !important;
 }
 
 .faq-btn:not(.collapsed) {
