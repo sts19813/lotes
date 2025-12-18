@@ -29,8 +29,28 @@ $(document).ready(function () {
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
+        // =====================================
+        // OBTENER TEXTO DEL SALÓN SELECCIONADO
+        // =====================================
+        const salonSpan = document.querySelector('.salon-seleccionado');
+        const salonHiddenInput = document.getElementById('selectedLotHidden');
+
+        if (salonSpan && salonHiddenInput) {
+            salonHiddenInput.value = salonSpan.textContent.trim();
+        }
+
         // Serializar datos
         let formData = new FormData(form);
+
+        // Mostrar loader profesional
+        Swal.fire({
+            title: 'Enviando información',
+            text: 'Por favor espera...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         // Enviar al backend vía fetch
         fetch(form.action, {
@@ -46,20 +66,32 @@ $(document).ready(function () {
             })
             .then(data => {
 
-                // Cerrar modal
-                let modal = bootstrap.Modal.getInstance(document.getElementById('downloadFormModal'));
+                // Cerrar modal Bootstrap
+                let modal = bootstrap.Modal.getInstance(
+                    document.getElementById('downloadFormModal')
+                );
                 if (modal) modal.hide();
 
-                // Limpiar formulario
                 form.reset();
 
-                // Mostrar mensaje
-                alert("¡Gracias! Un ejecutivo se pondrá en contacto contigo.");
+                // Alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Solicitud enviada',
+                    text: 'Un ejecutivo se pondrá en contacto contigo a la brevedad.',
+                    confirmButtonText: 'Aceptar'
+                });
             })
             .catch(err => {
                 console.error(err);
-                alert("Ocurrió un error al enviar la información.");
-            });
 
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al enviar',
+                    text: 'No fue posible enviar la información. Intenta nuevamente.',
+                    confirmButtonText: 'Cerrar'
+                });
+            });
     });
+
 });

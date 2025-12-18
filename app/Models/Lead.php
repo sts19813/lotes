@@ -12,14 +12,16 @@ class Lead extends Model
 
     protected $fillable = [
         'name',
-        'phone',
+        'company',
         'email',
-        'city',
-        'phase_id',
+        'phone',
+        'event_type',
+        'estimated_date',
+        'message',
         'project_id',
+        'phase_id',
         'stage_id',
         'lot_number',
+        'lots'
     ];
-
-   
 }

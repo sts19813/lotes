@@ -2,14 +2,24 @@
 
 @section('title', 'Centro Internacional de Congresos de Yucatán')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<link href="https://db.onlinewebfonts.com/c/88f10bf18a36407ef36bf30bc25a3618?family=SuisseIntl-Regular"
-    rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/styleCic.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('content')
 
 
 <style>
+    .swal2-confirm.swal2-styled {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.swal2-confirm.swal2-styled:hover {
+    background-color: #111111 !important;
+}
+
     /* Desktop: oculto por default */
 @media (min-width: 992px) {
     .disable-desktop-star {

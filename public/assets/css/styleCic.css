@@ -245,7 +245,7 @@
 
 /* Thin */
 @font-face {
-    font-family: 'Suisse BP';
+    font-family: 'Suisse BP Antique';
     src: url('/fonts/Suisse BP/SuisseBPIntl-Thin.otf') format('opentype');
     font-weight: 100;
     font-style: normal;
@@ -259,6 +259,9 @@
 }
 
 
+#btnSolicitarEvento{
+    background: #000 !important;
+}
 
 /* ============================
    ESTILOS GENERALES
@@ -307,23 +310,23 @@
 }
 
 .metrics-bar p{
-    font-family: "SuisseIntl-Regular" !important;
+    font-family: "Suisse BP" !important;
     font-weight: 400;
     font-size: 14px;
 }
 .right-panel p {
-    font-family: "SuisseIntl-Regular" !important;
+    font-family: "Suisse BP" !important;
     font-weight: 400;
     font-size: 14px !important;
 }
 .right-panel .btn{
-    font-family: "SuisseIntl-Regular" !important;
+    font-family: "Suisse BP" !important;
     font-weight: 400;
     font-size: 14px !important;
 }
 .text-normal-standart {
     font-size: 14px !important;
-    font-family: "SuisseIntl-Regular" !important;
+    font-family: "Suisse BP" !important;
 }
 
 .btn-grid-2 {
@@ -399,7 +402,6 @@ p {
     position: fixed;
     bottom: 80px;
     left: 20px;
-    z-index: 999999;
     padding: 10px 15px;
     border-radius: 8px;
 }
@@ -804,7 +806,7 @@ svg .active{
         appearance: none;
         -webkit-appearance: none;
         font-size: 18px;
-        font-family: "SuisseIntl-Regular" !important;
+        font-family: "Suisse BP Antique" !important;
         font-weight: 600;
     }
     .custom-select-wrapper-mobile::after {

@@ -17,6 +17,8 @@
                 <form id="downloadForm" action="{{ route('leads.store') }}" method="POST">
                     @csrf
 
+                    <input type="hidden" name="lots" id="selectedLotHidden">
+
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
                             <input type="text" class="modal-input" name="name" placeholder="Nombre" required>
