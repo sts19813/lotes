@@ -8,7 +8,7 @@
 
             <div class="p-4 text-center">
 
-                <h3 class="fw-bold mb-2">Contáctanos</h3>
+                <h3 class="fw-bold mb-2" style="font-size: 1.25rem;">Contáctanos</h3>
                 <p class="modal-subtext mb-4">
                     Siempre atentos a tus necesidades, contáctanos y nuestros ejecutivos especializados 
                     te ayudarán a concretar tu evento en este grandioso escenario.
@@ -56,7 +56,7 @@
                     <input type="hidden" name="lot_number" id="lotNumberHidden">
 
                     <div class="text-center mt-4">
-                        <button type="submit" class="submit-button">
+                        <button type="submit" class="submit-button " style="font-family: 'Suisse BP'">
                             Enviar
                         </button>
                     </div>

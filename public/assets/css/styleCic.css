@@ -576,7 +576,7 @@ p {
     border: none;
     padding: 14px 18px;
     border-radius: 20px;
-    font-size: 15px;
+    font-size: 14px;
 }
 .modal-input:focus {
     outline: none;
@@ -589,7 +589,7 @@ p {
     padding: 12px 40px;
     border-radius: 25px;
     border: none;
-    font-size: 16px;
+    font-size: 14px;
     width: 220px;
 }
 .submit-button:hover {
