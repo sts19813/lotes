@@ -212,7 +212,8 @@ class ReportController extends Controller
             "stage_id" => $data["stage_id"] ?? null,
             "phase_name" => $phaseName,
             "stage_name" => $stageName,
-            "desarrollo_logo" => $desarrolloLogo,
+            "path_logo" => $desarrolloLogo,
+            "color_acento" => $desarrollo?->color_acento ?? null,
             "years" => $years,
             "precio_final" => $precioFinal,
             "precioTotal" => $precioFinal,
@@ -318,6 +319,8 @@ class ReportController extends Controller
             "stage_id" => $report->stage_id,
             "phase_name" => $phaseName,
             "stage_name" => $stageName,
+            "path_logo" => $desarrollo?->path_logo ?? null,
+            "color_acento" => $desarrollo?->color_acento ?? null,
         ];
 
         $pdf = Pdf::loadView("reports.cotizacion", ["lot" => (object) $pdfData])

@@ -137,16 +137,17 @@
 <body>
 
 	{{-- ENCABEZADO --}}
-	<div class="header" style="text-align: center; background-color: #000; color: #fff; padding: 40px 0;">
-		@if (!empty($lot->desarrollo_logo))
-			<img src="{{ public_path($lot->desarrollo_logo) }}" alt="{{ $lot->desarrollo_name }}"
+	<div class="header" style="text-align: center; background-color: {{ $lot->color_acento ?? '#000' }}; color: #fff; padding: 40px 0;">
+		@if (!empty($lot->path_logo))
+			<img src="{{ public_path($lot->path_logo) }}"
+				alt="{{ $lot->desarrollo_name }}"
 				style="height: 80px; display: block; margin: 0 auto 20px auto;">
+		@else
+			<div class="subheader" style="font-size: 16px; letter-spacing: 2px; margin-bottom: 10px;">
+				{{ $lot->desarrollo_name ?? 'HACIENDA' }}
+			</div>
 		@endif
-
-		<div class="subheader" style="font-size: 16px; letter-spacing: 2px; margin-bottom: 10px;">
-			{{ $lot->desarrollo_name ?? 'HACIENDA' }}
-		</div>
-
+	
 		<h1 style="font-size: 48px; margin: 0 0 10px 0; font-weight: bold; letter-spacing: 5px;">
 			{{ $lot->name ?? 'PIARÓ' }}
 		</h1>
