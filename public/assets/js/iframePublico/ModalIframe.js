@@ -104,7 +104,7 @@ function actualizarFinanciamiento(box, precioTotal) {
         plan.financiamiento_meses ||
         plan.months ||
         plan.financing_months ||
-        60
+        0
     );
 
     const enganchePorc = parseFloat(plan.porcentaje_enganche || 30);
@@ -316,6 +316,7 @@ function actualizarFinanciamiento(box, precioTotal) {
     window.currentMeses = meses;
     window.currentMensualidad = mensualidad;
     window.currentPrecioFinal = precioFinal;
+    window.currentPriceSquareMeter = precioM2Ajustado;
 
     // Llamada original: pasar precioTotal original (para proyeccion) o pasar precioFinal?
     // Dejamos como original para que proyecciones históricas sigan igual,
@@ -365,7 +366,7 @@ function actualizarProyeccion(precioReal, plusvaliaRate, plan) {
     const tbody = document.querySelector(".table-responsive tbody");
     tbody.innerHTML = "";
 
-    const meses = window.currentMeses || 60;
+    const meses = window.currentMeses || 0;
 
     // precioFinal = precio con interés o descuento
     const precioFinal = window.currentPrecioFinal || precioReal;
@@ -406,6 +407,10 @@ function actualizarProyeccion(precioReal, plusvaliaRate, plan) {
         `;
         tbody.appendChild(tr);
     }
+
+    window.plusvaliaTotal = plusvaliaTotal;
+    window.roi = roi;
+    window.valorFinal5Anios = valorFinal5Anios;
 }
 
 /**

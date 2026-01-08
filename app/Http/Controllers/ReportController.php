@@ -36,57 +36,85 @@ class ReportController extends Controller
             "name" => "required|string",
             "area" => "required|numeric",
             "price_square_meter" => "required|numeric",
-            "down_payment_percent" => "nullable|numeric",
-            "financing_months" => "nullable|integer",
+
+            "precio_real" => "required|numeric",
+            "precio_final" => "required|numeric",
+            "tipo_aplicado" => "required|string",
+
+            // Financiero
+            "porcentaje_enganche" => "required|numeric",
+            "enganche_monto" => "required|numeric",
+
+            "porcentaje_saldo" => "nullable|numeric",
+            "saldo_monto" => "nullable|numeric",
+
+            "monto_financiado" => "required|numeric",
+            "financing_months" => "required|integer",
+            "mensualidad" => "required|numeric",
+
+            "descuento_porcentaje" => "nullable|numeric",
+            "financiamiento_interes" => "nullable|numeric",
+
+            // Plusvalía
             "annual_appreciation" => "nullable|numeric",
+
+            // Imagen
             "chepina" => "nullable|string",
+
+            // Lead
             "lead_name" => "nullable|string",
             "lead_phone" => "nullable|string",
             "lead_email" => "nullable|string",
             "city" => "nullable|string",
+
+            // Contexto
             "desarrollo_id" => "nullable|integer",
             "desarrollo_name" => "nullable|string",
             "phase_id" => "nullable|integer",
             "stage_id" => "nullable|integer",
             "project_id" => "nullable|integer",
-            "source_type" => "nullable|string"
+            "source_type" => "nullable|string",
+            "roi" => "nullable|numeric",
+            "valor_final" => "nullable|numeric",
+            "plusvalia_total" => "nullable|numeric",
         ]);
 
         // Cálculos principales
-        $precioTotal = $data["area"] * $data["price_square_meter"];
-        $enganchePorc = $data["down_payment_percent"] ?? 30;
-        $engancheMonto = $precioTotal * ($enganchePorc / 100);
-        $meses = $data["financing_months"] ?? 60;
-        $mensualidad = ($precioTotal - $engancheMonto) / max(1, $meses);
-        $plusvaliaRate = $data["annual_appreciation"] ?? 0.15;
-        $plusvaliaTotal = $precioTotal * pow(1 + $plusvaliaRate, 5);
-        $roi = (($plusvaliaTotal - $precioTotal) / $precioTotal) * 100;
+        $enganchePorc = $data["porcentaje_enganche"];
+        $engancheMonto = $data["enganche_monto"];
 
-        // Proyección anual
+        $saldoMonto = $data["saldo_monto"] ?? 0;
+
+        $meses = $data["financing_months"];
+        $mensualidad = $data["mensualidad"];
+        $montoFinanciado = $data["monto_financiado"];
+
+        $precioReal = $data["precio_real"];
+        $precioFinal = $data["precio_final"];
+        $plusvaliaTotal = $data["plusvalia_total"] ?? 0;
+        $roi = $data["roi"] ?? 0;
+        $valorFinal = $data["valor_final"];
+        $tipoAplicado = $data["tipo_aplicado"];
+
+        $plusvaliaRate = $data["annual_appreciation"] ?? 0.15;
         $years = [];
         $totalAnios = (int) ceil($meses / 12);
 
         for ($year = 0; $year <= $totalAnios; $year++) {
-            $valorProp = $precioTotal * pow(1 + $plusvaliaRate, $year);
+            $valorProp = $precioReal * pow(1 + $plusvaliaRate, $year);
 
-            if ($year === 0) {
-                $mesesPagados = 0;
-            } elseif ($year === 1) {
-                $mesesPagados = min($meses, 11);
-            } else {
-                $mesesPagados = min($meses, 11 + (($year - 1) * 12));
-            }
+            $mesesPagados = min($meses, max(0, ($year * 12) - 1));
 
-            $montoPagado = $engancheMonto + $mensualidad * $mesesPagados;
-            $plusvaliaAcum = $valorProp - $precioTotal;
-            $roiAnual = (($valorProp - $precioTotal) / $precioTotal) * 100;
+            $montoPagado = $engancheMonto + ($mensualidad * $mesesPagados);
+            $plusvaliaAcum = $valorProp - $precioReal;
+            $roiAnual = (($valorProp - $precioFinal) / $precioFinal) * 100;
 
             $years[] = [
                 "year" => $year,
-                "valorProp" => $valorProp,
-                "montoPagado" => $montoPagado,
-                "plusvaliaAcum" => $plusvaliaAcum,
-                "roiAnual" => $roiAnual,
+                "valorProp" => round($valorProp, 2),
+                "montoPagado" => round($montoPagado, 2),
+                "plusvaliaAcum" => round($plusvaliaAcum, 2),
+                "roiAnual" => round($roiAnual, 2),
             ];
         }
 
@@ -127,28 +155,38 @@ class ReportController extends Controller
                 "name" => $data["name"],
                 "area" => round($data["area"], 2),
                 "price_square_meter" => round($data["price_square_meter"], 2),
-                "down_payment_percent" => round($enganchePorc, 2),
-                "financing_months" => $meses,
-                "annual_appreciation" => round($plusvaliaRate, 2),
+
+                "precio_total" => round($precioFinal, 2),   // precio final enviado por JS
+                "tipo_aplicado" => $tipoAplicado,
+
+                "enganche_porcentaje" => round($data["porcentaje_enganche"], 2),
+                "enganche_monto" => round($data["enganche_monto"], 2),
+                "saldo_monto" => round($data["saldo_monto"] ?? 0, 2),
+                "monto_financiado" => round($data["monto_financiado"], 2),
+
+                "financing_months" => $data["financing_months"],
+                "mensualidad" => round($data["mensualidad"], 2),
+
+                "annual_appreciation" => round($data["annual_appreciation"] ?? 0.15, 2),
+                "plusvalia_total" => round($plusvaliaTotal, 2),
+                "roi" => round($roi, 2),
+                "valor_final_plusvalia" => round($valorFinal, 2),
+
                 "chepina" => $data["chepina"] ?? null,
                 "lead_name" => $data["lead_name"] ?? null,
                 "lead_phone" => $data["lead_phone"] ?? null,
                 "lead_email" => $data["lead_email"] ?? null,
                 "city" => $data["city"] ?? null,
-                "precio_total" => round($precioTotal, 2),
-                "enganche_porcentaje" => round($enganchePorc, 2),
-                "enganche_monto" => round($engancheMonto, 2),
-                "mensualidad" => round($mensualidad, 2),
-                "plusvalia_total" => round($plusvaliaTotal, 2),
-                "roi" => round($roi, 2),
-                "years_data" => $years,
-                "chepina_url" => $chepinaUrl,
+
                 "desarrollo_id" => $data["project_id"] ?? null,
-                "desarrollo_name" => $desarrolloName ?? null,
+                "desarrollo_name" => $data["desarrollo_name"] ?? null,
                 "phase_id" => $data["phase_id"] ?? null,
                 "stage_id" => $data["stage_id"] ?? null,
                 "source_type" => $data["source_type"] ?? null,
+                "years_data" => json_encode($years),
+
             ]);
+
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
@@ -156,16 +194,17 @@ class ReportController extends Controller
         $desarrollo = $data['desarrollo_id'] ? Desarrollos::find($data['desarrollo_id']) : null;
         $desarrolloLogo = $desarrollo?->path_logo ?? null;
 
+        $chepinaBase64 = $this->getChepinaBase64($data['chepina'] ?? null);
+
         $pdfData = array_merge($data, [
-            "precioTotal" => $precioTotal,
+
+            "precio_real" => $precioReal,
             "enganchePorc" => $enganchePorc,
             "engancheMonto" => $engancheMonto,
             "meses" => $meses,
             "mensualidad" => $mensualidad,
             "plusvaliaRate" => $plusvaliaRate,
-            "plusvaliaTotal" => $plusvaliaTotal,
-            "roi" => $roi,
-            "years" => $years,
+            "chepina_base64" => $chepinaBase64,
             "chepinaUrl" => $chepinaUrl,
             "desarrollo_id" => $data["desarrollo_id"] ?? null,
             "desarrollo_name" => $desarrolloName ?? null,
@@ -174,8 +213,13 @@ class ReportController extends Controller
             "phase_name" => $phaseName,
             "stage_name" => $stageName,
             "desarrollo_logo" => $desarrolloLogo,
-            "chepina_base64" => $chepinaBase64,
+            "years" => $years,
+            "precio_final" => $precioFinal,
+            "precioTotal" => $precioFinal,
+            "valorFinal" => $valorFinal,
+            "roi" => $roi,
         ]);
+
 
         // Generar PDF
         $pdf = Pdf::loadView("reports.cotizacion", ["lot" => (object) $pdfData])
@@ -188,13 +232,13 @@ class ReportController extends Controller
 
         // Enviar al usuario
         if (!empty($data["lead_email"])) {
-            Mail::to($data["lead_email"])->send(new CotizacionGenerada((object) $pdfData, $pdf));
-        } 
+             Mail::to($data["lead_email"])->send(new CotizacionGenerada((object) $pdfData, $pdf));
+        }
         // Enviar al admin
         Mail::to("hi@davidsabido.com")->send(new CotizacionGenerada((object) $pdfData, $pdf));
 
         // Retornar descarga
-        return response()->streamDownload(fn() => print($pdf), "cotizacion_" . $data["name"] . ".pdf");
+        return response()->streamDownload(fn() => print ($pdf), "cotizacion_" . $data["name"] . ".pdf");
     }
 
     public function download(Report $report)
@@ -216,7 +260,6 @@ class ReportController extends Controller
             }
         } else {
             $desarrolloName = $report->desarrollo_name;
-            
             $Phase = Phase::find($report->phase_id);
             $phaseName = $Phase?->name ?? null;
 
@@ -229,29 +272,52 @@ class ReportController extends Controller
         $pdfData = [
             "name" => $report->name,
             "area" => $report->area,
+
+            // PRECIOS BASE
             "price_square_meter" => $report->price_square_meter,
+            "precio_real" => $report->precio_real,
+
+            // PRECIO DE COMPRA
+            "precio_final" => $report->precio_total,
             "precioTotal" => $report->precio_total,
+
+            // VALOR FINAL CON PLUSVALÍA
+            "valorFinal" => $report->valor_final_plusvalia,
+
+            // FINANCIAMIENTO
             "enganchePorc" => $report->enganche_porcentaje,
             "engancheMonto" => $report->enganche_monto,
+            "saldoMonto" => $report->saldo_monto ?? 0,
+            "montoFinanciado" => $report->monto_financiado,
             "meses" => $report->financing_months,
             "mensualidad" => $report->mensualidad,
+
+            // PLUSVALÍA / ROI
             "plusvaliaRate" => $report->annual_appreciation,
             "plusvaliaTotal" => $report->plusvalia_total,
             "roi" => $report->roi,
-            "chepinaUrl" => $report->chepina_url,
+
+            // CHEPINA
+            "chepinaUrl" => $report->chepina,
             "chepina_base64" => $chepinaBase64,
+
+            // LEAD
             "lead_name" => $report->lead_name,
             "lead_phone" => $report->lead_phone,
             "lead_email" => $report->lead_email,
             "city" => $report->city,
-            "years" => $report->years_data ?? [],
+
+            // PROYECCIÓN (CORREGIDO)
+            "years" => is_string($report->years_data)
+                ? json_decode($report->years_data, true)
+                : null,
+            // DESARROLLO
             "desarrollo_id" => $report->desarrollo_id,
             "desarrollo_name" => $desarrolloName,
             "phase_id" => $report->phase_id,
             "stage_id" => $report->stage_id,
             "phase_name" => $phaseName,
             "stage_name" => $stageName,
-            "project_id" => $report->project_id ?? null,
         ];
 
         $pdf = Pdf::loadView("reports.cotizacion", ["lot" => (object) $pdfData])

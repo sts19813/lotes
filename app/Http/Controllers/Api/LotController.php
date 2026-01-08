@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lot;
+use App\Models\Lote;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -19,12 +20,12 @@ class LotController extends Controller
         $query = Lot::with(['stage.phase.project']);
 
         if ($request->project_id) {
-            $query->whereHas('stage.phase.project', function($q) use ($request) {
+            $query->whereHas('stage.phase.project', function ($q) use ($request) {
                 $q->where('id', $request->project_id);
             });
         }
         if ($request->phase_id) {
-            $query->whereHas('stage.phase', function($q) use ($request) {
+            $query->whereHas('stage.phase', function ($q) use ($request) {
                 $q->where('id', $request->phase_id);
             });
         }
@@ -88,9 +89,9 @@ class LotController extends Controller
          */
         $statusReverseMap = [
             "Disponible" => "for_sale",
-            "Vendido"    => "sold",
-            "Apartado"   => "reserved",
-            "Bloqueado"  => "locked_sale"
+            "Vendido" => "sold",
+            "Apartado" => "reserved",
+            "Bloqueado" => "locked_sale"
         ];
 
         $file = $request->file('file')->getPathname();
@@ -107,14 +108,14 @@ class LotController extends Controller
          * ============================================================
          */
         $baseProjectId = null;
-        $basePhaseId   = null;
-        $baseStageId   = null;
+        $basePhaseId = null;
+        $baseStageId = null;
 
         foreach (array_slice($rows, 3) as $row) {
             if (!empty($row[4])) { // "name"
                 $baseProjectId = $row[1];
-                $basePhaseId   = $row[2];
-                $baseStageId   = $row[3];
+                $basePhaseId = $row[2];
+                $baseStageId = $row[3];
                 break;
             }
         }
@@ -135,12 +136,13 @@ class LotController extends Controller
 
             $excelRow = $index + 4;
 
-            if (empty($row[4])) continue; // nombre vacío → ignorar
+            if (empty($row[4]))
+                continue; // nombre vacío → ignorar
 
-            $id          = $row[0];
-            $project_id  = $row[1] ?: $baseProjectId;
-            $phase_id    = $row[2] ?: $basePhaseId;
-            $stage_id    = $row[3] ?: $baseStageId;
+            $id = $row[0];
+            $project_id = $row[1] ?: $baseProjectId;
+            $phase_id = $row[2] ?: $basePhaseId;
+            $stage_id = $row[3] ?: $baseStageId;
 
             /**
              * Convertir ESTATUS de español → clave interna
@@ -150,27 +152,27 @@ class LotController extends Controller
 
             $data = [
                 'project_id' => $project_id,
-                'phase_id'   => $phase_id,
-                'stage_id'   => $stage_id,
-                'name'       => $row[4],
-                'depth'      => $row[5],
-                'front'      => $row[6],
-                'area'       => $row[7],
+                'phase_id' => $phase_id,
+                'stage_id' => $stage_id,
+                'name' => $row[4],
+                'depth' => $row[5],
+                'front' => $row[6],
+                'area' => $row[7],
                 'price_square_meter' => $row[8],
                 'total_price' => $row[9],
-                'status'     => $statusInternal, // ← Mapeo correcto
-                'chepina'    => $row[11],
+                'status' => $statusInternal, // ← Mapeo correcto
+                'chepina' => $row[11],
             ];
 
             // Validación
             $validator = Validator::make($data, [
                 'project_id' => 'required|exists:projects,id',
-                'phase_id'   => 'required|exists:phases,id',
-                'stage_id'   => 'required|exists:stages,id',
-                'name'       => 'required|string',
-                'depth'      => 'nullable|numeric|min:0',
-                'front'      => 'nullable|numeric|min:0',
-                'area'       => 'nullable|numeric|min:0',
+                'phase_id' => 'required|exists:phases,id',
+                'stage_id' => 'required|exists:stages,id',
+                'name' => 'required|string',
+                'depth' => 'nullable|numeric|min:0',
+                'front' => 'nullable|numeric|min:0',
+                'area' => 'nullable|numeric|min:0',
                 'price_square_meter' => 'nullable|numeric|min:0',
                 'total_price' => 'nullable|numeric|min:0',
             ]);
@@ -266,5 +268,15 @@ class LotController extends Controller
             'message' => 'Imagen subida correctamente',
             'file' => $filename
         ]);
+    }
+
+    //mapeo para el masterplan
+    public function map(Request $request)
+    {
+        $stageId = $request->stage_id;
+
+        $maps = Lote::where('stage_id', $stageId)->get();
+
+        return $maps;
     }
 }

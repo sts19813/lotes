@@ -212,7 +212,9 @@
 							</tr>
 							<tr>
 								<td>Precio Total</td>
-								<td><b>${{ number_format($lot->precioTotal, 2) }}</b></td>
+								<td>
+									<b>${{ number_format($lot->precioTotal, 2) }}</b>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -243,7 +245,25 @@
 					<td>{{ $lot->enganchePorc }}% <br> ${{ number_format($lot->engancheMonto, 2) }}</td>
 					<td>{{ $lot->meses }} Meses</td>
 					<td>${{ number_format($lot->mensualidad, 2) }}</td>
-					<td>${{ number_format($lot->precioTotal - $lot->engancheMonto, 2) }}</td>
+					<td>
+						${{ number_format($lot->precio_final - $lot->engancheMonto, 2) }}
+					</td>
+
+					@if(!empty($lot->descuento_porcentaje) && $lot->descuento_porcentaje > 0)
+					<tr>
+						<td colspan="2">
+							<b>Descuento aplicado:</b> {{ $lot->descuento_porcentaje }}%
+						</td>
+					</tr>
+					@endif
+
+					@if(!empty($lot->financiamiento_interes) && $lot->financiamiento_interes > 0)
+					<tr>
+						<td colspan="2">
+							<b>Interés por financiamiento:</b> {{ $lot->financiamiento_interes }}%
+						</td>
+					</tr>
+					@endif
 				</tr>
 			</tbody>
 		</table>
@@ -264,14 +284,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				@php
-					$valorFinal = $lot->precioTotal * pow(1 + ($lot->plusvaliaRate ?? 0.15), 5);
-				@endphp
 				<tr>
-					<td>${{ number_format($valorFinal - $lot->precioTotal, 2) }}</td>
+					<td>${{ number_format($lot->plusvaliaTotal ?? 0, 2) }}</td>
 					<td>{{ ($lot->plusvaliaRate ?? 0.15) * 100 }}%</td>
-					<td>{{ number_format($lot->roi, 2) }}%</td>
-					<td>${{ number_format($valorFinal, 2) }}</td>
+					<td>{{ number_format($lot->roi ?? 0, 2) }}%</td>
+					<td>${{ number_format($lot->valorFinal, 2) }}</td>
 				</tr>
 			</tbody>
 		</table>

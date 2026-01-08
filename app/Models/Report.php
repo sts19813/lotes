@@ -34,6 +34,9 @@ class Report extends Model
         'phase_id',
         'stage_id',
         'source_type',
+        'valor_final_plusvalia',
+        'monto_financiado'
+
     ];
 
     protected $casts = [

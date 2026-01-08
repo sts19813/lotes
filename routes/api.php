@@ -17,6 +17,9 @@ Route::apiResource('stages', StageController::class);
 // Lotes
 Route::apiResource('lots', LotController::class);
 
+// routes/api.php
+Route::get('/masterplan/map', [LotController::class, 'map']);
+
 
 Route::post('/lots/import', [LotController::class, 'import']);
 Route::put('/lots/{lot}/status', [LotController::class, 'updateStatus']);
