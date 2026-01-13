@@ -305,13 +305,7 @@ $(document).ready(function () {
 
         $.get(`/api/lots?project_id=${projectId}&phase_id=${phaseId}&stage_id=${stageId}`, function (lots) {
 
-            if (lots.length === 0) {
-                return Swal.fire({
-                    icon: 'info',
-                    title: 'Sin lotes',
-                    text: 'No hay lotes en esta combinación.'
-                });
-            }
+ 
 
             // Mapeo estatus EN ESPAÑOL
             const statusMap = {
