@@ -3,19 +3,46 @@
 namespace App\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\RequestException;
 
 class AdaraService
 {
     public function request($endpoint, $params = [])
-    {
+{
+    try {
         $response = Http::withHeaders([
             'accept' => 'application/json',
-            'X-API-KEY' => env('ADARA_API_KEY'),
-        ])->withoutVerifying()->get(env('ADARA_API_URL') . $endpoint, $params);
+            'X-API-KEY' => config('services.adara.key'),
+        ])
+        ->withoutVerifying()
+        ->timeout(5)
+        ->get(config('services.adara.url') . $endpoint, $params);
 
-        return $response->successful() ? $response->json() : [];
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        // Error HTTP controlado (400, 500, etc.)
+        Log::warning('Adara API error', [
+            'endpoint' => $endpoint,
+            'status' => $response->status(),
+            'body' => $response->body()
+        ]);
+
+        return [];
+
+    } catch (\Throwable $e) {
+
+        // ❌ Evita pantalla roja
+        Log::error('Adara API connection failed', [
+            'endpoint' => $endpoint,
+            'error' => $e->getMessage()
+        ]);
+
+        return [];
     }
+}
 
     public function getProjects()
     {
