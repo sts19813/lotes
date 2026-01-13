@@ -99,7 +99,7 @@ $(document).ready(function () {
                         </button>
                     `;
                 }
-            },           
+            },
         ],
         autoWidth: false,
         language: { url: '//cdn.datatables.net/plug-ins/2.3.2/i18n/es-MX.json' },
@@ -207,7 +207,7 @@ $(document).ready(function () {
         }, { rootMargin: "100px" }); // carga anticipada suave
 
         images.forEach(img => observer.observe(img));
-}
+    }
 
     // ========================================================================
     //  FORMULARIO MODAL (crear nuevo lote)
@@ -290,6 +290,10 @@ $(document).ready(function () {
      * Genera y descarga una plantilla Excel para importar lotes.
      * Los IDs se rellenan automáticamente para evitar errores.
      */
+    /**
+ * Genera y descarga una plantilla Excel para importar lotes.
+ * Incluye una fila ejemplo con IDs precargados.
+ */
     $('#btnDownloadTemplate').on('click', function () {
         const projectId = $('#filterProject').val();
         const phaseId = $('#filterPhase').val();
@@ -305,9 +309,7 @@ $(document).ready(function () {
 
         $.get(`/api/lots?project_id=${projectId}&phase_id=${phaseId}&stage_id=${stageId}`, function (lots) {
 
- 
-
-            // Mapeo estatus EN ESPAÑOL
+            // 🟢 Mapeo estatus EN ESPAÑOL
             const statusMap = {
                 for_sale: "Disponible",
                 sold: "Vendido",
@@ -315,16 +317,17 @@ $(document).ready(function () {
                 locked_sale: "Bloqueado"
             };
 
-            // 🟢 INSTRUCCIONES COMPLETAS EN UNA SOLA CELDA
+            // 🟢 INSTRUCCIONES (UNA SOLA CELDA)
             const instrucciones = [
                 "⚠️ INSTRUCCIONES IMPORTANTES:\n" +
                 "- No modifiques los IDs de Proyecto, Fase y Etapa para registros existentes.\n" +
-                "- Para NUEVOS registros: NO incluyas los campos de ID (déjalos vacíos o elimina la fila ejemplo).\n" +
-                "- Solo edita columnas como: Nombre, Área, Precios, Estatus y Chepina.\n" +
+                "- Para NUEVOS registros: deja el ID vacío.\n" +
+                "- Duplica la fila ejemplo para capturar nuevos lotes.\n" +
+                "- Solo edita: Nombre, Área, Precios, Estatus y Chepina.\n" +
                 "- Estatus permitidos: Disponible, Vendido, Apartado, Bloqueado.\n"
             ];
 
-            // 🟢 ENCABEZADOS EN ESPAÑOL
+            // 🟢 ENCABEZADOS
             const header = [
                 "ID",
                 "ID Proyecto",
@@ -340,7 +343,23 @@ $(document).ready(function () {
                 "Chepina"
             ];
 
-            // 🟢 Filas
+            // 🟢 FILA EJEMPLO (PARA NUEVOS LOTES)
+            const exampleRow = [
+                "",             // ID vacío (nuevo lote)
+                projectId,      // ID Proyecto
+                phaseId,        // ID Fase
+                stageId,        // ID Etapa
+                "",             // Nombre
+                "",             // Profundidad
+                "",             // Frente
+                "",             // Área
+                "",             // Precio m²
+                "",             // Precio Total
+                "Disponible",   // Estatus por defecto
+                ""              // Chepina
+            ];
+
+            // 🟢 LOTES EXISTENTES
             const dataRows = lots.map(l => [
                 l.id,
                 l.stage.phase.project_id,
@@ -356,11 +375,13 @@ $(document).ready(function () {
                 l.chepina ?? ""
             ]);
 
+            // 🟢 ESTRUCTURA FINAL DEL EXCEL
             const aoa = [
-                instrucciones,   // Fila 1 con instrucciones
-                [],              // Fila 2 vacía
-                header,          // Fila 3 encabezados
-                ...dataRows      // Fila 4+ lotes
+                instrucciones,  // Fila 1
+                [],             // Fila 2 vacía
+                header,         // Fila 3 encabezados
+                exampleRow,     // Fila 4 (ejemplo editable)
+                ...dataRows     // Fila 5+ (lotes existentes)
             ];
 
             const worksheet = XLSX.utils.aoa_to_sheet(aoa);
@@ -371,6 +392,7 @@ $(document).ready(function () {
             XLSX.writeFile(workbook, "plantilla_lotes.xlsx");
         });
     });
+
 
 
 
