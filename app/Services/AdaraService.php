@@ -3,46 +3,19 @@
 namespace App\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Client\RequestException;
+
 
 class AdaraService
 {
     public function request($endpoint, $params = [])
-{
-    try {
+    {
         $response = Http::withHeaders([
             'accept' => 'application/json',
-            'X-API-KEY' => config('services.adara.key'),
-        ])
-        ->withoutVerifying()
-        ->timeout(5)
-        ->get(config('services.adara.url') . $endpoint, $params);
+            'X-API-KEY' => env('ADARA_API_KEY'),
+        ])->withoutVerifying()->get(env('ADARA_API_URL') . $endpoint, $params);
 
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        // Error HTTP controlado (400, 500, etc.)
-        Log::warning('Adara API error', [
-            'endpoint' => $endpoint,
-            'status' => $response->status(),
-            'body' => $response->body()
-        ]);
-
-        return [];
-
-    } catch (\Throwable $e) {
-
-        // ❌ Evita pantalla roja
-        Log::error('Adara API connection failed', [
-            'endpoint' => $endpoint,
-            'error' => $e->getMessage()
-        ]);
-
-        return [];
+        return $response->successful() ? $response->json() : [];
     }
-}
 
     public function getProjects()
     {
@@ -71,7 +44,8 @@ class AdaraService
     {
         $projects = $this->getProjects();
         foreach ($projects as $p) {
-            if ((int)$p['id'] === $projectId) return $p['name'] ?? null;
+            if ((int) $p['id'] === $projectId)
+                return $p['name'] ?? null;
         }
         return null;
     }
@@ -81,7 +55,8 @@ class AdaraService
     {
         $phases = $this->getPhases($projectId);
         foreach ($phases as $f) {
-            if ((int)$f['id'] === $phaseId) return $f['name'] ?? null;
+            if ((int) $f['id'] === $phaseId)
+                return $f['name'] ?? null;
         }
         return null;
     }
@@ -93,7 +68,8 @@ class AdaraService
     {
         $stages = $this->getStages($projectId, $phaseId);
         foreach ($stages as $s) {
-            if ((int)$s['id'] === $stageId) return $s['name'] ?? null;
+            if ((int) $s['id'] === $stageId)
+                return $s['name'] ?? null;
         }
         return null;
     }
