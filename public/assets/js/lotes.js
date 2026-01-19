@@ -1,14 +1,22 @@
+let lotSelect;      // select nativo
+let lotTomSelect;  // instancia Tom Select
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Referencias a elementos
+
+    // =============================
+    // REFERENCIAS
+    // =============================
     const redirectCheckbox = document.getElementById('redirect');
     const redirectUrlInput = document.getElementById('redirect_url');
     const polygonForm = document.getElementById('polygonForm');
-    const lotSelect = document.getElementById('modal_lot_id');
+    lotSelect = document.getElementById('modal_lot_id');
     const colorInput = document.getElementById('color');
     const colorActiveInput = document.getElementById('color_active');
 
-    // Habilitar/deshabilitar inputs extra
-    redirectCheckbox.addEventListener('change', function() {
+    // =============================
+    // TOGGLE REDIRECT
+    // =============================
+    redirectCheckbox.addEventListener('change', function () {
         const enabled = this.checked;
         redirectUrlInput.disabled = !enabled;
         colorInput.disabled = !enabled;
@@ -20,122 +28,143 @@ document.addEventListener('DOMContentLoaded', function () {
             colorActiveInput.value = '#2c7be5ff';
         }
     });
-    // Instancia del modal
+
+    // =============================
+    // MODAL
+    // =============================
     const modalEl = document.getElementById('polygonModal');
     const polygonModal = new bootstrap.Modal(modalEl);
 
-    // Detectar click sobre cualquier elemento dentro de SVG
-    const svgElements = document.querySelectorAll(selector);
-    svgElements.forEach(el => {
+    // =============================
+    // SVG CLICK
+    // =============================
+    document.querySelectorAll(selector).forEach(el => {
         el.addEventListener('click', function (e) {
             e.preventDefault();
 
-            // Obtener ID del elemento clickeado o del <g> padre
-            let elementId = this.id?.trim() || this.closest('g')?.id?.trim() || null;
+            const elementId =
+                this.id?.trim() ||
+                this.closest('g')?.id?.trim() ||
+                null;
+
             if (!elementId) return;
 
             document.getElementById('selectedElementId').innerText = elementId;
             document.getElementById('polygonId').value = elementId;
 
-            // Limpiar select
-            lotSelect.innerHTML = `<option value="">Cargando lotes...</option>`;
-
-            if (window.currentLot.source_type === 'adara') {
-                
-                const formData = new FormData();
-                formData.append('project_id', window.currentLot.project_id);
-                formData.append('phase_id', window.currentLot.phase_id);
-                formData.append('stage_id', window.currentLot.stage_id);
-
-                fetch(window.Laravel.routes.lotsFetch, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
-                    data.forEach(lot => {
-                        const opt = document.createElement('option');
-                        opt.value = lot.id;
-                        opt.textContent = lot.name;
-                        lotSelect.appendChild(opt);
-                    });
-                })
-                .catch(err => {
-                    console.error(err);
-                    lotSelect.innerHTML = `<option value="">Error al cargar lotes</option>`;
-                });
-            } else if (window.currentLot.source_type === 'naboo') {
-                lotSelect.innerHTML = `<option value="">Seleccione un lote...</option>`;
-                window.preloadedLots.forEach(lot => {
-                    
-                        const opt = document.createElement('option');
-                        opt.value = lot.id;
-                        opt.textContent = lot.name;
-                        lotSelect.appendChild(opt);
-                });
-            }
-
+            loadLotsForCurrentSource();
             polygonModal.show();
         });
     });
 
-    // Form submit sigue igual
-    polygonForm.addEventListener('submit', function(e) {
+    // =============================
+    // FORM SUBMIT
+    // =============================
+    polygonForm.addEventListener('submit', function (e) {
         e.preventDefault();
+
         const formData = new FormData(this);
-        // Siempre enviamos el desarrollo actual
+
         formData.set('desarrollo_id', window.idDesarrollo);
+        formData.set('project_id', window.currentLot.project_id ?? '');
+        formData.set('phase_id', window.currentLot.phase_id ?? '');
+        formData.set('stage_id', window.currentLot.stage_id ?? '');
+        formData.set('lot_id', lotTomSelect?.getValue() ?? '');
 
-        // Agregar los demás IDs desde currentLot
-        formData.append('project_id', window.currentLot.project_id ?? '');
-        formData.append('phase_id', window.currentLot.phase_id ?? '');
-        formData.append('stage_id', window.currentLot.stage_id ?? '');
-        formData.append('lot_id', document.getElementById('modal_lot_id').value ?? '');
-
-        // Enviar checkbox de redirección
-        const redirectCheckbox = document.getElementById('redirect');
         formData.set('redirect', redirectCheckbox.checked ? 1 : 0);
 
-        // Redirección + colores
         if (redirectCheckbox.checked) {
-            formData.set('redirect', 1);
             formData.set('redirect_url', redirectUrlInput.value ?? '');
             formData.set('color', colorInput.value);
             formData.set('color_active', colorActiveInput.value);
         } else {
-            formData.set('redirect', 0);
             formData.set('redirect_url', '');
             formData.set('color', '');
             formData.set('color_active', '');
         }
+
         fetch(window.Laravel.routes.lotesStore, {
             method: 'POST',
             body: formData,
             headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
         })
-        .then(async res => {
-            const text = await res.text();
-            try { return JSON.parse(text); } 
-            catch { throw new Error('Respuesta no es JSON: ' + text); }
-        })
-        .then(data => {
-            if (data.success) {
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) {
+                    alert(data.message || 'Error al guardar');
+                    return;
+                }
+
                 polygonModal.hide();
                 polygonForm.reset();
-                document.getElementById('modal_lot_id').innerHTML = `<option value="">Seleccione un lote...</option>`;
-                const redirectSelect = document.getElementById('redirect_url');
-                redirectSelect.disabled = true;
-                redirectSelect.value = '';
+                lotTomSelect?.clear();
                 location.reload();
-            } else {
-                alert('Error: ' + (data.message || 'No se pudo guardar'));
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Ocurrió un error al guardar el lote. Revisa la consola.');
-        });
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error al guardar');
+            });
     });
+
+    // =============================
+    // LOAD LOTS
+    // =============================
+    function loadLotsForCurrentSource() {
+
+        if (window.currentLot.source_type === 'adara') {
+
+            const fd = new FormData();
+            fd.append('project_id', window.currentLot.project_id);
+            fd.append('phase_id', window.currentLot.phase_id);
+            fd.append('stage_id', window.currentLot.stage_id);
+
+            fetch(window.Laravel.routes.lotsFetch, {
+                method: 'POST',
+                body: fd,
+                headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken }
+            })
+                .then(r => r.json())
+                .then(lots => initLotSelect(lots))
+                .catch(() => initLotSelect([]));
+
+        } else {
+            initLotSelect(window.preloadedLots || []);
+        }
+    }
 });
+
+// =============================
+// FILTRO LOTES NO MAPEADOS
+// =============================
+function getUnmappedLots(allLots, dbLotes) {
+    const mappedIds = new Set(
+        (dbLotes || []).map(l => String(l.lote_id))
+    );
+
+    return allLots.filter(l => !mappedIds.has(String(l.id)));
+}
+
+// =============================
+// INIT TOM SELECT
+// =============================
+function initLotSelect(lots) {
+
+    const unmappedLots = getUnmappedLots(lots, window.dbLotes);
+
+    if (lotTomSelect) {
+        lotTomSelect.destroy();
+    }
+
+    lotSelect.innerHTML = '';
+
+    lotTomSelect = new TomSelect(lotSelect, {
+        options: unmappedLots.map(l => ({
+            value: l.id,
+            text: l.name
+        })),
+        placeholder: 'Buscar o seleccionar lote...',
+        allowEmptyOption: true,
+        maxOptions: 500,
+        searchField: ['text']
+    });
+}

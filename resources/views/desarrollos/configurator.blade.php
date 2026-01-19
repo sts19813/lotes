@@ -5,10 +5,12 @@
 @section('content')
 
 	<link rel="stylesheet" href="/assets/css/configurador.css">
+	<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
 	<style>
 		{{ $lot->modal_selector ?? 'svg g *' }}
-		{
+			{
 			fill: transparent !important;
 			stroke: #00aeef;
 			stroke-miterlimit: 10;
@@ -16,9 +18,54 @@
 			transition: fill 0.3s ease;
 		}
 
-		{{ $lot->modal_selector ?? 'svg g *' }}:hover {
+		{{ $lot->modal_selector ?? 'svg g *' }}
+		:hover {
 			fill: rgb(0, 200, 0) !important;
 		}
+
+		/* ===============================
+   TOM SELECT → LISTA PLANA
+   =============================== */
+
+/* contenedor */
+.ts-dropdown {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid #ced4da;
+}
+
+/* lista */
+.ts-dropdown-content {
+    padding: 0 !important;
+}
+
+/* opción = texto plano */
+.ts-dropdown .option {
+    all: unset;               /* ← CLAVE */
+    display: block;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* hover simple */
+.ts-dropdown .option:hover,
+.ts-dropdown .option.active {
+    background-color: #e9ecef;
+}
+
+/* eliminar decoraciones internas */
+.ts-dropdown .option > * {
+    all: unset;
+}
+
+/* input superior */
+.ts-control {
+    box-shadow: none !important;
+    border-radius: 0.375rem;
+}
+
 	</style>
 
 	<div class="card shadow-sm">
