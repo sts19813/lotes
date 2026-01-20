@@ -7,6 +7,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const stageSelect = document.getElementById("stage_id");
     const projectSelect = document.getElementById("project_id");
 
+    const sourceSelect = filterForm.querySelector('[name="source"]');
+
+    sourceSelect.addEventListener('change', () => {
+        if (!sourceSelect.value) {
+            projectSelect.innerHTML = `<option value="">Todos...</option>`;
+            phaseSelect.innerHTML = `<option value="">Todas...</option>`;
+            stageSelect.innerHTML = `<option value="">Todas...</option>`;
+            return;
+        }
+
+        loadProjects().finally(fetchDashboardData);
+    });
+
+
     let chart = Highcharts.chart('lotsChart', {
         chart: { type: 'column' },
         title: { text: 'Distribución de Estatus' },
@@ -14,21 +28,47 @@ document.addEventListener("DOMContentLoaded", function () {
         series: [{ data: [0, 0, 0, 0, 0] }]
     });
 
+    function loadProjects() {
+        const source = filterForm.querySelector('[name="source"]').value;
+
+        projectSelect.innerHTML = `<option value="">Todos...</option>`;
+        phaseSelect.innerHTML = `<option value="">Todas...</option>`;
+        stageSelect.innerHTML = `<option value="">Todas...</option>`;
+
+        return fetch(`/api/dashboard/projects?source=${source}`)
+            .then(r => r.json())
+            .then(data => {
+                data.forEach(p => {
+                    projectSelect.innerHTML +=
+                        `<option value="${p.id}">${p.name}</option>`;
+                });
+            });
+    }
+
+
     function loadPhases(projectId) {
-        return fetch(`/api/phases?project_id=${projectId}`)
+        const source = filterForm.querySelector('[name="source"]').value;
+
+        return fetch(`/api/dashboard/phases?project_id=${projectId}&source=${source}`)
             .then(r => r.json())
             .then(data => {
                 phaseSelect.innerHTML = `<option value="">Todas...</option>`;
-                data.forEach(f => phaseSelect.innerHTML += `<option value="${f.id}">${f.name}</option>`);
+                data.forEach(f =>
+                    phaseSelect.innerHTML += `<option value="${f.id}">${f.name}</option>`
+                );
             });
     }
 
     function loadStages(projectId, phaseId) {
-        return fetch(`/api/stages?project_id=${projectId}&phase_id=${phaseId}`)
+        const source = filterForm.querySelector('[name="source"]').value;
+
+        return fetch(`/api/dashboard/stages?project_id=${projectId}&phase_id=${phaseId}&source=${source}`)
             .then(r => r.json())
             .then(data => {
                 stageSelect.innerHTML = `<option value="">Todas...</option>`;
-                data.forEach(s => stageSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`);
+                data.forEach(s =>
+                    stageSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`
+                );
             });
     }
 
@@ -53,6 +93,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function fetchDashboardData() {
+        const source = filterForm.querySelector('[name="source"]').value;
+
+        if (!source) {
+            return;
+        }
         document.body.classList.add("loading");
 
         fetch("/dashboards/data", {
@@ -100,5 +145,4 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    fetchDashboardData();
 });

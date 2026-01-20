@@ -12,6 +12,7 @@ $(document).ready(function () {
             url: '/api/lots', // Endpoint que devuelve todos los lotes
             dataSrc: ''       // Respuesta es un array directo
         },
+        pageLength: 50,
         columnDefs: [
             {
                 targets: 0,          // Columna ID
