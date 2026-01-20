@@ -109,10 +109,22 @@ class DesarrollosController extends Controller
         ]);
 
         $data = $request->only([
-            'name','description','total_lots','project_id','phase_id','stage_id',
-            'modal_color','modal_selector','color_primario','color_acento',
-            'financing_months','redirect_return','redirect_next','redirect_previous',
-            'plusvalia','source_type'
+            'name',
+            'description',
+            'total_lots',
+            'project_id',
+            'phase_id',
+            'stage_id',
+            'modal_color',
+            'modal_selector',
+            'color_primario',
+            'color_acento',
+            'financing_months',
+            'redirect_return',
+            'redirect_next',
+            'redirect_previous',
+            'plusvalia',
+            'source_type'
         ]);
 
         // Subir imágenes usando FileUploadService
@@ -164,22 +176,22 @@ class DesarrollosController extends Controller
                 $lots = $this->adaraService->getLots($lot->project_id, $lot->phase_id, $lot->stage_id);
             }
 
-        $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
+            $dbLotes = Lote::where('desarrollo_id', $lot->id)->get();
 
         } elseif ($sourceType === 'naboo') {
             $projects = Desarrollos::all();
 
             $lots = Lot::where('stage_id', $lot->stage_id)->get();
             $dbLotes = Lote::where([
-                            'desarrollo_id' => $lot->id,
-                            'project_id' => $lot->project_id,
-                            'phase_id' => $lot->phase_id,
-                            'stage_id' => $lot->stage_id
-                        ])->get();
+                'desarrollo_id' => $lot->id,
+                'project_id' => $lot->project_id,
+                'phase_id' => $lot->phase_id,
+                'stage_id' => $lot->stage_id
+            ])->get();
         }
 
-        return view('desarrollos.configurator', compact('lot','projects','lots','dbLotes','desarrollos'))
-               ->with('sourceType', $sourceType);
+        return view('desarrollos.configurator', compact('lot', 'projects', 'lots', 'dbLotes', 'desarrollos'))
+            ->with('sourceType', $sourceType);
     }
 
     /**
@@ -211,11 +223,11 @@ class DesarrollosController extends Controller
         }
 
 
-         //  Obtener financiamientos relacionados (solo activos)
+        //  Obtener financiamientos relacionados (solo activos)
         $financiamientos = $lot->financiamientos()->activos()->get();
         $templateModal = $lot->iframe_template_modal ?? 'emedos';
 
-        return view('iframe.index', compact('lot','projects','lots','dbLotes', 'financiamientos', 'templateModal'));
+        return view('iframe.index', compact('lot', 'projects', 'lots', 'dbLotes', 'financiamientos', 'templateModal'));
     }
 
     /**
@@ -231,19 +243,21 @@ class DesarrollosController extends Controller
 
         if ($sourceType === 'adara') {
             $projects = $this->adaraService->getProjects();
-            if ($lot->project_id) $phases = $this->adaraService->getPhases($lot->project_id);
-            if ($lot->phase_id) $stages = $this->adaraService->getStages($lot->project_id, $lot->phase_id);
+            if ($lot->project_id)
+                $phases = $this->adaraService->getPhases($lot->project_id);
+            if ($lot->phase_id)
+                $stages = $this->adaraService->getStages($lot->project_id, $lot->phase_id);
         }
 
         $desarrollos = Desarrollos::select('id', 'name')->get();
 
-        return view('desarrollos.edit', compact('lot','projects','phases','stages','desarrollos'));
+        return view('desarrollos.edit', compact('lot', 'projects', 'phases', 'stages', 'desarrollos'));
     }
 
     /**
      * Actualizar desarrollo existente en la basse de datos
      */
-    
+
     public function update(Request $request, $id)
     {
         $desarrollo = Desarrollos::findOrFail($id);
@@ -266,15 +280,29 @@ class DesarrollosController extends Controller
             'redirect_next' => 'nullable|string|max:255',
             'redirect_previous' => 'nullable|string|max:255',
             'plusvalia' => 'nullable|numeric|min:0|max:100',
-            'iframe_template_modal'=> 'nullable|string|max:255',
+            'iframe_template_modal' => 'nullable|string|max:255',
             'is_migrated' => 'nullable|boolean',
         ]);
 
         $data = $request->only([
-            'name','description','total_lots','project_id','phase_id','stage_id',
-            'modal_color','modal_selector','color_primario','color_acento',
-            'financing_months','redirect_return','redirect_next','redirect_previous',
-            'plusvalia','source_type','iframe_template_modal','is_migrated'
+            'name',
+            'description',
+            'total_lots',
+            'project_id',
+            'phase_id',
+            'stage_id',
+            'modal_color',
+            'modal_selector',
+            'color_primario',
+            'color_acento',
+            'financing_months',
+            'redirect_return',
+            'redirect_next',
+            'redirect_previous',
+            'plusvalia',
+            'source_type',
+            'iframe_template_modal',
+            'is_migrated'
         ]);
 
         $data['is_migrated'] = $request->boolean('is_migrated');
@@ -287,7 +315,7 @@ class DesarrollosController extends Controller
             $data['png_image'] = $this->fileUploadService->upload($request->file('png_image'), 'lots');
         }
 
-         DB::beginTransaction();
+        DB::beginTransaction();
 
         try {
             // 1) Guardar cambios del desarrollo (IMPORTANTE)
@@ -315,8 +343,8 @@ class DesarrollosController extends Controller
                     // Si tu tabla Lote tiene fillable con project_id/phase_id/stage_id puedes:
                     $lote->update([
                         'project_id' => $nProject,
-                        'phase_id'   => $nPhase,
-                        'stage_id'   => $nStage,
+                        'phase_id' => $nPhase,
+                        'stage_id' => $nStage,
                     ]);
                 }
 
@@ -342,5 +370,15 @@ class DesarrollosController extends Controller
         $desarrollo->delete();
 
         return redirect()->route('desarrollos.index')->with('success', 'Desarrollo eliminado correctamente.');
+    }
+
+
+    // Eliminar el mapeo de un lote en el configurador, en caso de error al mapearlo.
+    public function destroyMappingLot(Request $request)
+    {
+        Lote::where('id', $request->lot_id)
+            ->delete();
+
+        return response()->json(['ok' => true]);
     }
 }

@@ -24,54 +24,57 @@
 		}
 
 		/* ===============================
-   TOM SELECT → LISTA PLANA
-   =============================== */
+								   TOM SELECT → LISTA PLANA
+								   =============================== */
 
-/* contenedor */
-.ts-dropdown {
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    border: 1px solid #ced4da;
-}
+		/* contenedor */
+		.ts-dropdown {
+			border-radius: 0 !important;
+			box-shadow: none !important;
+			border: 1px solid #ced4da;
+		}
 
-/* lista */
-.ts-dropdown-content {
-    padding: 0 !important;
-}
+		/* lista */
+		.ts-dropdown-content {
+			padding: 0 !important;
+		}
 
-/* opción = texto plano */
-.ts-dropdown .option {
-    all: unset;               /* ← CLAVE */
-    display: block;
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1.4;
-}
+		/* opción = texto plano */
+		.ts-dropdown .option {
+			all: unset;
+			/* ← CLAVE */
+			display: block;
+			padding: 6px 10px;
+			cursor: pointer;
+			font-size: 14px;
+			line-height: 1.4;
+		}
 
-/* hover simple */
-.ts-dropdown .option:hover,
-.ts-dropdown .option.active {
-    background-color: #e9ecef;
-}
+		/* hover simple */
+		.ts-dropdown .option:hover,
+		.ts-dropdown .option.active {
+			background-color: #e9ecef;
+		}
 
-/* eliminar decoraciones internas */
-.ts-dropdown .option > * {
-    all: unset;
-}
+		/* eliminar decoraciones internas */
+		.ts-dropdown .option>* {
+			all: unset;
+		}
 
-/* input superior */
-.ts-control {
-    box-shadow: none !important;
-    border-radius: 0.375rem;
-}
-
+		/* input superior */
+		.ts-control {
+			box-shadow: none !important;
+			border-radius: 0.375rem;
+		}
 	</style>
 
 	<div class="card shadow-sm">
 		<div class="card-header">
 			<h3 class="card-title">Configurador: {{ $lot->name }}</h3>
 			<div class="card-toolbar">
+				<button class="btn btn-outline-danger me-2" id="btnManageMappings">
+					<i class="fas fa-project-diagram"></i> Administrar mapeos
+				</button>
 				<a href="{{ route('admin.index') }}" class="btn btn-secondary">Regresar</a>
 			</div>
 		</div>
@@ -152,6 +155,35 @@
 			</div>
 		</div>
 	</div>
+
+
+
+	<div class="modal fade" id="mappedLotsModal" tabindex="-1">
+		<div class="modal-dialog modal-xl modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Lotes mapeados en este SVG</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<div class="modal-body">
+					<table class="table table-bordered align-middle">
+						<thead class="table-light">
+							<tr>
+								<th>SVG ID</th>
+								<th>Nombre del Lote</th>
+								<th width="120">Acciones</th>
+							</tr>
+						</thead>
+						<tbody id="mappedLotsTable">
+							{{-- JS --}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
 @endsection
 
 @push('scripts')
@@ -177,4 +209,5 @@
 
 	<script src="/assets/js/lotes.js"></script>
 	<script src="/assets/js/iframePublico/Mainiframe.js"></script>
+	<script src="/assets/js/adminitrarMapeos.js"></script>
 @endpush

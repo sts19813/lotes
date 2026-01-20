@@ -94,9 +94,15 @@ $(document).ready(function () {
                 orderable: false,
                 render: function (data) {
                     return `
-                        <button class="btn btn-sm btn-outline-primary btn-edit-lot" data-id="${data.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-sm btn-outline-primary btn-edit-lot" data-id="${data.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            <button class="btn btn-sm btn-outline-danger btn-delete-lot" data-id="${data.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     `;
                 }
             },
@@ -585,5 +591,51 @@ $(document).ready(function () {
             }
         });
     });
+
+    // ========================================================================
+    //  ELIMINAR LOTE DEL CATALOGO NABOO
+    // ========================================================================
+
+    $('#lotsTable').on('click', '.btn-delete-lot', function () {
+        const lotId = $(this).data('id');
+        const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        Swal.fire({
+            title: '¿Eliminar lote?',
+            text: 'Esta acción no se puede deshacer',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+
+            $.ajax({
+                url: `/api/lots/${lotId}`,
+                type: 'DELETE',
+                data: { _token: csrf },
+                success: function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Lote eliminado',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    $('#lotsTable').DataTable().ajax.reload(null, false);
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar el lote'
+                    });
+                }
+            });
+        });
+    });
+
 
 });

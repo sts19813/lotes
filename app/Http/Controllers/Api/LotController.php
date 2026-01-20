@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+use Illuminate\Support\Facades\Storage;
 
 class LotController extends Controller
 {
@@ -69,10 +69,19 @@ class LotController extends Controller
         return response()->json($lot->load(['stage.phase.project', 'customFields']));
     }
 
+    //Eliminar un lote y su chepina asociada, en caso de un error de creacion en el catalogo naboo
     public function destroy(Lot $lot)
     {
+        // Opcional: borrar chepina del storage
+        if ($lot->chepina) {
+            Storage::disk('public')->delete('chepinas/' . $lot->chepina);
+        }
+
         $lot->delete();
-        return response()->json(null, 204);
+
+        return response()->json([
+            'message' => 'Lote eliminado correctamente'
+        ]);
     }
 
 
