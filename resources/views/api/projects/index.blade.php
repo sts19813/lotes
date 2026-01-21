@@ -69,12 +69,12 @@
                         <input type="text" name="phone" class="form-control" placeholder="9991234567">
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 d-none">
                         <label class="form-label">Logo (URL)</label>
-                        <input type="text" name="logo" class="form-control" placeholder="https://example.com/logo.png">
+                        <input type="text" name="logo" class="form-control" placeholder="">
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 d-none">
                         <label class="form-label">¿Cotización habilitada?</label>
                         <select name="quotation" class="form-select">
                             <option value="0">No</option>
@@ -122,7 +122,7 @@ $(document).ready(function () {
                 className: 'text-end',
                 render: function (data) {
                     return `
-                        <button class="btn btn-sm btn-light-primary view-btn" data-id="${data.id}">
+                        <button class="btn btn-sm btn-light-primary view-btn" data-id="${data.id}" disabled>
                             <i class="ki-duotone ki-eye fs-5"></i> Ver
                         </button>
                     `;

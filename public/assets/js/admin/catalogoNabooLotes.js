@@ -350,18 +350,18 @@ $(document).ready(function () {
                 "Chepina"
             ];
 
-            // 🟢 FILA EJEMPLO (PARA NUEVOS LOTES)
+            // 🟢 FILA EJEMPLO (SOLO SI NO HAY LOTES)
             const exampleRow = [
                 "",             // ID vacío (nuevo lote)
                 projectId,      // ID Proyecto
                 phaseId,        // ID Fase
                 stageId,        // ID Etapa
                 "",             // Nombre
-                "",             // Profundidad
-                "",             // Frente
-                "",             // Área
-                "",             // Precio m²
-                "",             // Precio Total
+                "0",             // Profundidad
+                "0",             // Frente
+                "0",             // Área
+                "0",             // Precio m²
+                "0",             // Precio Total
                 "Disponible",   // Estatus por defecto
                 ""              // Chepina
             ];
@@ -382,14 +382,25 @@ $(document).ready(function () {
                 l.chepina ?? ""
             ]);
 
-            // 🟢 ESTRUCTURA FINAL DEL EXCEL
-            const aoa = [
+            // 🟢 ¿HAY REGISTROS?
+            const hasLots = lots.length > 0;
+
+            // 🟢 CONSTRUCCIÓN FINAL DEL EXCEL
+            let aoa = [
                 instrucciones,  // Fila 1
                 [],             // Fila 2 vacía
-                header,         // Fila 3 encabezados
-                exampleRow,     // Fila 4 (ejemplo editable)
-                ...dataRows     // Fila 5+ (lotes existentes)
+                header          // Fila 3 encabezados
             ];
+
+            // ➕ Fila ejemplo SOLO si NO hay registros
+            if (!hasLots) {
+                aoa.push(exampleRow);
+            }
+
+            // ➕ Registros existentes (si hay)
+            if (hasLots) {
+                aoa = aoa.concat(dataRows);
+            }
 
             const worksheet = XLSX.utils.aoa_to_sheet(aoa);
 
@@ -398,6 +409,7 @@ $(document).ready(function () {
 
             XLSX.writeFile(workbook, "plantilla_lotes.xlsx");
         });
+
     });
 
 

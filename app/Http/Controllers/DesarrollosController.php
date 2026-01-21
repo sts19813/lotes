@@ -50,7 +50,7 @@ class DesarrollosController extends Controller
     public function admin()
     {
         $lots = Desarrollos::orderBy('updated_at', 'desc')->get();
-        return view('lots.admin', compact('lots'));
+        return view('desarrollos.admin', compact('lots'));
     }
 
     /**
