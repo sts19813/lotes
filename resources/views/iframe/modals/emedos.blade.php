@@ -126,7 +126,7 @@
                                     <div class="value fw-bold" id="loteMontoFinanciado">$0</div>
                                 </div>
                                 <div id="divSaldo" class="col-12 col-md-6 col-lg-5">
-                                    <div class="label text-modal">Contra Entrega</div>
+                                    <div class="label text-modal">Saldo</div>
                                     <div class="value fw-bold" id="Saldo">$0</div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4">
